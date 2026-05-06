@@ -74,8 +74,9 @@ export default {
     elsewhere: 'Ailleurs',
     prose: [
       "Je suis un ingénieur porté par la curiosité et l'envie d'apprendre de nouveaux domaines. Ce qui m'importe le plus, c'est d'avoir un impact réel sur les écosystèmes et les organisations dont je fais partie.",
-      "Ma carrière a débuté en tant qu'Ops dans un organisme de formation, où j'ai développé mes compétences en ingénierie de façon autodidacte. Je me suis ensuite tourné vers le développement full-stack et le SaaS, et j'y construis des produits depuis.",
-      "J'ai appris que les ingénieurs qui maîtrisent à la fois le technique et le produit sont ceux qui livrent ce qui compte.",
+      "Ma carrière a débuté en tant qu'Ops dans un organisme de formation, où j'ai développé mes compétences en ingénierie de façon autodidacte. Je me suis ensuite tourné vers le développement full-stack et le SaaS.",
+      "J'ai appris que les ingénieurs qui maîtrisent à la fois le technique et le produit sont ceux qui font vraiment la différence. C'est ce qui me motive le plus : gérer toute la partie technique et arbitrer des solutions côté produit. J'aime construire des choses utilisées par de vrais utilisateurs.",
+      "J'ai un BAC+5 en tant que réalisateur numérique et je suis en cours d'obtention d'un master d'ingénieur au CNAM grâce à une VAE.",
     ],
     whatIWriteHeading: "Ce sur quoi j'écris",
     whatIWriteText: "Les quatre fils conducteurs auxquels je reviens sans cesse : l'architecture logicielle traitée honnêtement, le leadership d'ingénierie à petite échelle, la réalité pratique de livrer des fonctionnalités IA, et l'économie de la gestion d'infrastructure hors des hyperscalers.",

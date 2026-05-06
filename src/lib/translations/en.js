@@ -76,7 +76,8 @@ export default {
     prose: [
       "I'm a motivated engineer, driven by curiosity and a love for learning. What I care about most is having real impact on the ecosystems and organizations I'm part of.",
       "My career started as an Ops at a learning-center company, where I grew my engineering skills as an autodidact. I then moved into the world of full-stack development and SaaS, and have been building products there ever since.",
-      "What I've learned is that the engineers who can hold both ends in their head at once, the engineering side and the product-and-customer side, are the ones who ship things that actually matter.",
+      "What I've learned is that the engineers who can hold both ends in their head at once, the engineering side and the product-and-customer side, are the ones who truly make a difference. That's what drives me most: owning the entire technical side and making product tradeoffs. I love building things used by real users.",
+      "I hold a BAC+5 as a digital director and am currently completing an engineering master's at CNAM through a prior learning assessment (VAE).",
     ],
     whatIWriteHeading: 'What I write about',
     whatIWriteText: "The four threads I keep returning to: software architecture done honestly, engineering leadership at small scale, the practical reality of shipping AI features, and the economics of running infrastructure outside of a hyperscaler.",

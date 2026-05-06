@@ -2,7 +2,7 @@
   import { goto } from '$app/navigation';
   import { base } from '$app/paths';
   import { onMount, onDestroy, tick } from 'svelte';
-  import { PROFILE, ARTICLES, fmtDate } from '$lib/data.js';
+  import { ARTICLES, fmtDate } from '$lib/data.js';
   import { t, loc, lang } from '$lib/i18n.js';
   import TagPill from '$lib/components/TagPill.svelte';
   import SectionHead from '$lib/components/SectionHead.svelte';
@@ -11,15 +11,15 @@
   import Bookmark from '$lib/components/Bookmark.svelte';
   import Heart from '$lib/components/Heart.svelte';
 
-  const enModules = import.meta.glob('/src/content/articles/en/*.svx', { eager: true });
-  const frModules = import.meta.glob('/src/content/articles/fr/*.svx', { eager: true });
+  const enModules = import.meta.glob('/src/content/articles/*/en.svx', { eager: true });
+  const frModules = import.meta.glob('/src/content/articles/*/fr.svx', { eager: true });
 
   let { data } = $props();
   const article = $derived(data.article);
   const la = $derived($loc(article));
 
-  const ContentEn = $derived(enModules[`/src/content/articles/en/${article.slug}.svx`]?.default);
-  const ContentFr = $derived(frModules[`/src/content/articles/fr/${article.slug}.svx`]?.default);
+  const ContentEn = $derived(enModules[`/src/content/articles/${article.slug}/en.svx`]?.default);
+  const ContentFr = $derived(frModules[`/src/content/articles/${article.slug}/fr.svx`]?.default);
   const Content = $derived($lang === 'fr' && ContentFr ? ContentFr : ContentEn);
 
   let progress = $state(0);
@@ -113,7 +113,7 @@
       <div class="byline">
         <div class="avatar">TS</div>
         <div>
-          <div class="byline-name">{PROFILE.name}</div>
+          <div class="byline-name">Trystan Sarrade</div>
           <div class="byline-sub">
             <time>{fmtDate(article.date, $t.dateLocale)}</time>
             <span class="dot">·</span>

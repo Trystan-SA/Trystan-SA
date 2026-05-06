@@ -2,7 +2,7 @@
   import { goto } from '$app/navigation';
   import { base } from '$app/paths';
   import { onMount } from 'svelte';
-  import { ARTICLES, TAGS, GUIDES, fmtDate } from '$lib/data.js';
+  import { ARTICLES, TAGS, GUIDES, CATEGORIES } from '$lib/data.js';
   import { t, loc } from '$lib/i18n.js';
   import TagPill from '$lib/components/TagPill.svelte';
   import ArticleList from '$lib/components/ArticleList.svelte';
@@ -12,14 +12,10 @@
   let section = $state('articles'); // 'articles' | 'guides'
   let query = $state('');
   let activeTag = $state(null);
-  let activeGuide = $state(null); // guide slug or null for all
+  let activeCategory = $state(null); // category slug or null for all
 
-  // Only path guides surface at the top level. Longform guides live inside the
-  // path that contains them (e.g. "writing-efficient-prompts" is a step of the
-  // "ai-engineering" path).
-  const topLevelGuides = $derived(GUIDES.filter((g) => g.kind === 'path'));
   const visibleGuides = $derived(
-    activeGuide ? topLevelGuides.filter((g) => g.slug === activeGuide) : topLevelGuides
+    activeCategory ? GUIDES.filter((g) => g.category === activeCategory) : GUIDES
   );
 
   function syncFromHash() {
@@ -55,34 +51,6 @@
     query = '';
     activeTag = null;
   }
-
-  // Resolve a path step to either an article or a longform guide so paths can
-  // mix both. Returns { kind, slug, title, date, readTime, href } or null.
-  function resolveStep(slug, locFn) {
-    const a = ARTICLES.find((x) => x.slug === slug);
-    if (a) {
-      return {
-        kind: 'article',
-        slug: a.slug,
-        title: locFn(a).title,
-        date: a.date,
-        readTime: a.readTime,
-        href: `${base}/article/${a.slug}/`
-      };
-    }
-    const g = GUIDES.find((x) => x.slug === slug && x.kind === 'longform');
-    if (g) {
-      return {
-        kind: 'longform',
-        slug: g.slug,
-        title: locFn(g).title,
-        date: g.date,
-        readTime: g.readTime,
-        href: `${base}/guide/${g.slug}/`
-      };
-    }
-    return null;
-  }
 </script>
 
 <div class="page articles-page">
@@ -114,7 +82,7 @@
     <div class="hero-eyebrow">{$t.articles.eyebrow}</div>
     <h1 class="page-title">{$t.articles.title}</h1>
     <p class="page-lede">
-      {$t.articles.lede(ARTICLES.length, topLevelGuides.length)}
+      {$t.articles.lede(ARTICLES.length, CATEGORIES.length)}
     </p>
   </header>
 
@@ -135,12 +103,12 @@
         class="sidebar-link {section === 'guides' ? 'is-active' : ''}"
         onclick={() => {
           selectSection('guides');
-          activeGuide = null;
+          activeCategory = null;
         }}
       >
         <span class="sidebar-link-row">
           <span>{$t.articles.sectionGuides}</span>
-          <span class="sidebar-count">{topLevelGuides.length}</span>
+          <span class="sidebar-count">{GUIDES.length}</span>
         </span>
         <span class="sidebar-hint">{$t.articles.guidesHint}</span>
       </button>
@@ -149,24 +117,24 @@
         <ul class="sidebar-chips">
           <li>
             <button
-              class="sidebar-chip {!activeGuide ? 'is-active' : ''}"
+              class="sidebar-chip {!activeCategory ? 'is-active' : ''}"
               title={$t.articles.allGuides}
-              onclick={() => (activeGuide = null)}
+              onclick={() => (activeCategory = null)}
             >
               <GuideIcon slug="all" />
               <span class="sidebar-chip-label">{$t.articles.allGuides}</span>
             </button>
           </li>
-          {#each topLevelGuides as g (g.slug)}
-            {@const lg = $loc(g)}
+          {#each CATEGORIES as cat (cat.slug)}
+            {@const lcat = $loc(cat)}
             <li>
               <button
-                class="sidebar-chip {activeGuide === g.slug ? 'is-active' : ''}"
-                title={lg.title}
-                onclick={() => (activeGuide = activeGuide === g.slug ? null : g.slug)}
+                class="sidebar-chip {activeCategory === cat.slug ? 'is-active' : ''}"
+                title={lcat.title}
+                onclick={() => (activeCategory = activeCategory === cat.slug ? null : cat.slug)}
               >
-                <GuideIcon slug={g.slug} />
-                <span class="sidebar-chip-label">{lg.title}</span>
+                <GuideIcon slug={cat.slug} />
+                <span class="sidebar-chip-label">{lcat.title}</span>
               </button>
             </li>
           {/each}
@@ -216,75 +184,35 @@
         <div class="guides-list">
           {#each visibleGuides as g (g.slug)}
             {@const lg = $loc(g)}
-            {#if g.kind === 'longform'}
-              <a
-                class="longform-card"
-                href="{base}/guide/{g.slug}/"
-                onclick={(e) => {
-                  e.preventDefault();
-                  goto(`${base}/guide/${g.slug}/`);
-                }}
-              >
-                <div class="longform-card-eyebrow">
-                  <span>{$t.guide.guideLabel}</span>
-                  <span class="dot">·</span>
-                  <span>{g.chapterCount} {$t.common.chapters}</span>
-                  <span class="dot">·</span>
-                  <span>{g.readTime} {$t.common.minRead}</span>
-                </div>
-                <h3 class="longform-card-title">{lg.title}</h3>
-                {#if lg.subtitle}
-                  <p class="longform-card-subtitle">{lg.subtitle}</p>
-                {/if}
-                <p class="longform-card-blurb">{lg.blurb}</p>
-                <div class="longform-card-foot">
-                  <div class="longform-card-tags">
-                    {#each g.tags as tag (tag)}
-                      <TagPill id={tag} />
-                    {/each}
-                  </div>
-                  <span class="longform-card-cta">{$t.articles.readGuide}</span>
-                </div>
-              </a>
-            {:else}
-              <article class="guide-card">
-                <header class="guide-card-head">
-                  <h3 class="guide-card-title">{lg.title}</h3>
-                  <span class="guide-card-count">{$t.articles.steps(g.steps.length)}</span>
-                </header>
-                <p class="guide-card-blurb">{lg.blurb}</p>
-                <ol class="guide-steps">
-                  {#each g.steps as slug, i (slug)}
-                    {@const s = resolveStep(slug, $loc)}
-                    {#if s}
-                      <li>
-                        <a
-                          href={s.href}
-                          class="guide-step {s.kind === 'longform' ? 'is-guide-step' : ''}"
-                          onclick={(e) => {
-                            e.preventDefault();
-                            goto(s.href);
-                          }}
-                        >
-                          <span class="guide-step-num">{String(i + 1).padStart(2, '0')}</span>
-                          <span class="guide-step-body">
-                            <span class="guide-step-title">
-                              {s.title}
-                            </span>
-                            <span class="guide-step-meta">
-                              <time>{fmtDate(s.date, $t.dateLocale)}</time>
-                              <span class="dot">·</span>
-                              <span>{s.readTime} {$t.common.minRead}</span>
-                            </span>
-                          </span>
-                          <span class="guide-step-arrow">→</span>
-                        </a>
-                      </li>
-                    {/if}
+            <a
+              class="longform-card"
+              href="{base}/guide/{g.slug}/"
+              onclick={(e) => {
+                e.preventDefault();
+                goto(`${base}/guide/${g.slug}/`);
+              }}
+            >
+              <div class="longform-card-eyebrow">
+                <span>{$t.guide.guideLabel}</span>
+                <span class="dot">·</span>
+                <span>{g.chapterCount} {$t.common.chapters}</span>
+                <span class="dot">·</span>
+                <span>{g.readTime} {$t.common.minRead}</span>
+              </div>
+              <h3 class="longform-card-title">{lg.title}</h3>
+              {#if lg.subtitle}
+                <p class="longform-card-subtitle">{lg.subtitle}</p>
+              {/if}
+              <p class="longform-card-blurb">{lg.blurb}</p>
+              <div class="longform-card-foot">
+                <div class="longform-card-tags">
+                  {#each g.tags as tag (tag)}
+                    <TagPill id={tag} />
                   {/each}
-                </ol>
-              </article>
-            {/if}
+                </div>
+                <span class="longform-card-cta">{$t.articles.readGuide}</span>
+              </div>
+            </a>
           {/each}
         </div>
       {/if}

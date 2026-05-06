@@ -1,18 +1,24 @@
 <script>
   import { goto } from '$app/navigation';
   import { base } from '$app/paths';
-  import { PROFILE, USES } from '$lib/data.js';
   import { t } from '$lib/i18n.js';
   import SectionHead from '$lib/components/SectionHead.svelte';
 
-  const usesEntries = Object.entries(USES);
+  const uses = [
+    { key: 'AI',                items: ['Claude Code', 'AI agents that review code, specs and Q.A.', 'RAG', 'MCP', 'Local LLM finetuning'] },
+    { key: 'Languages',         items: ['TypeScript', 'Go', 'Python', 'bit of Rust', "(and anything really, we are in the AI era, syntax doesn't matter anymore)"] },
+    { key: 'Frontend frameworks', items: ['Angular', 'React', 'Svelte'] },
+    { key: 'Backend',           items: ['NestJS', 'Fastify', 'Gin', 'Postgres', 'MongoDB'] },
+    { key: 'Infrastructure',    items: ['Terraform', 'Ansible', 'Kubernetes', 'Coolify', 'AWS', 'Heroku', 'OVH', 'DigitalOcean', 'Hetzner'] },
+    { key: 'CI/CD',             items: ['GitHub Actions', 'Custom hooks', 'AI agents'] },
+  ];
 </script>
 
 <div class="page about-page">
 
   <header class="page-head">
     <div class="hero-eyebrow">{$t.about.eyebrow}</div>
-    <h1 class="page-title">{PROFILE.name}</h1>
+    <h1 class="page-title">Trystan Sarrade</h1>
     <p class="page-lede">{$t.profile.tagline}</p>
   </header>
 
@@ -29,18 +35,18 @@
         />
       </div>
       <dl class="about-facts">
-        <div><dt>{$t.about.basedIn}</dt><dd>{PROFILE.location}</dd></div>
+        <div><dt>{$t.about.basedIn}</dt><dd>Bordeaux, France</dd></div>
         <div><dt>{$t.about.currently}</dt><dd>{$t.about.currentlyValue}</dd></div>
         <div>
           <dt>{$t.about.emailLabel}</dt>
-          <dd><a href="mailto:{PROFILE.email}">{PROFILE.email}</a></dd>
+          <dd><a href="mailto:trystansarrade@gmail.com">trystansarrade@gmail.com</a></dd>
         </div>
         <div>
           <dt>{$t.about.elsewhere}</dt>
           <dd>
-            <a href={PROFILE.social.github} target="_blank" rel="noopener">GitHub</a>
+            <a href="https://github.com/Trystan-SA" target="_blank" rel="noopener">GitHub</a>
             <span class="dot">·</span>
-            <a href={PROFILE.social.linkedin} target="_blank" rel="noopener">LinkedIn</a>
+            <a href="https://www.linkedin.com/in/trystan-sarrade/" target="_blank" rel="noopener">LinkedIn</a>
           </dd>
         </div>
       </dl>
@@ -69,10 +75,10 @@
   <section class="section uses-section">
     <SectionHead eyebrow={$t.about.usesEyebrow} title={$t.about.usesTitle} />
     <dl class="uses-list">
-      {#each usesEntries as [k, vs] (k)}
+      {#each uses as { key, items } (key)}
         <div>
-          <dt>{$t.about.usesCategories[k] || k}</dt>
-          <dd>{vs.join(' · ')}</dd>
+          <dt>{$t.about.usesCategories[key] || key}</dt>
+          <dd>{items.join(' · ')}</dd>
         </div>
       {/each}
     </dl>

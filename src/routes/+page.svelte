@@ -1,7 +1,7 @@
 <script>
   import { goto } from '$app/navigation';
   import { base } from '$app/paths';
-  import { PROFILE, ARTICLES, TECH, fmtDate } from '$lib/data.js';
+  import { ARTICLES, TECH, fmtDate } from '$lib/data.js';
   import { t, loc } from '$lib/i18n.js';
   import TagPill from '$lib/components/TagPill.svelte';
   import SectionHead from '$lib/components/SectionHead.svelte';
@@ -21,7 +21,7 @@
   <header class="hero hero-split">
     <div class="hero-split-left">
       <div class="hero-eyebrow">{$t.profile.role.toUpperCase()}</div>
-      <h1 class="hero-name display">{PROFILE.name}</h1>
+      <h1 class="hero-name display">Trystan Sarrade</h1>
       <p class="hero-bio">{$t.profile.bio}</p>
 
       <div class="tech-stack" aria-label="Tech stack">
