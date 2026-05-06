@@ -17,7 +17,14 @@
   <div class="about-grid">
     <div class="about-portrait">
       <div class="portrait-frame">
-        <img src="{base}/trystan.jpg" alt="Trystan Sarrade" class="portrait-img" />
+        <img
+          src="{base}/trystanx400.jpg"
+          alt="Trystan Sarrade"
+          width="400"
+          height="400"
+          decoding="async"
+          class="portrait-img"
+        />
       </div>
       <dl class="about-facts">
         <div><dt>Based in</dt><dd>{PROFILE.location}</dd></div>

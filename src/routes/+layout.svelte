@@ -23,7 +23,14 @@
     <div class="topnav-inner">
       <a class="brand" href="{base}/">
         <div class="brand-avatar" aria-label="Profile picture">
-          <img src="{base}/trystan.jpg" alt="Trystan Sarrade" />
+          <img
+            src="{base}/trystanx60.jpg"
+            alt="Trystan Sarrade"
+            width="60"
+            height="60"
+            decoding="async"
+            fetchpriority="high"
+          />
         </div>
         <div>
           <div class="brand-name">Trystan Sarrade</div>
@@ -69,7 +76,14 @@
       <div class="footer-brand">
         <div class="brand">
           <div class="brand-avatar" aria-label="Profile picture">
-            <img src="{base}/trystan.jpg" alt="Trystan Sarrade" />
+            <img
+              src="{base}/trystanx60.jpg"
+              alt="Trystan Sarrade"
+              width="60"
+              height="60"
+              decoding="async"
+              loading="lazy"
+            />
           </div>
           <div class="brand-name">Trystan Sarrade</div>
         </div>
