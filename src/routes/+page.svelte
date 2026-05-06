@@ -30,7 +30,7 @@
             <li class="tech-chip" title={t.name}>
               <img
                 class="tech-chip-icon"
-                src="https://cdn.simpleicons.org/{t.slug}/e08267"
+                src="{base}/icons/{t.slug}.svg"
                 alt=""
                 width="18"
                 height="18"

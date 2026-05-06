@@ -269,7 +269,60 @@ export const PROJECTS = [
   }
 ];
 
-// Each NOW item is HTML — rendered with {@html} to support inline links.
+// Curated learning paths. Each step references an article by slug.
+export const GUIDES = [
+  {
+    slug: 'ai-engineering',
+    title: 'AI Engineering',
+    blurb: 'From first prompts to production-ready LLM systems.',
+    steps: [
+      'llm-eval-harness',
+      'autonomous-ai-qa-workflow',
+      'hiring-engineers-ai-era'
+    ]
+  },
+  {
+    slug: 'software-team-lead',
+    title: 'Team Leadership',
+    blurb: 'The rituals, decisions and conversations that turn a group of engineers into a team.',
+    steps: [
+      'cto-team-management-playbook',
+      'product-engineer-archetype',
+      'hiring-engineers-ai-era'
+    ]
+  },
+  {
+    slug: 'devops',
+    title: 'DevOps & Infrastructure',
+    blurb: 'Running real systems, on real machines, without burning a hyperscaler-sized hole in your budget.',
+    steps: [
+      'leaving-aws-saved-70-percent',
+      'event-driven-pitfalls',
+      'llm-eval-harness'
+    ]
+  },
+  {
+    slug: 'security',
+    title: 'Security',
+    blurb: 'Practical, day-one controls that scale with you, not just SOC 2 theater.',
+    steps: [
+      'secure-by-default-saas',
+      'zero-trust-internal-tools'
+    ]
+  },
+  {
+    slug: 'architecture',
+    title: 'Software Architecture',
+    blurb: 'Decisions you can defend, structures you can refactor, and the framework I use to choose between them.',
+    steps: [
+      'monolith-microservices-decision',
+      'event-driven-pitfalls',
+      'leaving-aws-saved-70-percent'
+    ]
+  }
+];
+
+// Each NOW item is HTML, rendered with {@html} to support inline links.
 export const NOW = [
   'Working at <a href="https://somanyways.co" target="_blank" rel="noopener">Somanyways</a> as a Senior Fullstack Engineer.',
   'Released <a href="https://criterium.app" target="_blank" rel="noopener">Criterium.app</a> (follow the link to know what it is about).',

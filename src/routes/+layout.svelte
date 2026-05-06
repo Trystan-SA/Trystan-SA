@@ -30,9 +30,18 @@
         <a href="{base}/" class={isActive('/') ? 'is-active' : ''}>Home</a>
         <a
           href="{base}/articles/"
-          class={isActive('/articles') || $page.url.pathname.startsWith('/article/') ? 'is-active' : ''}
+          class={(isActive('/articles') && $page.url.hash !== '#guides') ||
+          $page.url.pathname.startsWith('/article/')
+            ? 'is-active'
+            : ''}
         >
-          Articles &amp; Guides
+          Articles
+        </a>
+        <a
+          href="{base}/articles/#guides"
+          class={isActive('/articles') && $page.url.hash === '#guides' ? 'is-active' : ''}
+        >
+          Guides
         </a>
         <a href="{base}/projects/" class={isActive('/projects') ? 'is-active' : ''}>Projects</a>
         <a href="{base}/about/" class={isActive('/about') ? 'is-active' : ''}>About</a>
@@ -71,7 +80,8 @@
         <h4>Site</h4>
         <ul>
           <li><a href="{base}/">Home</a></li>
-          <li><a href="{base}/articles/">Articles &amp; Guides</a></li>
+          <li><a href="{base}/articles/">Articles</a></li>
+          <li><a href="{base}/articles/#guides">Guides</a></li>
           <li><a href="{base}/projects/">Projects</a></li>
           <li><a href="{base}/about/">About</a></li>
         </ul>

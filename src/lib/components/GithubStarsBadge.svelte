@@ -41,8 +41,10 @@
   title="Total stars across all my GitHub repos"
 >
   <Icons name="github" />
-  <span class="gh-stars-icon"><Icons name="star" /></span>
-  <span class="gh-stars-num">
-    {error ? '—' : stars === null ? '…' : stars.toLocaleString()}
+  <span class="gh-meta">
+    <span class="gh-stars-icon"><Icons name="star" /></span>
+    <span class="gh-stars-num">
+      {error ? '—' : stars === null ? '…' : stars.toLocaleString()}
+    </span>
   </span>
 </a>

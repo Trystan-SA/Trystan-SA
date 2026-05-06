@@ -17,7 +17,7 @@
     />
   </svg>
 {:else if name === 'star'}
-  <svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true">
+  <svg viewBox="0 0 16 16" width="10" height="10" aria-hidden="true">
     <path
       fill="currentColor"
       d="M8 .25l2.36 4.78 5.27.77-3.81 3.71.9 5.24L8 12.27l-4.72 2.48.9-5.24L.37 5.8l5.27-.77L8 .25z"

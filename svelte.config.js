@@ -9,7 +9,11 @@ const config = {
       assets: 'build',
       precompress: false,
       strict: true
-    })
+    }),
+    prerender: {
+      // #guides is a tab-state hash, not an in-page anchor
+      handleMissingId: 'ignore'
+    }
   }
 };
 

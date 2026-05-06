@@ -130,14 +130,22 @@ button { font-family: inherit; }
   background: transparent; color: var(--fg-dim);
   border: 1px solid transparent;
   font-size: 12px; font-weight: 500; font-variant-numeric: tabular-nums;
+  line-height: 1;
   text-decoration: none;
   transition: background .15s, color .15s, border-color .15s;
 }
 .gh-stars-badge:hover { background: var(--bg-alt); color: var(--fg); }
-.gh-stars-badge svg { color: currentColor; }
-.gh-stars-badge .gh-stars-icon { color: var(--fg-dim); opacity: 0.7; width: 11px; height: 11px; }
-.gh-stars-badge:hover .gh-stars-icon { color: var(--accent); opacity: 1; }
-.gh-stars-num { letter-spacing: 0.01em; opacity: 0.85; }
+.gh-stars-badge svg { display: block; color: currentColor; }
+.gh-meta {
+  display: inline-flex; align-items: center; gap: 3px;
+  color: var(--fg-soft); opacity: 0.55;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  transition: opacity .15s;
+}
+.gh-stars-badge:hover .gh-meta { opacity: 0.9; }
+.gh-stars-badge .gh-stars-icon { display: inline-flex; align-items: center; }
+.gh-stars-num { letter-spacing: 0.01em; line-height: 1; }
 
 /* ── Page-level ──────────────────────────────────────────────────────────── */
 .page { padding: 60px 0 var(--d-section); }
@@ -769,3 +777,109 @@ button { font-family: inherit; }
 /* Now card hidden — markup kept; remove these two rules to re-enable */
 .hero-split { grid-template-columns: 1fr; }
 .hero-split-right { display: none; }
+
+/* ── Articles & Guides: sidebar layout ──────────────────────────────────── */
+.content-with-sidebar {
+  display: grid; grid-template-columns: 220px 1fr; gap: 56px;
+  align-items: start;
+}
+.content-sidebar { position: sticky; top: 92px; }
+.sidebar-link {
+  appearance: none; border: 0; background: transparent; cursor: pointer;
+  font-family: inherit; color: var(--fg-dim);
+  display: flex; flex-direction: column; gap: 4px;
+  width: 100%; padding: 8px 14px; text-align: left;
+  border-left: 2px solid transparent; margin: 0 0 12px -16px;
+  transition: color .15s, border-color .15s;
+}
+.sidebar-link:hover { color: var(--fg); }
+.sidebar-link:hover .sidebar-hint { color: var(--fg-dim); }
+.sidebar-link.is-active { color: var(--accent); border-left-color: var(--accent); }
+.sidebar-link-row {
+  font-family: var(--serif); font-weight: 500; font-size: 22px;
+  letter-spacing: -0.015em;
+  display: flex; align-items: baseline; justify-content: space-between; gap: 10px;
+}
+.sidebar-count {
+  font-family: var(--mono); font-size: 11px; font-weight: 500;
+  color: var(--fg-soft); letter-spacing: 0.05em;
+}
+.sidebar-link.is-active .sidebar-count { color: var(--accent); }
+.sidebar-hint {
+  font-size: 12.5px; color: var(--fg-soft);
+  line-height: 1.45; margin: 0;
+}
+.sidebar-chips {
+  list-style: none; padding: 0; margin: 0 0 24px;
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px;
+}
+.sidebar-chips li { display: contents; }
+.sidebar-chip {
+  appearance: none; cursor: pointer; width: 100%;
+  aspect-ratio: 1 / 1;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 4px;
+  border: 1px solid var(--line); background: transparent;
+  color: var(--fg-dim); font-family: inherit;
+  font-size: 9.5px; font-weight: 500; line-height: 1.15;
+  padding: 6px 4px; border-radius: var(--r-1);
+  text-align: center; text-wrap: balance;
+  transition: background .15s, border-color .15s, color .15s;
+}
+.sidebar-chip-label { display: block; }
+.sidebar-chip:hover { color: var(--fg); border-color: var(--line-strong); background: var(--accent-wash); }
+.sidebar-chip.is-active {
+  background: var(--accent-soft); border-color: var(--accent); color: var(--accent);
+}
+
+/* ── Guides ─────────────────────────────────────────────────────────────── */
+.guides-list { display: flex; flex-direction: column; gap: 28px; }
+.guide-card {
+  border: 1px solid var(--line); border-left: 3px solid var(--accent);
+  border-radius: var(--r-3);
+  padding: 24px 28px;
+  background: color-mix(in srgb, var(--bg-alt) 60%, transparent);
+}
+.guide-card-head {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 16px;
+  margin-bottom: 8px;
+}
+.guide-card-title {
+  font-family: var(--serif); font-weight: 500; font-size: 26px;
+  letter-spacing: -0.015em; color: var(--fg); margin: 0;
+}
+.guide-card-count {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--accent); font-weight: 600;
+}
+.guide-card-blurb {
+  margin: 0 0 18px; color: var(--fg-dim); font-size: 15px; line-height: 1.55;
+  max-width: 60ch;
+}
+.guide-steps { list-style: none; padding: 0; margin: 0; }
+.guide-step {
+  display: grid; grid-template-columns: auto 1fr auto; gap: 16px; align-items: center;
+  padding: 12px 12px; border-top: 1px solid var(--line);
+  color: var(--fg); cursor: pointer;
+  transition: background .15s, color .15s;
+}
+.guide-step:hover { background: var(--accent-wash); color: var(--accent); }
+.guide-step-num {
+  font-family: var(--mono); font-size: 12px; font-weight: 600;
+  color: var(--accent); letter-spacing: 0.06em;
+}
+.guide-step-body { display: flex; flex-direction: column; gap: 2px; }
+.guide-step-title {
+  font-family: var(--serif); font-weight: 500; font-size: 16px;
+  letter-spacing: -0.01em; line-height: 1.3;
+}
+.guide-step-meta { font-size: 12px; color: var(--fg-soft); display: flex; gap: 6px; }
+.guide-step-arrow { color: var(--accent); font-size: 16px; transition: transform .15s; }
+.guide-step:hover .guide-step-arrow { transform: translateX(3px); }
+
+@media (max-width: 920px) {
+  .content-with-sidebar { grid-template-columns: 1fr; gap: 24px; }
+  .content-sidebar { position: static; display: flex; flex-wrap: wrap; gap: 6px; }
+  .sidebar-link { width: auto; padding: 6px 14px; margin-left: 0; }
+  .sidebar-hint { display: none; }
+}
