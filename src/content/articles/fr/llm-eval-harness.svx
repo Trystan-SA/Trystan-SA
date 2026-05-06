@@ -1,0 +1,14 @@
+---
+title: "Construire un harness d'évaluation pour les fonctionnalités LLM en production"
+excerpt: "Les tests unitaires ne fonctionnent pas. Les tests snapshots ne fonctionnent pas. Voici ce qui marche : un pipeline d'évaluation continue qui détecte les régressions avant les utilisateurs."
+---
+
+Le problème d'ingénierie le plus difficile dans la livraison de fonctionnalités LLM n'est pas le prompting. C'est de savoir si votre dernier changement a amélioré ou empiré les choses.
+
+## Pourquoi les tests traditionnels échouent
+
+Un test unitaire affirme l'égalité. Une sortie LLM est rarement égale à quoi que ce soit. Un test snapshot détecte la dérive, mais chaque changement de prompt invalide chaque snapshot, alors vous arrêtez de les lancer.
+
+## Ce que nous utilisons à la place
+
+Un pipeline d'évaluation continue avec trois couches : des gardes déterministes (latence, nombre de tokens, validité du schéma), des rubriques notées (jugées par un modèle plus puissant), et des contrôles humains sur un échantillon stratifié.

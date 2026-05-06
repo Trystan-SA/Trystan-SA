@@ -1,23 +1,30 @@
 <script>
   import { goto } from '$app/navigation';
   import { base } from '$app/paths';
-  import { onMount, onDestroy } from 'svelte';
+  import { onMount, onDestroy, tick } from 'svelte';
   import { PROFILE, ARTICLES, fmtDate } from '$lib/data.js';
-  import { BODIES } from '$lib/article-bodies.js';
+  import { t, loc, lang } from '$lib/i18n.js';
   import TagPill from '$lib/components/TagPill.svelte';
   import SectionHead from '$lib/components/SectionHead.svelte';
   import ArticleList from '$lib/components/ArticleList.svelte';
   import Icons from '$lib/components/icons.svelte';
   import Bookmark from '$lib/components/Bookmark.svelte';
   import Heart from '$lib/components/Heart.svelte';
-  import CodeBlock from '$lib/components/CodeBlock.svelte';
+
+  const enModules = import.meta.glob('/src/content/articles/en/*.svx', { eager: true });
+  const frModules = import.meta.glob('/src/content/articles/fr/*.svx', { eager: true });
 
   let { data } = $props();
   const article = $derived(data.article);
-  const blocks = $derived(BODIES[article.body] || []);
+  const la = $derived($loc(article));
+
+  const ContentEn = $derived(enModules[`/src/content/articles/en/${article.slug}.svx`]?.default);
+  const ContentFr = $derived(frModules[`/src/content/articles/fr/${article.slug}.svx`]?.default);
+  const Content = $derived($lang === 'fr' && ContentFr ? ContentFr : ContentEn);
 
   let progress = $state(0);
   let tocActive = $state(null);
+  let toc = $state([]);
   let likeOn = $state(false);
   let bookmark = $state(false);
   let draft = $state('');
@@ -38,24 +45,24 @@
 
   let articleEl = $state(null);
 
-  function blockId(b, i) {
-    return `h-${i}-${b.text.toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 40)}`;
-  }
-
-  const toc = $derived(
-    blocks
-      .map((b, i) => ({ b, i }))
-      .filter(({ b }) => b.type === 'h2' || b.type === 'h3')
-      .map(({ b, i }) => ({
-        id: blockId(b, i),
-        text: b.text,
-        level: b.type === 'h2' ? 2 : 3
-      }))
-  );
-
   const related = $derived(
-    ARTICLES.filter((a) => a.slug !== article.slug && a.tags.some((t) => article.tags.includes(t))).slice(0, 3)
+    ARTICLES.filter((a) => a.slug !== article.slug && a.tags.some((tag) => article.tags.includes(tag))).slice(0, 3)
   );
+
+  // Rebuild TOC from DOM whenever content or language changes
+  $effect(() => {
+    const el = articleEl;
+    void Content; // track dependency
+    if (!el || typeof window === 'undefined') return;
+    tick().then(() => {
+      const headings = el.querySelectorAll('h2[id], h3[id]');
+      toc = Array.from(headings).map((h) => ({
+        id: h.id,
+        text: h.textContent?.trim() ?? '',
+        level: parseInt(h.tagName[1])
+      }));
+    });
+  });
 
   function onScroll() {
     const el = articleEl;
@@ -92,25 +99,25 @@
 
 <div class="reading-progress" style="transform: scaleX({progress})"></div>
 <div class="page article-page">
-  <button class="back-link" onclick={() => goto(`${base}/articles/`)}>← All articles</button>
+  <button class="back-link" onclick={() => goto(`${base}/articles/`)}>{$t.article.backLink}</button>
 
   <header class="article-head">
     <div class="article-tags">
-      {#each article.tags as t (t)}
-        <TagPill id={t} />
+      {#each article.tags as tag (tag)}
+        <TagPill id={tag} />
       {/each}
     </div>
-    <h1 class="article-title">{article.title}</h1>
-    <p class="article-excerpt">{article.excerpt}</p>
+    <h1 class="article-title">{la.title}</h1>
+    <p class="article-excerpt">{la.excerpt}</p>
     <div class="article-meta">
       <div class="byline">
         <div class="avatar">TS</div>
         <div>
           <div class="byline-name">{PROFILE.name}</div>
           <div class="byline-sub">
-            <time>{fmtDate(article.date)}</time>
+            <time>{fmtDate(article.date, $t.dateLocale)}</time>
             <span class="dot">·</span>
-            <span>{article.readTime} min read</span>
+            <span>{article.readTime} {$t.article.minRead}</span>
           </div>
         </div>
       </div>
@@ -131,32 +138,18 @@
 
   <div class="article-layout">
     <aside class="toc">
-      <div class="toc-label">On this page</div>
+      <div class="toc-label">{$t.article.onThisPage}</div>
       <ul>
-        {#each toc as t (t.id)}
-          <li class="toc-{t.level} {tocActive === t.id ? 'is-active' : ''}">
-            <a href={`#${t.id}`}>{t.text}</a>
+        {#each toc as tocItem (tocItem.id)}
+          <li class="toc-{tocItem.level} {tocActive === tocItem.id ? 'is-active' : ''}">
+            <a href={`#${tocItem.id}`}>{tocItem.text}</a>
           </li>
         {/each}
       </ul>
     </aside>
 
     <article class="article-body" bind:this={articleEl}>
-      {#each blocks as b, i (i)}
-        {#if b.type === 'p'}
-          <p>{b.text}</p>
-        {:else if b.type === 'h2'}
-          <h2 id={blockId(b, i)}>{b.text}</h2>
-        {:else if b.type === 'h3'}
-          <h3 id={blockId(b, i)}>{b.text}</h3>
-        {:else if b.type === 'ul'}
-          <ul>
-            {#each b.items as it (it)}<li>{it}</li>{/each}
-          </ul>
-        {:else if b.type === 'code'}
-          <CodeBlock lang={b.lang} text={b.text} />
-        {/if}
-      {/each}
+      <svelte:component this={Content} />
 
       <div class="article-end-actions">
         <button
@@ -165,23 +158,23 @@
         >
           <Heart filled={likeOn} />
           <span>{1247 + (likeOn ? 1 : 0)}</span>
-          <span class="reaction-label">{likeOn ? 'Liked' : 'Like'}</span>
+          <span class="reaction-label">{likeOn ? $t.article.liked : $t.article.like}</span>
         </button>
         <button
           class="reaction-btn {bookmark ? 'is-on' : ''}"
           onclick={() => (bookmark = !bookmark)}
         >
           <Bookmark filled={bookmark} />
-          <span class="reaction-label">{bookmark ? 'Saved' : 'Save'}</span>
+          <span class="reaction-label">{bookmark ? $t.article.saved : $t.article.save}</span>
         </button>
       </div>
 
       <section class="comments">
-        <h3>Comments ({comments.length})</h3>
+        <h3>{$t.article.commentsTitle(comments.length)}</h3>
         <form class="comment-form" onsubmit={submitComment}>
           <div class="avatar small">Y</div>
-          <textarea placeholder="Add a comment…" bind:value={draft}></textarea>
-          <button type="submit" class="btn btn-primary" disabled={!draft.trim()}>Post</button>
+          <textarea placeholder={$t.article.commentPlaceholder} bind:value={draft}></textarea>
+          <button type="submit" class="btn btn-primary" disabled={!draft.trim()}>{$t.article.commentPost}</button>
         </form>
         <ul class="comment-list">
           {#each comments as c, i (i)}
@@ -201,7 +194,7 @@
 
       {#if related.length > 0}
         <section class="related">
-          <SectionHead eyebrow="Related" title="If you liked this" />
+          <SectionHead eyebrow={$t.article.relatedEyebrow} title={$t.article.relatedTitle} />
           <ArticleList articles={related} variant="stacked" />
         </section>
       {/if}

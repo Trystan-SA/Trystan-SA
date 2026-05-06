@@ -3,6 +3,7 @@
   import { base } from '$app/paths';
   import { onMount } from 'svelte';
   import { ARTICLES, TAGS, GUIDES, fmtDate } from '$lib/data.js';
+  import { t, loc } from '$lib/i18n.js';
   import TagPill from '$lib/components/TagPill.svelte';
   import ArticleList from '$lib/components/ArticleList.svelte';
   import Icons from '$lib/components/icons.svelte';
@@ -57,13 +58,13 @@
 
   // Resolve a path step to either an article or a longform guide so paths can
   // mix both. Returns { kind, slug, title, date, readTime, href } or null.
-  function resolveStep(slug) {
+  function resolveStep(slug, locFn) {
     const a = ARTICLES.find((x) => x.slug === slug);
     if (a) {
       return {
         kind: 'article',
         slug: a.slug,
-        title: a.title,
+        title: locFn(a).title,
         date: a.date,
         readTime: a.readTime,
         href: `${base}/article/${a.slug}/`
@@ -74,7 +75,7 @@
       return {
         kind: 'longform',
         slug: g.slug,
-        title: g.title,
+        title: locFn(g).title,
         date: g.date,
         readTime: g.readTime,
         href: `${base}/guide/${g.slug}/`
@@ -85,12 +86,35 @@
 </script>
 
 <div class="page articles-page">
+  <svg class="deco deco-pen" viewBox="0 0 200 260" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <!-- Pen body -->
+    <rect x="72" y="44" width="56" height="162" rx="28" fill="currentColor" fill-opacity="0.82"/>
+    <!-- Pen shadow side -->
+    <path d="M116 46 Q128 50 128 72 L128 178 Q128 202 116 206 L120 206 Q134 202 134 178 L134 72 Q134 48 120 46 Z" fill="currentColor" fill-opacity="0.36"/>
+    <!-- Cap (top section) -->
+    <rect x="74" y="42" width="52" height="58" rx="26" fill="currentColor" fill-opacity="0.97"/>
+    <!-- Cap/body separator -->
+    <rect x="70" y="92" width="60" height="8" rx="2" fill="currentColor" fill-opacity="0.55"/>
+    <!-- Cap clip -->
+    <path d="M118 48 L122 92" stroke="currentColor" stroke-width="6" stroke-opacity="0.45" stroke-linecap="round" fill="none"/>
+    <ellipse cx="120" cy="48" rx="5" ry="5" fill="currentColor" fill-opacity="0.6"/>
+    <!-- Nib section -->
+    <path d="M86 200 L100 232 L114 200" fill="currentColor" fill-opacity="0.92"/>
+    <!-- Nib slit -->
+    <line x1="100" y1="208" x2="100" y2="232" stroke="currentColor" stroke-width="2.5" stroke-opacity="0.28"/>
+    <!-- Nib sides -->
+    <path d="M86 200 L100 208 L114 200" fill="currentColor" fill-opacity="0.48"/>
+    <!-- Body highlight -->
+    <path d="M86 58 Q82 108 84 195" stroke="white" stroke-width="9" stroke-opacity="0.13" fill="none" stroke-linecap="round"/>
+    <!-- Band ring -->
+    <rect x="72" y="138" width="56" height="10" rx="2" fill="currentColor" fill-opacity="0.5"/>
+  </svg>
+
   <header class="page-head">
-    <div class="hero-eyebrow">The writing</div>
-    <h1 class="page-title">Articles &amp; Guides</h1>
+    <div class="hero-eyebrow">{$t.articles.eyebrow}</div>
+    <h1 class="page-title">{$t.articles.title}</h1>
     <p class="page-lede">
-      Learn here how to ship software that lasts, lead engineering teams that work, and run real
-      infrastructure without bleeding cash. {ARTICLES.length} articles, {topLevelGuides.length} guides.
+      {$t.articles.lede(ARTICLES.length, topLevelGuides.length)}
     </p>
   </header>
 
@@ -101,10 +125,10 @@
         onclick={() => selectSection('articles')}
       >
         <span class="sidebar-link-row">
-          <span>Articles</span>
+          <span>{$t.articles.sectionArticles}</span>
           <span class="sidebar-count">{ARTICLES.length}</span>
         </span>
-        <span class="sidebar-hint">Released over time. Latest first.</span>
+        <span class="sidebar-hint">{$t.articles.articlesHint}</span>
       </button>
 
       <button
@@ -115,10 +139,10 @@
         }}
       >
         <span class="sidebar-link-row">
-          <span>Guides</span>
+          <span>{$t.articles.sectionGuides}</span>
           <span class="sidebar-count">{topLevelGuides.length}</span>
         </span>
-        <span class="sidebar-hint">Long-form deep-dives and curated reading paths.</span>
+        <span class="sidebar-hint">{$t.articles.guidesHint}</span>
       </button>
 
       {#if section === 'guides'}
@@ -126,22 +150,23 @@
           <li>
             <button
               class="sidebar-chip {!activeGuide ? 'is-active' : ''}"
-              title="All guides"
+              title={$t.articles.allGuides}
               onclick={() => (activeGuide = null)}
             >
               <GuideIcon slug="all" />
-              <span class="sidebar-chip-label">All</span>
+              <span class="sidebar-chip-label">{$t.articles.allGuides}</span>
             </button>
           </li>
           {#each topLevelGuides as g (g.slug)}
+            {@const lg = $loc(g)}
             <li>
               <button
                 class="sidebar-chip {activeGuide === g.slug ? 'is-active' : ''}"
-                title={g.title}
+                title={lg.title}
                 onclick={() => (activeGuide = activeGuide === g.slug ? null : g.slug)}
               >
                 <GuideIcon slug={g.slug} />
-                <span class="sidebar-chip-label">{g.title}</span>
+                <span class="sidebar-chip-label">{lg.title}</span>
               </button>
             </li>
           {/each}
@@ -154,7 +179,7 @@
         <div class="filters">
           <div class="search-row">
             <Icons name="search" />
-            <input type="search" placeholder="Search titles, topics, ideas…" bind:value={query} />
+            <input type="search" placeholder={$t.articles.searchPlaceholder} bind:value={query} />
             {#if query}
               <button class="search-clear" onclick={() => (query = '')}>✕</button>
             {/if}
@@ -164,15 +189,15 @@
               class="tag-pill all {!activeTag ? 'is-active' : ''}"
               onclick={() => (activeTag = null)}
             >
-              All ({ARTICLES.length})
+              {$t.articles.allFilter(ARTICLES.length)}
             </button>
-            {#each TAGS as t (t.id)}
-              {@const count = ARTICLES.filter((a) => a.tags.includes(t.id)).length}
+            {#each TAGS as tag (tag.id)}
+              {@const count = ARTICLES.filter((a) => a.tags.includes(tag.id)).length}
               {#if count > 0}
                 <TagPill
-                  id={t.id}
-                  active={activeTag === t.id}
-                  onclick={() => (activeTag = activeTag === t.id ? null : t.id)}
+                  id={tag.id}
+                  active={activeTag === tag.id}
+                  onclick={() => (activeTag = activeTag === tag.id ? null : tag.id)}
                 />
               {/if}
             {/each}
@@ -181,8 +206,8 @@
 
         {#if filtered.length === 0}
           <div class="empty-state">
-            <p>Nothing matches that filter.</p>
-            <button class="btn btn-ghost" onclick={clearFilters}>Clear filters</button>
+            <p>{$t.articles.noResults}</p>
+            <button class="btn btn-ghost" onclick={clearFilters}>{$t.articles.clearFilters}</button>
           </div>
         {:else}
           <ArticleList articles={filtered} variant="stacked" />
@@ -190,6 +215,7 @@
       {:else}
         <div class="guides-list">
           {#each visibleGuides as g (g.slug)}
+            {@const lg = $loc(g)}
             {#if g.kind === 'longform'}
               <a
                 class="longform-card"
@@ -200,36 +226,36 @@
                 }}
               >
                 <div class="longform-card-eyebrow">
-                  <span>Guide</span>
+                  <span>{$t.guide.guideLabel}</span>
                   <span class="dot">·</span>
-                  <span>{g.chapterCount} chapters</span>
+                  <span>{g.chapterCount} {$t.common.chapters}</span>
                   <span class="dot">·</span>
-                  <span>{g.readTime} min</span>
+                  <span>{g.readTime} {$t.common.minRead}</span>
                 </div>
-                <h3 class="longform-card-title">{g.title}</h3>
-                {#if g.subtitle}
-                  <p class="longform-card-subtitle">{g.subtitle}</p>
+                <h3 class="longform-card-title">{lg.title}</h3>
+                {#if lg.subtitle}
+                  <p class="longform-card-subtitle">{lg.subtitle}</p>
                 {/if}
-                <p class="longform-card-blurb">{g.blurb}</p>
+                <p class="longform-card-blurb">{lg.blurb}</p>
                 <div class="longform-card-foot">
                   <div class="longform-card-tags">
-                    {#each g.tags as t (t)}
-                      <TagPill id={t} />
+                    {#each g.tags as tag (tag)}
+                      <TagPill id={tag} />
                     {/each}
                   </div>
-                  <span class="longform-card-cta">Read the guide →</span>
+                  <span class="longform-card-cta">{$t.articles.readGuide}</span>
                 </div>
               </a>
             {:else}
               <article class="guide-card">
                 <header class="guide-card-head">
-                  <h3 class="guide-card-title">{g.title}</h3>
-                  <span class="guide-card-count">{g.steps.length} steps</span>
+                  <h3 class="guide-card-title">{lg.title}</h3>
+                  <span class="guide-card-count">{$t.articles.steps(g.steps.length)}</span>
                 </header>
-                <p class="guide-card-blurb">{g.blurb}</p>
+                <p class="guide-card-blurb">{lg.blurb}</p>
                 <ol class="guide-steps">
                   {#each g.steps as slug, i (slug)}
-                    {@const s = resolveStep(slug)}
+                    {@const s = resolveStep(slug, $loc)}
                     {#if s}
                       <li>
                         <a
@@ -246,9 +272,9 @@
                               {s.title}
                             </span>
                             <span class="guide-step-meta">
-                              <time>{fmtDate(s.date)}</time>
+                              <time>{fmtDate(s.date, $t.dateLocale)}</time>
                               <span class="dot">·</span>
-                              <span>{s.readTime} min</span>
+                              <span>{s.readTime} {$t.common.minRead}</span>
                             </span>
                           </span>
                           <span class="guide-step-arrow">→</span>

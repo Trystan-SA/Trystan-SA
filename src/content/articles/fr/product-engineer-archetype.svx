@@ -1,0 +1,12 @@
+---
+title: "L'ingénieur produit est le nouveau full-stack"
+excerpt: "Sur le profil de l'ingénieur qui livre le plus de valeur par trimestre, et pourquoi les grilles d'évaluation traditionnelles ne parviennent pas à le reconnaître."
+---
+
+Sur le profil de l'ingénieur qui livre le plus de valeur par trimestre, et pourquoi les grilles d'évaluation traditionnelles ne parviennent pas à le reconnaître.
+
+## Symptômes de l'archétype
+
+- Il ouvre l'outil de design sans qu'on le lui demande.
+- Il a des enregistrements d'appels clients sur son second écran.
+- Ses PRs citent la métrique qu'il cherche à faire bouger.

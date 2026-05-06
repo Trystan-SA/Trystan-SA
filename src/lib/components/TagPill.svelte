@@ -1,16 +1,18 @@
 <script>
   import { tagById } from '$lib/data.js';
+  import { lang } from '$lib/i18n.js';
 
   let { id, onclick = undefined, active = false } = $props();
-  const t = $derived(tagById(id));
+  const tag = $derived(tagById(id));
+  const label = $derived($lang === 'fr' ? (tag.labelFr || tag.label) : tag.label);
 </script>
 
 <button
   type="button"
   class="tag-pill {active ? 'is-active' : ''}"
   onclick={onclick}
-  style="--tag-color: {t.color}"
+  style="--tag-color: {tag.color}"
 >
   <i class="tag-dot"></i>
-  {t.label}
+  {label}
 </button>

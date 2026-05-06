@@ -1,0 +1,293 @@
+---
+title: "Écrire des prompts efficaces"
+subtitle: "Un guide pratique de la mécanique des LLMs, de la prédiction de tokens au cache, en passant par les quatre leviers que j'ajuste en production."
+blurb: "Comment les LLMs lisent vraiment votre prompt, pourquoi les fenêtres de contexte sont des budgets et non des buffers, pourquoi le cache est le levier que la plupart des équipes ignorent, et les quatre leviers que j'active dans l'ordre avant de toucher au modèle. La base que j'aurais voulu avoir avant de livrer ma première fonctionnalité LLM."
+---
+
+<script>
+import CodeBlock from '$lib/components/CodeBlock.svelte';
+import Callout from '$lib/components/Callout.svelte';
+
+  const _code0 = `// Mêmes données. Environ 2x les tokens.
+const asJson = JSON.stringify({
+  customer_id: 42, customer_name: 'Acme', plan_type: 'pro'
+});
+
+// Forme compacte, quand le schéma est connu et stable.
+const asCsv = '42,Acme,pro';`;
+  const _code1 = `await client.messages.create({
+  model: 'claude-opus-4-7',
+  system: [
+    { type: 'text', text: SYSTEM_POLICY },
+    { type: 'text', text: STYLE_GUIDE,
+      cache_control: { type: 'ephemeral' } }     // point 1 : stable
+  ],
+  tools: TOOLS,                                    // section cacheable implicite
+  messages: [
+    { role: 'user', content: [
+      { type: 'text', text: BIG_REFERENCE_DOC,
+        cache_control: { type: 'ephemeral' } },    // point 2 : par tenant
+      { type: 'text', text: CURRENT_QUESTION }     // volatile, jamais mis en cache
+    ] }
+  ]
+});`;
+  const _code2 = `<role>
+  Vous êtes un ingénieur backend senior qui revoit des migrations.
+</role>
+
+<context>
+  {diff de schéma et SQL de migration ici}
+</context>
+
+<task>
+  Listez les risques. Pour chacun : sévérité (low|med|high), pourquoi, et une alternative plus sûre.
+</task>
+
+<output_format>
+  Tableau JSON de { severity, risk, alternative }. Pas de prose.
+</output_format>`;
+  const _code3 = `// Le routeur bon marché décide de l'intention et extrait les entités.
+const routed = await haiku({
+  system: ROUTER_POLICY,
+  user: userMessage,
+  output_schema: RoutedRequest
+});
+
+// Le modèle puissant répond à la vraie question, avec seulement la tranche extraite en contexte.
+const answer = await opus({
+  system: ANSWER_POLICY,
+  user: render(routed)
+});`;
+  const _code4 = `<!-- SYSTEM PROMPT (cacheable, stable) -->
+<role>
+  {qui est l'assistant, en une phrase}
+</role>
+
+<policy>
+  - {règle non négociable 1}
+  - {règle non négociable 2}
+  - Refuser si {condition de refus explicite}.
+</policy>
+
+<output_format>
+  {schéma exact ou exemple. Pas une description.}
+</output_format>
+
+<examples>
+  <example>
+    <input>...</input>
+    <output>...</output>
+  </example>
+  {2–3 exemples couvrant les cas limites}
+</examples>
+
+<!-- USER PROMPT (volatile, jamais mis en cache) -->
+<context>
+  {uniquement ce qui est réellement nécessaire pour CETTE requête}
+</context>
+
+<task>
+  {une phrase, impératif, spécifique}
+</task>`;
+</script>
+
+<div class="guide-intro">
+
+Un prompt n'est pas un vœu. C'est un programme — une fonction plus ou moins déterministe de (system prompt, conversation, outils, message actuel) vers un flux de tokens. Chaque octet que vous envoyez façonne à la fois la sortie et la facture, et le modèle est bien plus sensible à la façon dont le prompt est agencé que la plupart des ingénieurs ne l'imaginent.
+
+Ce qui suit est le modèle mental que j'ai reconstruit après un an à livrer des fonctionnalités LLM en production. C'est la base que j'aurais voulu avoir avant que mon premier prompt n'atteigne un client payant. Nous verrons comment le modèle lit vraiment ce que vous lui envoyez, pourquoi les fenêtres de contexte se comportent davantage comme des budgets que comme des buffers, pourquoi le cache de prompt est le levier au meilleur ROI que la plupart des équipes ignorent, et les quatre leviers que j'ajuste — dans l'ordre — avant d'envisager de changer de modèle.
+
+<Callout kind="note">
+Ce guide est agnostique au modèle mais s'appuie sur des exemples concrets des APIs Anthropic, OpenAI et Google. Lorsque le prix ou le comportement diffère selon le fournisseur, je le précise.
+</Callout>
+
+</div>
+
+## Comment un LLM lit vraiment
+
+Un LLM ne lit pas votre prompt. Il voit une séquence plate de tokens et prédit le suivant, puis le suivant, puis le suivant. C'est l'intégralité de l'algorithme. Il n'y a pas de passe de compréhension, pas de réflexion intérieure, pas d'étape de compréhension — à moins que vous ne demandiez explicitement au modèle d'en générer une, auquel cas vous payez simplement plus de tokens pour scaffolder son propre raisonnement.
+
+Trois conséquences en découlent, et presque toutes les règles de prompt engineering que vous avez entendues sont un corollaire de l'une d'elles.
+
+### 1. L'ordre compte
+
+L'attention du Transformer s'applique à chaque token en parallèle, mais l'entraînement, les encodages positionnels et les biais de décodage conspirent tous à pondérer plus fortement les tokens récents et aux limites que ceux enfouis au milieu. C'est l'effet « lost-in-the-middle » bien documenté : enterrez une instruction au milieu d'un document de 50 pages et le modèle lui accordera moins de poids qu'une instruction d'une ligne en bas du prompt. Mettez la question en dernier.
+
+### 2. La répétition est un signal
+
+Les modèles font des arbitrages entre de nombreuses contraintes à la fois. Si une contrainte est non négociable, répétez-la près de la sortie. « Répondre en JSON » mentionné à la fois au début et à la fin du prompt surpasse une seule mention par une marge mesurable sur tous les modèles que j'ai testés. Ça paraît redondant pour un humain ; pour un prédicteur de prochain token, c'est une distribution conditionnelle plus forte.
+
+### 3. La spécificité est de la compression
+
+Les prompts vagues obligent le modèle à interpoler depuis les données d'entraînement, ce qui signifie une régression vers la réponse moyenne du web. Un prompt spécifique réduit l'espace de recherche. « Écris une fonction » est une demande du snippet Stack Overflow médian. « Écris une fonction TypeScript qui prend une connexion Postgres et renvoie les 10 meilleurs clients par valeur vie, en utilisant des prepared statements » est une demande pour une fonction spécifique.
+
+<Callout kind="tip">
+Un test utile : si un prompt pourrait plausiblement venir de cinq métiers différents, il produira cinq réponses différentes à chaque exécution. Ajoutez les contraintes qui le font venir d'exactement un.
+</Callout>
+
+### Les tokens ne sont pas des caractères
+
+Un token représente environ quatre caractères d'anglais, mais le code, le JSON et les textes non anglophones se tokenisent moins bien. Les clés JSON se répètent dans chaque enregistrement ; les balises XML se répètent. Une réponse JSON de 200 lignes peut facilement doubler en nombre de tokens par rapport au CSV équivalent. Les espaces, l'indentation, les commentaires — tout est facturé. Cela se cumule à l'échelle : une réduction de taille de 10 % sur le prompt le plus appelé dans votre système peut être le gain infra le moins cher du trimestre.
+
+<CodeBlock lang="typescript" text={_code0} />
+
+## La fenêtre de contexte est un budget, pas un buffer
+
+Chaque modèle annonce un contexte maximum : 200k tokens pour Claude Sonnet/Opus, 1M pour certaines variantes Gemini, 128k–200k pour la gamme GPT, souvent plus pour les expériences long-contexte. Traitez le chiffre affiché comme un plafond, pas comme une cible. Trois propriétés des longs contextes comptent bien plus que le nombre lui-même.
+
+### 1. L'attention est approximativement quadratique
+
+L'auto-attention évolue en O(n²) avec la longueur de l'entrée. Doubler le prompt ne double pas le calcul — il le quadruple à peu près. Les modèles de production utilisent des approximations parcimonieuses, à fenêtre glissante ou de bas rang pour garder cela gérable, mais vous le ressentez quand même : la latence monte, le débit baisse, et le rappel par token diminue à mesure que le contexte grandit. Un prompt de 100k tokens n'est pas 50× plus cher qu'un prompt de 2k ; c'est pire, et plus lent par token de sortie.
+
+### 2. La sortie est le goulot d'étranglement de latence
+
+Les tokens d'entrée sont traités en parallèle pendant la phase de prefill. Les tokens de sortie sont émis un à un pendant la phase de décodage. Une requête avec 5k d'entrée et 2k de sortie passe la majeure partie de son temps à générer ces 2k tokens, pas à lire les 5k. Si vous optimisez pour la latence, demandez moins de sortie avant de réduire l'entrée. Resserrez le schéma de réponse, demandez un résumé plutôt que le texte complet, supprimez les champs que personne ne lit.
+
+### 3. Le rappel n'est pas uniforme dans le contexte
+
+L'effet lost-in-the-middle est réel et reproductible. Placez les informations les plus importantes au début ou à la fin du contexte, jamais au milieu géographique. Si vous avez un document de référence de 30 pages et une question sur la page 14, ne collez pas tout le document en espérant. Récupérez la page 14, placez-la à côté de la question, et ignorez le reste.
+
+<Callout kind="warn">
+Bourrer l'intégralité de la base de code dans le contexte est la forme la plus courante de payer plus pour une sortie moins bonne. RAG, file-search ou tool use agentique battent le bourrage de document complet sur chaque dimension qui compte, sauf le temps d'installation.
+</Callout>
+
+### Une économie pratique de tokens
+
+Trois habitudes maintiennent le budget honnête :
+
+- Choisissez le format qui coûte le moins de tokens pour le travail. CSV bat JSON pour les données tabulaires que le modèle ne modifiera pas ; Markdown bat HTML ; la prose concise bat les deux pour le narratif.
+- Supprimez ce qui ne change pas le comportement. Commentaires, en-têtes de copyright, blocs de licence, horodatages de logs dans les sorties collées — rien de tout cela n'améliore la réponse ; tout est facturé.
+- Limitez explicitement la sortie. Un `max_tokens` de 400 avec un schéma clair est plus rapide, moins cher et plus prévisible qu'une requête illimitée, même quand le modèle aurait produit 350 tokens spontanément.
+
+## Le cache de prompt : le levier que la plupart des équipes ignorent
+
+Les fournisseurs modernes proposent tous le cache de prompt : envoyez le même préfixe deux fois dans un TTL, et le second appel le lit depuis le cache à une fraction du prix d'entrée et de la latence. Anthropic facture environ 10 % du prix d'entrée de base pour les lectures en cache (avec une petite surtaxe d'écriture au premier appel) ; OpenAI et Google ont des tarifs analogues. Le TTL est typiquement de 5 minutes par défaut, avec des options plus longues chez certains fournisseurs.
+
+Le cache ne change pas ce que dit votre prompt. Il change comment vous devriez l'agencer.
+
+### La règle de disposition : stable d'abord, volatile en dernier
+
+Un cache hit nécessite que le préfixe corresponde exactement. Donc tout ce qui ne varie pas entre les requêtes doit apparaître avant tout ce qui varie. Par ordre de stabilité :
+
+1. System prompt statique (rôle, politique, schéma de sortie, règles de refus).
+2. Définitions d'outils et leurs schémas JSON.
+3. Grands documents de référence réutilisés entre utilisateurs (guides de style, taxonomies, la spec produit).
+4. Contexte par utilisateur mais à évolution lente (profil utilisateur, préférences au niveau du compte, résumés de fils longs).
+5. Le tour de conversation actuel (messages récents).
+6. La question actuelle de l'utilisateur.
+
+Si vous placez le nom de l'utilisateur dans le system prompt parce que ça semblait naturel, vous venez d'invalider le cache pour tous les autres utilisateurs. Descendez-le.
+
+### Points de rupture de cache (spécifique Anthropic)
+
+L'API d'Anthropic expose des points de rupture de cache explicites via `cache_control: { type: 'ephemeral' }`. Placez-les à la jonction naturelle entre sections stables et volatiles. Le fournisseur hache le préfixe jusqu'à chaque point de rupture ; le préfixe correspondant le plus profond gagne. Jusqu'à quatre points de rupture par requête — utilisez-les pour marquer le system prompt, les définitions d'outils, le corpus de documents, et la conversation en cours.
+
+<CodeBlock lang="typescript" text={_code1} />
+
+### Ce que ça apporte vraiment
+
+Sur un chatbot que j'ai livré l'année dernière, restructurer le prompt pour maximiser les cache hits a fait chuter la latence p50 de ~2,4 s à ~700 ms et a réduit la facture API de 64 % sur le même trafic, sans aucun changement de qualité de sortie. Même modèle, même température, mêmes scores d'évaluation. La seule chose qui a bougé, c'est l'ordre des octets dans la requête.
+
+<Callout kind="tip">
+Un TTL de 5 minutes est plus court que ça n'y paraît pour du trafic humain. Si votre trafic est en rafale, envoyez un appel de préchauffage synthétique à l'ouverture d'une session ; le reste de la session profite du cache.
+</Callout>
+
+## Les quatre leviers, dans l'ordre
+
+Quand un prompt est sous-performant, la correction est presque toujours l'une de ces quatre choses. Essayez-les dans cet ordre : chacun est moins coûteux que le suivant, et chacun tend à révéler si le suivant est même nécessaire.
+
+### 1. La structure
+
+Sections, titres, balises XML. Le modèle a été entraîné sur d'énormes quantités de documents structurés et y répond — les modèles d'Anthropic en particulier sont ajustés pour prêter attention aux balises de type XML, et les modèles récents d'OpenAI se comportent de même avec les sections Markdown. Un prompt avec `<context>`, `<task>`, `<output_format>` surpasse le même prompt en mur de texte par une large marge, sans aucune information ajoutée.
+
+<CodeBlock lang="xml" text={_code2} />
+
+### 2. Les exemples (few-shot)
+
+Une paire entrée/sortie concrète bat deux paragraphes de description. Trois paires battent une. Le modèle est un extraordinaire reconnaisseur de patterns ; le goulot d'étranglement est de lui montrer le pattern, pas de le nommer. Les exemples sont particulièrement puissants pour les tâches où le style de sortie souhaité est implicite : ton, niveau de détail, choix de formatage, gestion des cas limites.
+
+<Callout kind="tip">
+Choisissez des exemples qui couvrent les cas limites, pas le milieu évident. Montrez au modèle quoi faire quand l'entrée est ambiguë, quand un champ est manquant, quand la question est hors périmètre. Le milieu se gère tout seul.
+</Callout>
+
+### 3. Les instructions
+
+Soyez explicite sur ce que vous ne voulez pas. « Ne vous excusez pas, ne faites pas de préambule, renvoyez uniquement le SQL » surpasse « soyez concis ». Les instructions négatives sont un signal : elles coupent des régions entières de la distribution du modèle que des instructions positives vagues laissent grandes ouvertes.
+
+Formulez les règles comme une politique, pas comme une politesse. « Si la question fait référence à des données personnelles, refusez et expliquez pourquoi » bat « Veuillez faire attention à la vie privée des utilisateurs. »
+
+### 4. Le contexte
+
+Plus de contexte est le dernier recours, pas le premier. Ajouter 30k tokens de documentation pour compenser une tâche vague, c'est payer pour corriger un bug ailleurs dans le prompt. Affinez la tâche, structurez le prompt, donnez un exemple — et seulement alors demandez-vous si le modèle manque d'informations dont il a besoin.
+
+Quand vous ajoutez du contexte, récupérez-le. Embed-and-rank, BM25, ou même un planificateur piloté par LLM qui décide quels fichiers récupérer. Presque n'importe quelle récupération bat le bourrage, et plus votre récupération est mauvaise, plus vous devriez remettre en question si la tâche est bien définie.
+
+## Patterns qui paient
+
+### Chain-of-thought et extended thinking, à la demande
+
+Demander au modèle de réfléchir avant de répondre améliore la qualité sur les tâches intensives en raisonnement, au prix de la latence et des tokens. Avec la génération actuelle de modèles — l'extended thinking de Claude, les reasoning models d'OpenAI, le thinking budget de Gemini — vous n'avez plus à le demander dans le prompt ; vous augmentez simplement le budget. Avec les modèles plus anciens, « réfléchis étape par étape avant de répondre » fonctionne encore et est essentiellement gratuit sauf pour les tokens de sortie qu'il génère.
+
+Ne demandez pas de chain-of-thought pour les tâches de classification ou d'extraction. La trace de raisonnement sera plus longue que la réponse et la réponse ne sera pas meilleure. Réservez-le pour la synthèse, la planification, les maths et les jugements.
+
+### Schémas de sortie, pas demandes de sortie
+
+Si vous avez besoin de JSON, utilisez les structured outputs (OpenAI), le mode tool-use avec un outil forcé (Anthropic) ou le décodage contraint (Gemini, vLLM). Le fournisseur contraindra le décodage à votre schéma et supprimera toute une classe d'erreurs de parsing. Quand ce n'est pas disponible, donnez un exemple concret du JSON dans le prompt — pas une description. Le modèle est bien meilleur pour imiter une forme que pour parser sa description.
+
+### Un modèle par tâche
+
+Modèles bon marché pour la classification, l'extraction, le routage et le ranking. Modèles puissants pour la synthèse, la planification, les jugements et le code. Un pipeline avec trois appels Haiku/Mini et un appel Opus/Sonnet/o-series bat généralement quatre appels Opus sur toutes les dimensions : moins cher, plus rapide, et les appels bon marché contraignent réellement ce que le modèle puissant voit.
+
+<CodeBlock lang="typescript" text={_code3} />
+
+### System prompt comme politique, user prompt comme données
+
+Le system prompt est l'endroit pour les règles non négociables : qui est l'assistant, ce qu'il doit refuser, quel schéma il doit respecter, quels outils il peut appeler. Le user prompt est l'endroit pour les données par requête. Traitez tout ce qui est contrôlé par l'utilisateur comme non fiable : ne laissez jamais cela écraser la politique. Les attaques « Ignore les instructions précédentes » atterrissent précisément dans la couture où ces couches se brouillent.
+
+### Récupération plutôt que bourrage, outils plutôt que récupération
+
+Si vous êtes sur le point de coller 30k tokens dans le contexte, demandez-vous si le modèle pourrait les récupérer à la demande à la place. L'utilisation d'outils permet au modèle de ne tirer que les pièces dont il a besoin, quand il en a besoin, souvent à un dixième du coût d'entrée. Le compromis est les aller-retours et la latence — mais pour tout corpus non trivial, outils > récupération > bourrage.
+
+## Anti-patterns à abandonner
+
+Ce sont des habitudes que je vois dans presque tous les prompts que je relis. Aucune ne survit à une évaluation sérieuse.
+
+- Les préambules de jeu de rôle « Tu es un ingénieur 10x chez une GAFAM ». Les données d'entraînement ne les récompensent pas ; les benchmarks bougent à peine ; vous avez brûlé des tokens et enfermé le modèle dans un ton que vous ne vouliez peut-être pas vraiment.
+- Le bourrage de base de code complète. RAG, file-search, tool use agentique le battent sur chaque dimension qui compte, sauf le temps d'installation.
+- Les évaluations one-shot. Un prompt qui avait l'air bien une fois et a été livré est la principale cause de régressions silencieuses. Construisez un petit set d'évaluation avant d'ajuster ; il se rentabilisera en une semaine.
+- L'itération infinie. Après trois rounds de modifications, vous optimisez soit autour d'une limitation du modèle (changez de modèle) soit vous résolvez le mauvais problème (relisez la spec).
+- « Soyez prudent » et « assurez-vous d'être précis ». Ce sont des vœux, pas des contraintes. Remplacez-les par des règles : « Si un chiffre cité n'apparaît pas mot pour mot dans la source, ne l'incluez pas. »
+- Le formatage Markdown quand vous avez besoin de données. Si un système en aval parse la sortie, demandez du JSON. Markdown est pour les humains ; faire semblant que c'est structuré vous mordra.
+- Mélanger instructions et données sans séparation. Enveloppez le contenu fourni par l'utilisateur dans une balise et référencez-la : `<doc>...</doc>`. Sinon, le modèle ne peut pas distinguer où finissent vos règles et où commence l'entrée.
+
+## Un template de prompt réutilisable
+
+Voici le squelette dont je pars pour presque chaque nouvelle fonctionnalité. Il est opinioné, il est ennuyeux, et il me mène à 80 % d'un prompt fonctionnel avant même d'avoir lu une seule page de documentation.
+
+<CodeBlock lang="xml" text={_code4} />
+
+Trois choses à noter. Le system prompt se termine avant que des octets contrôlés par l'utilisateur n'apparaissent. Le format de sortie est montré, pas décrit. Les exemples viennent avant la tâche, pas après, pour que le pattern soit frais au moment où le modèle décode.
+
+### Quand dévier
+
+Supprimez le bloc d'exemples quand la tâche est bien connue et le schéma est imposé par le fournisseur (les structured outputs rendent le few-shot moins nécessaire). Supprimez le bloc de politique pour des outils internes ponctuels où le coût d'une mauvaise sortie est une ré-exécution. Sinon, suivez le squelette.
+
+## Comment vraiment progresser
+
+Le prompt engineering se bonifie de la même façon que toute autre compétence d'ingénierie : en mesurant ce que vous changez. Trois habitudes, par ordre d'effet de levier :
+
+### Construire des évaluations avant d'ajuster
+
+Un tableur de vingt entrées représentatives et les réponses que vous souhaiteriez obtenir suffit pour commencer. Lancez-le après chaque changement de prompt. L'acte d'écrire l'évaluation améliorera le prompt avant même que vous l'ayez lancé une fois, parce que définir ce que « bon » signifie représente la moitié du travail. J'ai écrit un article plus long sur ce sujet dans le parcours de lecture IA ci-dessous.
+
+### Lire la documentation que votre fournisseur publie vraiment
+
+La documentation de prompt engineering d'Anthropic, le cookbook et le guide de raisonnement d'OpenAI, les stratégies de prompt Gemini de Google — tous sont courts, tous sont opinionés, et presque aucun du contenu de prompt engineering sur Twitter ne s'y trouve. Lisez la source.
+
+### Programmer en binôme avec un modèle plus puissant
+
+Demandez au modèle le plus puissant disponible de critiquer votre prompt. Collez-le, collez une entrée qui échoue, demandez ce qui ne va pas. Les diagnostics seront inégaux, mais les suggestions sont souvent non évidentes — et gratuites. Un second modèle comme lecteur adversarial est le reviewer le moins cher que vous embaucherez jamais.
+
+### Par où aller ensuite
+
+Les articles du parcours de lecture IA sur ce site parcourent les couches suivantes : construire des évaluations qui survivent au contact avec la production, une boucle QA autonome, et comment les processus d'entretien changent quand les agents de développement sont réels. Commencez par l'article sur le harness d'évaluation — rien du reste ne tient sans lui.

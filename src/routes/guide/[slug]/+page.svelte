@@ -1,34 +1,52 @@
 <script>
   import { goto } from '$app/navigation';
   import { base } from '$app/paths';
-  import { onMount, onDestroy } from 'svelte';
+  import { onMount, onDestroy, tick } from 'svelte';
   import { PROFILE, ARTICLES, fmtDate } from '$lib/data.js';
+  import { t, loc, lang } from '$lib/i18n.js';
   import TagPill from '$lib/components/TagPill.svelte';
   import SectionHead from '$lib/components/SectionHead.svelte';
   import ArticleList from '$lib/components/ArticleList.svelte';
   import CodeBlock from '$lib/components/CodeBlock.svelte';
 
+  const enModules = import.meta.glob('/src/content/guides/en/*.svx', { eager: true });
+  const frModules = import.meta.glob('/src/content/guides/fr/*.svx', { eager: true });
+
   let { data } = $props();
   const guide = $derived(data.guide);
-  const body = $derived(data.body);
+  const lg = $derived($loc(guide));
+
+  const ContentEn = $derived(enModules[`/src/content/guides/en/${guide.slug}.svx`]?.default);
+  const ContentFr = $derived(frModules[`/src/content/guides/fr/${guide.slug}.svx`]?.default);
+  const Content = $derived($lang === 'fr' && ContentFr ? ContentFr : ContentEn);
 
   let progress = $state(0);
   let activeChapter = $state(null);
+  let toc = $state([]);
   let articleEl = $state(null);
-
-  function chapterId(slug) {
-    return `ch-${slug}`;
-  }
-
-  function blockId(chSlug, i) {
-    return `${chSlug}-h-${i}`;
-  }
 
   const related = $derived(
     (guide.relatedArticles || [])
       .map((slug) => ARTICLES.find((a) => a.slug === slug))
       .filter(Boolean)
   );
+
+  // Build TOC from H2s and add chapter labels for CSS ::before eyebrow
+  $effect(() => {
+    const el = articleEl;
+    void Content;
+    if (!el || typeof window === 'undefined') return;
+    tick().then(() => {
+      const h2s = Array.from(el.querySelectorAll('h2[id]'));
+      toc = h2s.map((h) => ({
+        id: h.id,
+        text: h.textContent?.trim() ?? ''
+      }));
+      h2s.forEach((h, i) => {
+        h.dataset.label = `${$t.guide.chapterPrefix} ${String(i + 1).padStart(2, '0')}`;
+      });
+    });
+  });
 
   function onScroll() {
     const el = articleEl;
@@ -38,11 +56,11 @@
     const p = Math.max(0, Math.min(1, -r.top / Math.max(1, h)));
     progress = p;
 
-    const headings = el.querySelectorAll('h2[data-chapter]');
+    const headings = el.querySelectorAll('h2[id]');
     let active = null;
     headings.forEach((hh) => {
       const top = hh.getBoundingClientRect().top;
-      if (top < 140) active = hh.dataset.chapter;
+      if (top < 140) active = hh.id;
     });
     activeChapter = active;
   }
@@ -58,18 +76,18 @@
 
 <div class="reading-progress" style="transform: scaleX({progress})"></div>
 <div class="page guide-page">
-  <button class="back-link" onclick={() => goto(`${base}/articles/#guides`)}>← All guides</button>
+  <button class="back-link" onclick={() => goto(`${base}/articles/#guides`)}>{$t.guide.backLink}</button>
 
   <header class="guide-hero">
     <div class="guide-hero-eyebrow">
-      <span>Guide</span>
+      <span>{$t.guide.guideLabel}</span>
       <span class="dot">·</span>
-      <span>{body.chapters.length} chapters</span>
+      <span>{guide.chapterCount} {$t.common.chapters}</span>
       <span class="dot">·</span>
-      <span>{guide.readTime} min</span>
+      <span>{guide.readTime} {$t.common.minRead}</span>
     </div>
-    <h1 class="guide-hero-title">{guide.title}</h1>
-    <p class="guide-hero-subtitle">{guide.subtitle}</p>
+    <h1 class="guide-hero-title">{lg.title}</h1>
+    <p class="guide-hero-subtitle">{lg.subtitle}</p>
 
     <div class="guide-hero-meta">
       <div class="byline">
@@ -77,17 +95,17 @@
         <div>
           <div class="byline-name">{PROFILE.name}</div>
           <div class="byline-sub">
-            <time>Published {fmtDate(guide.date)}</time>
+            <time>{$t.guide.publishedOn(fmtDate(guide.date, $t.dateLocale))}</time>
             {#if guide.updated && guide.updated !== guide.date}
               <span class="dot">·</span>
-              <time>Updated {fmtDate(guide.updated)}</time>
+              <time>{$t.guide.updatedOn(fmtDate(guide.updated, $t.dateLocale))}</time>
             {/if}
           </div>
         </div>
       </div>
       <div class="guide-hero-tags">
-        {#each guide.tags as t (t)}
-          <TagPill id={t} />
+        {#each guide.tags as tag (tag)}
+          <TagPill id={tag} />
         {/each}
       </div>
     </div>
@@ -95,13 +113,13 @@
 
   <div class="guide-layout">
     <aside class="guide-toc">
-      <div class="toc-label">Chapters</div>
+      <div class="toc-label">{$t.guide.chaptersLabel}</div>
       <ol class="guide-toc-list">
-        {#each body.chapters as ch, i (ch.slug)}
-          <li class="guide-toc-item {activeChapter === ch.slug ? 'is-active' : ''}">
-            <a href={`#${chapterId(ch.slug)}`}>
+        {#each toc as ch, i (ch.id)}
+          <li class="guide-toc-item {activeChapter === ch.id ? 'is-active' : ''}">
+            <a href={`#${ch.id}`}>
               <span class="guide-toc-num">{String(i + 1).padStart(2, '0')}</span>
-              <span class="guide-toc-text">{ch.title}</span>
+              <span class="guide-toc-text">{ch.text}</span>
             </a>
           </li>
         {/each}
@@ -109,55 +127,11 @@
     </aside>
 
     <article class="guide-body" bind:this={articleEl}>
-      {#if body.intro && body.intro.length > 0}
-        <section class="guide-intro">
-          {#each body.intro as b, i (i)}
-            {#if b.type === 'p'}
-              <p>{b.text}</p>
-            {:else if b.type === 'callout'}
-              <aside class="callout callout-{b.kind}">{b.text}</aside>
-            {/if}
-          {/each}
-        </section>
-      {/if}
-
-      {#each body.chapters as ch, ci (ch.slug)}
-        <section class="guide-chapter" id={chapterId(ch.slug)}>
-          <div class="guide-chapter-eyebrow">
-            <span class="guide-chapter-num">Chapter {String(ci + 1).padStart(2, '0')}</span>
-          </div>
-          <h2 class="guide-chapter-title" data-chapter={ch.slug}>{ch.title}</h2>
-
-          {#each ch.blocks as b, i (i)}
-            {#if b.type === 'p'}
-              <p>{b.text}</p>
-            {:else if b.type === 'h3'}
-              <h3 id={blockId(ch.slug, i)}>{b.text}</h3>
-            {:else if b.type === 'ul'}
-              <ul>
-                {#each b.items as it (it)}<li>{it}</li>{/each}
-              </ul>
-            {:else if b.type === 'ol'}
-              <ol class="guide-ol">
-                {#each b.items as it (it)}<li>{it}</li>{/each}
-              </ol>
-            {:else if b.type === 'code'}
-              <CodeBlock lang={b.lang} text={b.text} />
-            {:else if b.type === 'callout'}
-              <aside class="callout callout-{b.kind}">{b.text}</aside>
-            {:else if b.type === 'quote'}
-              <blockquote class="guide-quote">
-                <p>{b.text}</p>
-                {#if b.who}<cite>— {b.who}</cite>{/if}
-              </blockquote>
-            {/if}
-          {/each}
-        </section>
-      {/each}
+      <svelte:component this={Content} />
 
       {#if related.length > 0}
         <section class="guide-related">
-          <SectionHead eyebrow="Keep going" title="Articles that build on this" />
+          <SectionHead eyebrow={$t.guide.keepGoingEyebrow} title={$t.guide.relatedTitle} />
           <ArticleList articles={related} variant="stacked" />
         </section>
       {/if}

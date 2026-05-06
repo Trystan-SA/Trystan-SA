@@ -1,8 +1,17 @@
 import adapter from '@sveltejs/adapter-static';
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
+import { mdsvex } from 'mdsvex';
+import rehypeSlug from 'rehype-slug';
 
 const config = {
-  preprocess: vitePreprocess(),
+  preprocess: [
+    vitePreprocess(),
+    mdsvex({
+      extensions: ['.svx'],
+      rehypePlugins: [rehypeSlug]
+    })
+  ],
+  extensions: ['.svelte', '.svx'],
   kit: {
     adapter: adapter({
       pages: 'build',
@@ -11,7 +20,6 @@ const config = {
       strict: true
     }),
     prerender: {
-      // #guides is a tab-state hash, not an in-page anchor
       handleMissingId: 'ignore'
     }
   }

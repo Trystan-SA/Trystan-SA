@@ -1,0 +1,51 @@
+---
+title: "Comment j'ai réduit mes coûts cloud de 70% en quittant AWS"
+excerpt: "Un récit détaillé de la migration d'un SaaS rentable vers un stack Hetzner + Cloudflare. Ce qui a cassé, ce qui a tenu, et la feuille de calcul qui a justifié la décision."
+---
+
+<script>
+import CodeBlock from '$lib/components/CodeBlock.svelte';
+
+  const _code0 = `# fly.toml? non. compose.yaml? oui.
+services:
+  app:
+    image: registry.lattice.dev/app:\${SHA}
+    deploy:
+      replicas: 6
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8080/healthz"]
+      interval: 5s`;
+</script>
+
+Nous payions 14 200 $ par mois à AWS. Douze semaines plus tard, nous payions 4 100 $ par mois (à Hetzner, Cloudflare et quelques petits SaaS) pour le même produit, servant les mêmes clients, avec une meilleure latence p95.
+
+Ce n'est pas un réquisitoire contre AWS. C'est un bilan honnête de ce que la migration a coûté, ce qu'elle a apporté, et la feuille de calcul que j'aurais aimé avoir dès le départ.
+
+## La facture de départ
+
+En gros :
+
+- EKS + nœuds workers : 4 800 $/mois
+- RDS Postgres (Multi-AZ) : 3 100 $/mois
+- S3 + egress CloudFront : 2 400 $/mois
+- ElastiCache + MSK : 1 900 $/mois
+- Observabilité (CloudWatch + X-Ray) : 1 200 $/mois
+- Tout le reste : 800 $/mois
+
+## La destination
+
+Trois serveurs dédiés Hetzner AX102, deux formant une paire primary/replica Postgres (avec WAL shipping vers un troisième), un faisant tourner l'application via Docker Compose derrière Cloudflare. Stockage objet sur Cloudflare R2. Logs vers une stack Grafana auto-hébergée.
+
+<CodeBlock lang="yaml" text={_code0} />
+
+## Ce qui a cassé
+
+Liste honnête, sans embellissement :
+
+- Nous avons perdu l'autoscaling. Remplacé par une marge de capacité et un runbook.
+- Nous avons perdu le failover multi-région. Remplacé par une conversation honnête avec nos clients.
+- Nous avons eu une panne de 14 minutes en semaine trois parce que j'avais mal configuré pgBackRest. Ma faute, pas celle de Hetzner.
+
+## Ce qui n'a pas cassé
+
+Presque tout le reste. L'application n'a pas changé. Nos déploiements sont devenus plus rapides. Notre facture est devenue prévisible. L'équipe est plus heureuse.
