@@ -244,9 +244,6 @@
                           <span class="guide-step-body">
                             <span class="guide-step-title">
                               {s.title}
-                              {#if s.kind === 'longform'}
-                                <span class="guide-step-badge">Guide</span>
-                              {/if}
                             </span>
                             <span class="guide-step-meta">
                               <time>{fmtDate(s.date)}</time>

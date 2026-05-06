@@ -350,6 +350,7 @@ button { font-family: inherit; }
 [data-js] .article-row {
   animation: row-in .5s ease both;
 }
+.article-row:first-child { border-top: none; }
 .article-row:last-child { border-bottom: 1px solid var(--line); }
 .article-row:hover { background: var(--accent-wash); padding-left: 16px; padding-right: 16px; }
 .article-row:hover .article-row-title { color: var(--accent); }
@@ -977,9 +978,6 @@ button { font-family: inherit; }
 .guide-toc {
   position: sticky; top: 92px; font-size: 13.5px;
   border-left: 2px solid var(--line); padding-left: 18px;
-  /* On wide viewports pull the TOC out toward the viewport's left edge so it
-     reads as a documentation nav rather than hugging the centered content. */
-  margin-left: min(0px, calc((var(--container) - 100vw) / 2 + 28px));
 }
 .guide-toc-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 4px; }
 .guide-toc-item a {
