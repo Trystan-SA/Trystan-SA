@@ -1,0 +1,26 @@
+# Cloudflare Pages response headers.
+# Rules are matched top-to-bottom; the first matching rule wins for any given
+# header. Keep specific patterns above the catch-all.
+
+# Hashed, content-addressed assets (SvelteKit JS/CSS chunks, fontsource woff2,
+# and anything else under _app/immutable). Safe to cache forever.
+/_app/immutable/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Static assets that don't carry a content hash. Cache aggressively but allow
+# revalidation in case the file is replaced in place.
+/icons/*
+  Cache-Control: public, max-age=86400, must-revalidate
+/trystan.jpg
+  Cache-Control: public, max-age=86400, must-revalidate
+
+# HTML and the sitemap should always revalidate so deploys go live immediately.
+/*.html
+  Cache-Control: public, max-age=0, must-revalidate
+/sitemap.xml
+  Cache-Control: public, max-age=0, must-revalidate
+
+# Catch-all for any path not matched above (HTML pages without a .html
+# extension, robots.txt, etc.). Keep it conservative.
+/*
+  Cache-Control: public, max-age=0, must-revalidate
