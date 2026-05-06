@@ -1,0 +1,73 @@
+---
+title: "Introduction to management roles in software engineering"
+subtitle: "From senior developer to CTO — how accountability scales with scope"
+blurb: "A practical model for mapping ownership responsibilities across every seniority level, so no critical area falls through the cracks."
+date: "2026-05-06"
+readTime: 12
+chapterCount: 6
+tags: [leadership]
+relatedArticles: []
+featured: false
+---
+
+<script>
+import Callout from '$lib/components/Callout.svelte';
+</script>
+
+Every person on an engineering team leads something. The question is whether they know it — and whether the organisation has been explicit enough to let them do it well.
+
+Ownership is not a title. It is an accountability contract between an individual and the rest of the team. Get it wrong and you end up with either gaps (nobody owns a critical area) or overlaps (two people own the same thing and fight about it). Both are expensive.
+
+## The ownership spectrum
+
+Ownership responsibilities shift significantly as you move up the seniority ladder. Here is how I think about the five major levels:
+
+- Senior developer: owns the technical quality of a scope. Mentors juniors, sets the standard for code review, and flags architectural debt before it compounds.
+- Lead developer (tech lead): owns the technical direction of a team or product area. Bridges the gap between product requests and engineering constraints.
+- Engineering Manager: owns the people and process layer. Responsible for team health, growth, and the removal of organisational blockers.
+- Product Manager: owns the "why" and the "what". Translates business strategy into a roadmap and holds the team accountable to outcomes, not outputs.
+- CTO / Product Owner: owns the long-range technical vision and the interface between engineering and the rest of the business. Sets culture, makes build-vs-buy calls, and bears the final accountability.
+
+The critical insight is that these levels are not a hierarchy of importance — they are a hierarchy of scope. A senior developer who deeply owns their domain contributes more than a lead who hovers over everything and owns nothing deeply.
+
+## People: the foundation nothing else runs on
+
+Engineering Managers have a crucial role in managing the people aspect of their teams. They are responsible for building, nurturing, and guiding their teams towards a shared goal. This involves hiring the right talent, fostering collaboration, and promoting a positive environment for brainstorming and innovation. They also address personal and professional conflicts, ensuring a unified and efficient team.
+
+Handling people is no easy task. Challenges come in many forms: personality clashes, power struggles, or unequal contribution from team members. To address these, the manager must have excellent communication, empathy, and leadership skills. Regular feedback sessions and team-building activities can also help.
+
+Success in managing people is a delicate balance of technical expertise and interpersonal intelligence. A good Engineering Manager does not just guide their team technically, but also emotionally. They celebrate success, address failures, and make everyone feel valued and heard.
+
+## Product: turning vision into something shippable
+
+Engineering Managers are pivotal in translating product visions into tangible results. They shoulder the responsibility of aligning the engineering team's efforts with the product roadmap. This involves not just understanding the technical complexity, but also grasping the product's strategic importance.
+
+They face challenges like prioritising feature development and resolving resource clashes. Effective handling requires a blend of technical proficiency and keen product sense. They also need to navigate collaborative decision-making, ensuring that engineering perspectives are well represented in product discussions.
+
+Accuracy in estimating timelines for product features is paramount. An Engineering Manager therefore needs to excel in project management, accurately gauging task complexity and foreseeing potential roadblocks. This is crucial to align engineering activities with overall product timelines and objectives.
+
+## Process: the invisible infrastructure
+
+Engineering management is a crucial role in tech companies, overseeing the processes that power engineering teams. An Engineering Manager has to ensure that all processes — be it software development lifecycles, testing protocols, or deployment procedures — are efficient, effective, and correctly implemented.
+
+A key responsibility is identifying and managing any bottlenecks or hindrances slowing down productivity. This may involve constant monitoring, discussion with team members, and careful analysis of workflow data. The role also involves process optimisation: introducing new tools, methodologies, or even reshaping teams for better performance.
+
+Success in this aspect requires exceptional problem-solving skills and the ability to innovate and adapt. Persistence and excellent communication skills are also required, as effective process management often involves persuading and influencing others about the value of proposed changes.
+
+## Culture: the one thing every level must carry
+
+Here is the mistake I see most often: treating company culture as something the leadership team owns and the individual contributors inherit. It does not work that way.
+
+Culture is not what is written on the wall. Culture is what happens in the five minutes before and after every meeting, in every code review comment, in every decision about whether to flag a problem or stay quiet. Every member of the organisation shapes it, at every seniority level.
+
+<Callout kind="info">
+A senior developer who dismisses junior questions with "RTFM" does more damage to team culture than any manager's all-hands can repair. The inverse is also true: a junior who proactively documents what they learned builds a culture of knowledge-sharing regardless of whether they were asked to.
+</Callout>
+
+Cohesion is the output of consistent behaviour across levels. It emerges when the senior developer's mentoring style aligns with the manager's feedback culture, which aligns with the product team's roadmap philosophy, which aligns with the CTO's long-term vision. When these are misaligned — even subtly — people feel it before they can name it.
+
+## Making ownership explicit
+
+The practical move is to map ownership before someone burns out. For each critical area — technical quality, team health, product direction, operational process, cultural norms — name a primary owner and a secondary. Make the contract visible. Run a retrospective every quarter to ask whether the ownership map still reflects reality.
+
+The goal is not a perfect org chart. The goal is a team where every person knows what they own, trusts that their neighbours own the rest, and feels safe enough to flag when the boundaries need to shift.

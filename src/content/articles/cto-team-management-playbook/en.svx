@@ -1,0 +1,29 @@
+---
+title: "The team management playbook every CTO needs"
+excerpt: "Five rituals I install on day one with any engineering team. None of them are standups."
+date: "2026-03-19"
+readTime: 9
+tags: [leadership, product]
+---
+
+Five rituals I install on day one with any engineering team I take over. None of them are standups.
+
+## 1. The Friday demo
+
+Thirty minutes, voluntary, low-stakes. Anyone can show anything they shipped or are working on. Three rules: no slides, no metrics, no apologies. The function is to remind ourselves what work looks like.
+
+## 2. The architecture office hour
+
+One hour a week, on the calendar, where I sit and answer architecture questions. The forcing function is that questions get asked. The second-order effect is that I find out what's actually being built.
+
+## 3. The blameless retro, ruthlessly enforced
+
+After every incident, every missed deadline, every surprising customer escalation. The output is a list of system changes, never a list of people changes.
+
+## 4. The personal one-on-one
+
+Forty-five minutes, every other week, no agenda set by me. If they have nothing to talk about, we end early. Most of the time, they don't.
+
+## 5. The kill list
+
+A standing doc where anyone can nominate a process, meeting, or tool to be retired. Quarterly review. About a third get killed. The team feels lighter.

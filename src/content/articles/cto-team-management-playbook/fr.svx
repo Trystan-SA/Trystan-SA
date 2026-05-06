@@ -1,0 +1,26 @@
+---
+title: "Le guide de management d'équipe que tout CTO devrait avoir"
+excerpt: "Cinq rituels que j'installe dès le premier jour avec n'importe quelle équipe d'ingénieurs. Aucun d'eux n'est un standup."
+---
+
+Cinq rituels que j'installe dès le premier jour avec n'importe quelle équipe d'ingénieurs que je prends en main. Aucun d'eux n'est un standup.
+
+## 1. La démo du vendredi
+
+Trente minutes, volontaire, sans pression. N'importe qui peut montrer ce qu'il a livré ou sur quoi il travaille. Trois règles : pas de slides, pas de métriques, pas d'excuses. La fonction est de nous rappeler à quoi ressemble le travail.
+
+## 2. L'heure de bureau architecture
+
+Une heure par semaine, planifiée, où je suis disponible pour répondre aux questions d'architecture. L'effet premier est que les questions sont posées. L'effet second est que je découvre ce qui est réellement en train d'être construit.
+
+## 3. La rétro blameless, appliquée sans compromis
+
+Après chaque incident, chaque deadline manquée, chaque escalade client surprenante. Le résultat est une liste de changements systémiques, jamais une liste de changements de personnes.
+
+## 4. Le one-on-one personnel
+
+Quarante-cinq minutes, toutes les deux semaines, sans agenda défini par moi. S'ils n'ont rien à dire, on s'arrête tôt. La plupart du temps, ce n'est pas le cas.
+
+## 5. La kill list
+
+Un document permanent où n'importe qui peut proposer d'éliminer un processus, une réunion ou un outil. Revue trimestrielle. Environ un tiers sont supprimés. L'équipe se sent plus légère.

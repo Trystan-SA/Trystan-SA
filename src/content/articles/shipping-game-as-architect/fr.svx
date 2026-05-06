@@ -1,0 +1,8 @@
+---
+title: "Sortir un jeu le week-end en tant qu'architecte en poste"
+excerpt: "Ce que j'ai appris en architecturant un SaaS d'entreprise la journée m'a aidé à concevoir un jeu la nuit — et ce que ça n'a absolument pas aidé."
+---
+
+Ce que j'ai appris en architecturant un SaaS d'entreprise la journée m'a aidé à concevoir un jeu la nuit — et ce que ça n'a absolument pas aidé.
+
+Surtout : que les budgets d'images sont impitoyables d'une manière qu'aucun SLO d'API ne l'est. Un budget de 16 ms raté, ça se ressent physiquement.

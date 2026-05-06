@@ -1,0 +1,20 @@
+---
+title: "Le choix monolithe vs. microservices, dix ans après"
+excerpt: "J'ai livré les deux. Voici le cadre que j'utilise maintenant pour choisir, et pourquoi la plupart des équipes qui tranchent répondent à la mauvaise question."
+---
+
+J'ai livré les deux. Voici le cadre que j'utilise maintenant pour choisir, et pourquoi la plupart des équipes qui tranchent répondent à la mauvaise question.
+
+## La mauvaise question
+
+« Faut-il utiliser des microservices ? » est une mauvaise question parce qu'elle interroge la destination plutôt que le chemin. La bonne question est : quelle est la plus petite unité de déploiement indépendant que cette équipe peut maintenir ?
+
+## Le cadre
+
+Trois axes. Notez chacun de 1 à 5.
+
+- Taille et topologie de l'équipe
+- Fréquence de déploiement dont vous avez réellement besoin
+- Maturité opérationnelle (monitoring, astreinte, rollback)
+
+Somme 3–7 : monolithe. 8–11 : monolithe modulaire. 12–15 : services, mais seulement si vous pouvez nommer les bounded contexts sans consulter un schéma.

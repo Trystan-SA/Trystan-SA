@@ -1,7 +1,8 @@
 <script>
   import { goto } from '$app/navigation';
   import { base } from '$app/paths';
-  import { ARTICLES, TECH, fmtDate } from '$lib/data.js';
+  import { ARTICLES } from '$lib/data.js';
+  import { fmtDate } from '$lib/utils.js';
   import { t, loc } from '$lib/i18n.js';
   import TagPill from '$lib/components/TagPill.svelte';
   import SectionHead from '$lib/components/SectionHead.svelte';
@@ -27,19 +28,14 @@
       <div class="tech-stack" aria-label="Tech stack">
         <div class="tech-stack-label">{$t.home.stackLabel}</div>
         <ul class="tech-stack-list">
-          {#each TECH as t (t.slug)}
-            <li class="tech-chip" title={t.name}>
-              <img
-                class="tech-chip-icon"
-                src="{base}/icons/{t.slug}.svg"
-                alt=""
-                width="18"
-                height="18"
-                loading="lazy"
-              />
-              <span>{t.name}</span>
-            </li>
-          {/each}
+          <li class="tech-chip" title="TypeScript"><img class="tech-chip-icon" src="{base}/icons/typescript.svg" alt="" width="18" height="18" loading="lazy" /><span>TypeScript</span></li>
+          <li class="tech-chip" title="Go"><img class="tech-chip-icon" src="{base}/icons/go.svg" alt="" width="18" height="18" loading="lazy" /><span>Go</span></li>
+          <li class="tech-chip" title="Angular"><img class="tech-chip-icon" src="{base}/icons/angular.svg" alt="" width="18" height="18" loading="lazy" /><span>Angular</span></li>
+          <li class="tech-chip" title="React"><img class="tech-chip-icon" src="{base}/icons/react.svg" alt="" width="18" height="18" loading="lazy" /><span>React</span></li>
+          <li class="tech-chip" title="Svelte"><img class="tech-chip-icon" src="{base}/icons/svelte.svg" alt="" width="18" height="18" loading="lazy" /><span>Svelte</span></li>
+          <li class="tech-chip" title="Terraform"><img class="tech-chip-icon" src="{base}/icons/terraform.svg" alt="" width="18" height="18" loading="lazy" /><span>Terraform</span></li>
+          <li class="tech-chip" title="Ansible"><img class="tech-chip-icon" src="{base}/icons/ansible.svg" alt="" width="18" height="18" loading="lazy" /><span>Ansible</span></li>
+          <li class="tech-chip" title="Kubernetes"><img class="tech-chip-icon" src="{base}/icons/kubernetes.svg" alt="" width="18" height="18" loading="lazy" /><span>Kubernetes</span></li>
         </ul>
       </div>
 

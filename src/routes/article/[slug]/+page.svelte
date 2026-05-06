@@ -2,7 +2,8 @@
   import { goto } from '$app/navigation';
   import { base } from '$app/paths';
   import { onMount, onDestroy, tick } from 'svelte';
-  import { ARTICLES, fmtDate } from '$lib/data.js';
+  import { ARTICLES } from '$lib/data.js';
+  import { fmtDate } from '$lib/utils.js';
   import { t, loc, lang } from '$lib/i18n.js';
   import TagPill from '$lib/components/TagPill.svelte';
   import SectionHead from '$lib/components/SectionHead.svelte';

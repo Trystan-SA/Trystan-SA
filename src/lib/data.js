@@ -112,20 +112,4 @@ export const NOW = [
 ];
 
 
-export const TECH = [
-  { name: 'TypeScript', slug: 'typescript' },
-  { name: 'Go', slug: 'go' },
-  { name: 'Angular', slug: 'angular' },
-  { name: 'React', slug: 'react' },
-  { name: 'Svelte', slug: 'svelte' },
-  { name: 'Terraform', slug: 'terraform' },
-  { name: 'Ansible', slug: 'ansible' },
-  { name: 'Kubernetes', slug: 'kubernetes' }
-];
 
-export const fmtDate = (iso, locale = 'en-US') => {
-  const d = new Date(iso);
-  return d.toLocaleDateString(locale, { year: 'numeric', month: 'short', day: 'numeric' });
-};
-
-export const tagById = (id) => TAGS.find((t) => t.id === id) || { id, label: id, color: '#888' };

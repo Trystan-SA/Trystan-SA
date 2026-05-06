@@ -1,0 +1,57 @@
+---
+title: "A fully autonomous AI workflow for the Q.A. Engineer"
+excerpt: "How we replaced manual regression suites with a self-correcting agent that reads the spec, runs the app, and files its own bug reports, plus the three guardrails that made it actually reliable."
+date: "2026-04-22"
+readTime: 14
+tags: [ai, devops, product]
+featured: true
+---
+
+<script>
+import CodeBlock from '$lib/components/CodeBlock.svelte';
+
+  const _code0 = `spec ──▶ planner ──▶ runner ──▶ verifier
+              ▲                       │
+              └───────  retry  ────────┘`;
+  const _code1 = `type Action =
+  | { kind: 'click'; testId: string }
+  | { kind: 'fill'; testId: string; value: string }
+  | { kind: 'wait_for'; testId: string }
+  | { kind: 'assert'; expr: string };
+
+async function step(a: Action): Promise<StepResult> { /* … */ }`;
+</script>
+
+For most of my career, the QA function was a paradox: critical, under-resourced, and the first thing to be sacrificed at the altar of velocity. The arrival of capable coding agents in 2025 didn't just shift the math, it inverted it.
+
+What follows is the workflow we now run on three production products. It catches roughly 84% of regressions before a human ever sees them, and the engineers who built it have not written a Selenium test in six months.
+
+## The architecture in one diagram
+
+Three loops, each with a clear contract.
+
+<CodeBlock lang="bash" text={_code0} />
+
+The planner reads the product spec and produces a task graph. The runner drives the actual application: a real browser, a real backend, real fixtures. The verifier inspects every state transition against the original intent.
+
+## The three guardrails
+
+An autonomous QA loop is, by default, a confidently wrong machine. These are the constraints that made it useful.
+
+### 1. Deterministic fixtures
+
+The agent gets a frozen database snapshot per run. Non-deterministic time and randomness are stubbed at the boundary. If a test passes, it must pass tomorrow for the same input.
+
+### 2. A bounded action space
+
+Letting the model freely click anything on the page is how you end up with bug reports about the cookie banner. We exposed a typed action API:
+
+<CodeBlock lang="typescript" text={_code1} />
+
+### 3. A second model as the verifier
+
+The model writing the tests cannot also be the model judging them. We use a smaller, cheaper model with a different prompt as the adversarial reader, and we only escalate to a human when the two disagree.
+
+## What it doesn't replace
+
+Exploratory testing. The kind where a human notices that a button feels mushy, or that the empty state is sad. We didn't try, and you shouldn't either.

@@ -1,0 +1,24 @@
+---
+title: "Recruter des ingénieurs logiciels compétents à l'ère des agents IA"
+excerpt: "Les outils d'autocomplétion de code ont effacé la valeur de la fluidité syntaxique. Voici le nouveau processus d'entretien que j'utilise, et pourquoi j'ai supprimé le round de code en direct."
+---
+
+J'ai supprimé l'épreuve de code en direct de mon processus d'entretien il y a quatorze mois. J'ai recruté onze ingénieurs depuis. Pas un seul n'a livré du code moins bon que les ingénieurs recrutés à l'ancienne.
+
+## Ce que nous avons mis à la place
+
+Une session de travail collaboratif de deux heures sur un vrai problème ciblé issu de notre backlog. Les candidats utilisent les outils qu'ils utilisent réellement au quotidien : Cursor, Copilot, ChatGPT, leur propre mère. Nous les rémunérons pour leur temps.
+
+## Ce pour quoi nous sélectionnons maintenant
+
+Trois choses, par ordre d'importance :
+
+- Le goût : la capacité de regarder trois solutions plausibles et d'expliquer pourquoi l'une est juste pour cette base de code.
+- La décomposition : transformer une demande produit vague en une séquence de changements qu'un coéquipier pourrait relire.
+- La communication dans l'incertitude : dire « je ne sais pas encore » suivi d'un plan crédible pour trouver la réponse.
+
+Remarquez ce qui n'est pas sur cette liste. Mémoriser des détails de syntaxe. Inverser un arbre binaire au tableau. Être capable de taper plus vite qu'un LLM.
+
+## L'objection que j'entends le plus
+
+« Mais comment vous savez qu'ils savent vraiment coder ? » Vous les regardez coder. Pendant deux heures. Sur un vrai problème. Avec leurs vrais outils. Le signal est énorme.

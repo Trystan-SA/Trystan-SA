@@ -1,6 +1,6 @@
 <script>
   import { base } from '$app/paths';
-  import { fmtDate } from '$lib/data.js';
+  import { fmtDate } from '$lib/utils.js';
   import { t, loc } from '$lib/i18n.js';
   import TagPill from './TagPill.svelte';
 

@@ -1,5 +1,5 @@
 <script>
-  import { tagById } from '$lib/data.js';
+  import { tagById } from '$lib/utils.js';
   import { lang } from '$lib/i18n.js';
 
   let { id, onclick = undefined, active = false } = $props();

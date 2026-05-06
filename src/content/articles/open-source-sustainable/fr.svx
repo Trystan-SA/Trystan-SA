@@ -1,0 +1,10 @@
+---
+title: "Comment je rends mes projets open-source secondaires durables"
+excerpt: "L'épuisement des mainteneurs est une fonctionnalité du système, pas un bug. Voici les changements structurels que j'ai apportés."
+---
+
+L'épuisement des mainteneurs est une fonctionnalité du système, pas un bug. Voici les changements structurels que j'ai apportés.
+
+## Déplacer le gestionnaire d'issues
+
+GitHub Issues est un tuyau d'incendie. Discussions est un café. Le même contenu vit différemment dans chacun.
