@@ -64,16 +64,6 @@
       </a>
       <div class="nav-links">
         <a href="{base}/" class={isActive('/') ? 'is-active' : ''}>{$t.nav.home}</a>
-        <a
-          href="{base}/articles/"
-          class={isActive('/articles') ||
-          $page.url.pathname.startsWith('/article/') ||
-          $page.url.pathname.startsWith('/guide/')
-            ? 'is-active'
-            : ''}
-        >
-          {$t.nav.articles}
-        </a>
         <a href="{base}/projects/" class={isActive('/projects') ? 'is-active' : ''}>{$t.nav.projects}</a>
         <a href="{base}/about/" class={isActive('/about') ? 'is-active' : ''}>{$t.nav.about}</a>
       </div>
@@ -112,10 +102,6 @@
     {#if menuOpen}
       <div class="nav-mobile-menu">
         <a href="{base}/" class={isActive('/') ? 'is-active' : ''}>{$t.nav.home}</a>
-        <a
-          href="{base}/articles/"
-          class={isActive('/articles') || $page.url.pathname.startsWith('/article/') || $page.url.pathname.startsWith('/guide/') ? 'is-active' : ''}
-        >{$t.nav.articles}</a>
         <a href="{base}/projects/" class={isActive('/projects') ? 'is-active' : ''}>{$t.nav.projects}</a>
         <a href="{base}/about/" class={isActive('/about') ? 'is-active' : ''}>{$t.nav.about}</a>
         <div class="nav-mobile-tools">
@@ -143,7 +129,6 @@
         <h4>{$t.footer.siteLabel}</h4>
         <ul>
           <li><a href="{base}/">{$t.nav.home}</a></li>
-          <li><a href="{base}/articles/">{$t.nav.articles}</a></li>
           <li><a href="{base}/projects/">{$t.nav.projects}</a></li>
           <li><a href="{base}/about/">{$t.nav.about}</a></li>
         </ul>
