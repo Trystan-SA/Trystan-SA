@@ -200,12 +200,6 @@ button { font-family: inherit; }
   position: absolute; pointer-events: none;
   color: var(--accent); opacity: 0.08;
 }
-.deco-coffee {
-  width: 500px; top: -50px; right: -70px;
-}
-.deco-plant {
-  width: 420px; bottom: 40px; right: -50px;
-}
 .deco-pen {
   width: 380px; top: -30px; right: -40px;
 }
