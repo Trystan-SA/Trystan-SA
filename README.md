@@ -5,7 +5,7 @@
 [![Portfolio](https://img.shields.io/badge/Portfolio-e08267?style=flat-square&logo=svelte&logoColor=white)](https://trystan-sarrade.com)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=flat-square&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/trystan-sarrade/)
 [![Email](https://img.shields.io/badge/Email-EA4335?style=flat-square&logo=gmail&logoColor=white)](mailto:trystansarrade@gmail.com)
-![Stars](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fapi.github.com%2Fusers%2FTrystan-SA%2Frepos%3Fper_page%3D100&query=%24sum%28%24%5B*%5D.stargazers_count%29&label=Stars&color=e08267&style=flat-square&logo=github)
+![Stars](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fapi.github-star-counter.workers.dev%2Fuser%2FTrystan-SA&query=%24.stars&label=Stars&color=e08267&style=flat-square&logo=github)
 
 I'm a motivated engineer, driven by curiosity and a love for learning. What I care about most is having real impact on the ecosystems and organizations I'm part of.
 
