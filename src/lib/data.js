@@ -269,13 +269,34 @@ export const PROJECTS = [
   }
 ];
 
-// Curated learning paths. Each step references an article by slug.
+// Guides come in two shapes:
+//   - kind: 'longform' — structured chapters in `guide-bodies.js`, rendered at /guide/[slug].
+//   - kind: 'path'     — curated reading sequence; `steps` references article slugs.
+// Both are displayed under a single "Guides" UI.
 export const GUIDES = [
   {
+    slug: 'writing-efficient-prompts',
+    kind: 'longform',
+    title: 'Writing efficient prompts',
+    subtitle:
+      'A practical guide to LLM mechanics, from token prediction to caching to the four levers I tune in production.',
+    blurb:
+      "How LLMs actually read your prompt, why context windows are budgets not buffers, why caching is the lever most teams ignore, and the four levers I pull in order before I touch the model. The foundation I wish I'd had before shipping my first LLM feature.",
+    tags: ['ai'],
+    date: '2026-05-06',
+    updated: '2026-05-06',
+    readTime: 22,
+    chapterCount: 8,
+    relatedArticles: ['llm-eval-harness', 'autonomous-ai-qa-workflow', 'hiring-engineers-ai-era'],
+    featured: true
+  },
+  {
     slug: 'ai-engineering',
+    kind: 'path',
     title: 'AI Engineering',
     blurb: 'From first prompts to production-ready LLM systems.',
     steps: [
+      'writing-efficient-prompts',
       'llm-eval-harness',
       'autonomous-ai-qa-workflow',
       'hiring-engineers-ai-era'
@@ -283,6 +304,7 @@ export const GUIDES = [
   },
   {
     slug: 'software-team-lead',
+    kind: 'path',
     title: 'Team Leadership',
     blurb: 'The rituals, decisions and conversations that turn a group of engineers into a team.',
     steps: [
@@ -293,6 +315,7 @@ export const GUIDES = [
   },
   {
     slug: 'devops',
+    kind: 'path',
     title: 'DevOps & Infrastructure',
     blurb: 'Running real systems, on real machines, without burning a hyperscaler-sized hole in your budget.',
     steps: [
@@ -303,6 +326,7 @@ export const GUIDES = [
   },
   {
     slug: 'security',
+    kind: 'path',
     title: 'Security',
     blurb: 'Practical, day-one controls that scale with you, not just SOC 2 theater.',
     steps: [
@@ -312,6 +336,7 @@ export const GUIDES = [
   },
   {
     slug: 'architecture',
+    kind: 'path',
     title: 'Software Architecture',
     blurb: 'Decisions you can defend, structures you can refactor, and the framework I use to choose between them.',
     steps: [

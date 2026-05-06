@@ -12,9 +12,9 @@
   --accent-2: #f0a085;
   --accent-soft: rgba(224,130,103,0.18);
   --accent-wash: rgba(224,130,103,0.07);
-  --serif: "Source Serif 4", "Source Serif Pro", Georgia, serif;
-  --sans: "Inter Tight", "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
-  --mono: "JetBrains Mono", "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --serif: "Source Serif 4 Variable", "Source Serif 4", Georgia, serif;
+  --sans: "Inter Tight Variable", "Inter Tight", -apple-system, BlinkMacSystemFont, sans-serif;
+  --mono: "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
   --r-1: 6px; --r-2: 10px; --r-3: 14px;
   --container: 1180px;
   --measure: 68ch;
@@ -34,16 +34,16 @@
 
 
 [data-fontpair="modern"] {
-  --serif: "Inter Tight", system-ui, sans-serif;
-  --sans:  "Inter Tight", system-ui, sans-serif;
+  --serif: "Inter Tight Variable", system-ui, sans-serif;
+  --sans:  "Inter Tight Variable", system-ui, sans-serif;
 }
 [data-fontpair="mono"] {
-  --serif: "JetBrains Mono", ui-monospace, monospace;
-  --sans:  "Inter Tight", system-ui, sans-serif;
+  --serif: "JetBrains Mono Variable", ui-monospace, monospace;
+  --sans:  "Inter Tight Variable", system-ui, sans-serif;
 }
 [data-fontpair="classic"] {
-  --serif: "Source Serif 4", Georgia, serif;
-  --sans: "Inter Tight", system-ui, sans-serif;
+  --serif: "Source Serif 4 Variable", Georgia, serif;
+  --sans: "Inter Tight Variable", system-ui, sans-serif;
 }
 
 * { box-sizing: border-box; }
@@ -346,6 +346,8 @@ button { font-family: inherit; }
   gap: 32px; padding: var(--d-y) 4px; border-top: 1px solid var(--line);
   cursor: pointer; align-items: start;
   transition: background .15s, padding .15s;
+}
+[data-js] .article-row {
   animation: row-in .5s ease both;
 }
 .article-row:last-child { border-bottom: 1px solid var(--line); }
@@ -783,6 +785,9 @@ button { font-family: inherit; }
   display: grid; grid-template-columns: 220px 1fr; gap: 56px;
   align-items: start;
 }
+.content-with-sidebar.is-guides {
+  grid-template-columns: 320px 1fr;
+}
 .content-sidebar { position: sticky; top: 92px; }
 .sidebar-link {
   appearance: none; border: 0; background: transparent; cursor: pointer;
@@ -811,7 +816,8 @@ button { font-family: inherit; }
 }
 .sidebar-chips {
   list-style: none; padding: 0; margin: 0 0 24px;
-  display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px;
+  display: grid; grid-template-columns: repeat(auto-fill, 68px); gap: 6px;
+  justify-content: start;
 }
 .sidebar-chips li { display: contents; }
 .sidebar-chip {
@@ -876,10 +882,216 @@ button { font-family: inherit; }
 .guide-step-meta { font-size: 12px; color: var(--fg-soft); display: flex; gap: 6px; }
 .guide-step-arrow { color: var(--accent); font-size: 16px; transition: transform .15s; }
 .guide-step:hover .guide-step-arrow { transform: translateX(3px); }
+.guide-step-badge {
+  display: inline-block; vertical-align: middle;
+  margin-left: 8px; padding: 1px 7px;
+  font-family: var(--mono); font-size: 9.5px; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--accent); background: var(--accent-soft);
+  border: 1px solid var(--accent); border-radius: 999px;
+  line-height: 1.4;
+}
+.guide-step.is-guide-step .guide-step-num { color: var(--accent); }
 
 @media (max-width: 920px) {
   .content-with-sidebar { grid-template-columns: 1fr; gap: 24px; }
   .content-sidebar { position: static; display: flex; flex-wrap: wrap; gap: 6px; }
   .sidebar-link { width: auto; padding: 6px 14px; margin-left: 0; }
   .sidebar-hint { display: none; }
+}
+
+/* ── Long-form guide cards (on /articles#guides) ───────────────────────── */
+.longform-card {
+  display: block; text-decoration: none; color: inherit;
+  border: 1px solid var(--line); border-left: 3px solid var(--accent);
+  border-radius: var(--r-3);
+  padding: 28px 32px;
+  background: color-mix(in srgb, var(--bg-alt) 60%, transparent);
+  transition: border-color .15s, transform .15s, background .15s;
+}
+.longform-card + .longform-card { margin-top: 20px; }
+.longform-card:hover {
+  border-color: var(--accent); transform: translateY(-2px);
+  background: color-mix(in srgb, var(--accent-wash) 50%, var(--bg-alt));
+}
+.longform-card-eyebrow {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--accent); font-weight: 600;
+  display: flex; align-items: center; gap: 8px; margin-bottom: 12px;
+}
+.longform-card-eyebrow .dot { color: var(--fg-soft); }
+.longform-card-title {
+  font-family: var(--serif); font-weight: 500;
+  font-size: clamp(26px, 3vw, 32px); line-height: 1.15;
+  letter-spacing: -0.02em; margin: 0 0 12px; color: var(--fg);
+  text-wrap: balance;
+}
+.longform-card-subtitle {
+  font-family: var(--serif); font-size: 17px; line-height: 1.5;
+  font-style: italic; color: var(--fg-dim);
+  margin: 0 0 14px; max-width: 60ch;
+}
+.longform-card-blurb {
+  margin: 0 0 22px; color: var(--fg-dim); font-size: 14.5px;
+  line-height: 1.6; max-width: 64ch;
+}
+.longform-card-foot {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; padding-top: 16px; border-top: 1px solid var(--line);
+}
+.longform-card-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+.longform-card-cta {
+  font-family: var(--mono); font-size: 12.5px; font-weight: 600;
+  letter-spacing: 0.04em; color: var(--accent);
+}
+
+/* ── Guide page (long-form) ─────────────────────────────────────────────── */
+.guide-page { max-width: 1140px; }
+.guide-hero { max-width: 820px; margin-bottom: 56px; }
+.guide-hero-eyebrow {
+  font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--accent); font-weight: 600;
+  display: flex; align-items: center; gap: 8px; margin-bottom: 18px;
+}
+.guide-hero-eyebrow .dot { color: var(--fg-soft); }
+.guide-hero-title {
+  font-family: var(--serif); font-weight: 500;
+  font-size: clamp(40px, 5vw, 60px); line-height: 1.05;
+  letter-spacing: -0.025em; margin: 0 0 20px; text-wrap: balance;
+}
+.guide-hero-subtitle {
+  font-family: var(--serif); font-size: 22px; line-height: 1.5;
+  color: var(--fg); font-style: italic; margin: 0 0 32px;
+  max-width: 62ch; padding-left: 20px; border-left: 3px solid var(--accent);
+}
+.guide-hero-meta {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; padding-top: 24px; border-top: 1px solid var(--line);
+}
+.guide-hero-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+
+.guide-layout {
+  display: grid; grid-template-columns: 240px 1fr; gap: 64px;
+  align-items: start;
+}
+.guide-toc {
+  position: sticky; top: 92px; font-size: 13.5px;
+  border-left: 2px solid var(--line); padding-left: 18px;
+  /* On wide viewports pull the TOC out toward the viewport's left edge so it
+     reads as a documentation nav rather than hugging the centered content. */
+  margin-left: min(0px, calc((var(--container) - 100vw) / 2 + 28px));
+}
+.guide-toc-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 4px; }
+.guide-toc-item a {
+  display: grid; grid-template-columns: auto 1fr; gap: 10px;
+  padding: 6px 0; color: var(--fg-soft); align-items: baseline;
+  line-height: 1.35; transition: color .15s;
+}
+.guide-toc-item a:hover { color: var(--fg); }
+.guide-toc-num {
+  font-family: var(--mono); font-size: 10.5px; font-weight: 600;
+  letter-spacing: 0.06em; color: var(--fg-soft);
+}
+.guide-toc-text { color: inherit; }
+.guide-toc-item.is-active { position: relative; }
+.guide-toc-item.is-active::before {
+  content: ""; position: absolute; left: -20px; top: 4px; bottom: 4px;
+  width: 2px; background: var(--accent);
+}
+.guide-toc-item.is-active a,
+.guide-toc-item.is-active .guide-toc-num { color: var(--accent); font-weight: 600; }
+
+.guide-body {
+  font-family: var(--serif); font-size: 19px; line-height: 1.7;
+  max-width: 68ch; color: var(--fg);
+}
+.guide-body p { margin: 0 0 1.4em; }
+.guide-body strong { font-weight: 600; color: var(--accent); }
+
+.guide-intro {
+  margin-bottom: 56px; padding-bottom: 32px;
+  border-bottom: 1px solid var(--line);
+}
+.guide-intro p { font-size: 20px; line-height: 1.7; }
+
+.guide-chapter { margin: 64px 0; scroll-margin-top: 100px; }
+.guide-chapter:first-of-type { margin-top: 0; }
+.guide-chapter-eyebrow {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--accent); font-weight: 600;
+  margin-bottom: 8px;
+}
+.guide-chapter-num { display: inline-block; }
+.guide-chapter-title {
+  font-family: var(--serif); font-weight: 500;
+  font-size: 34px; line-height: 1.15;
+  letter-spacing: -0.02em; margin: 0 0 28px;
+  scroll-margin-top: 100px;
+  color: var(--fg); text-wrap: balance;
+  padding-bottom: 12px; border-bottom: 1px solid var(--line);
+}
+.guide-body h3 {
+  font-family: var(--serif); font-weight: 500; font-size: 22px;
+  line-height: 1.3; margin: 1.8em 0 0.5em; color: var(--fg);
+  scroll-margin-top: 100px;
+}
+.guide-body ul, .guide-body ol.guide-ol {
+  font-size: 17px; line-height: 1.65; padding-left: 24px;
+  margin: 0 0 1.5em;
+}
+.guide-body ul li, .guide-body ol.guide-ol li { margin-bottom: 10px; }
+.guide-body ol.guide-ol { counter-reset: guideol; list-style: none; padding-left: 0; }
+.guide-body ol.guide-ol li {
+  counter-increment: guideol; padding-left: 36px; position: relative;
+}
+.guide-body ol.guide-ol li::before {
+  content: counter(guideol, decimal-leading-zero);
+  position: absolute; left: 0; top: 0;
+  font-family: var(--mono); font-size: 12px; font-weight: 700;
+  color: var(--accent); letter-spacing: 0.04em;
+  padding-top: 4px;
+}
+
+/* Callouts */
+.callout {
+  font-family: var(--sans); font-size: 15px; line-height: 1.6;
+  margin: 1.8em 0; padding: 16px 20px;
+  border-radius: var(--r-2); border: 1px solid var(--line);
+  background: var(--bg-alt); color: var(--fg);
+  position: relative; padding-left: 56px;
+}
+.callout::before {
+  content: ""; position: absolute; left: 18px; top: 18px;
+  width: 22px; height: 22px; border-radius: 50%;
+  display: grid; place-items: center;
+  font-family: var(--mono); font-size: 12px; font-weight: 700;
+  color: #fff;
+}
+.callout-note { border-left: 3px solid #2a6fdb; }
+.callout-note::before { content: "i"; background: #2a6fdb; font-style: italic; }
+.callout-tip { border-left: 3px solid var(--accent); }
+.callout-tip::before { content: "+"; background: var(--accent); }
+.callout-warn { border-left: 3px solid #c43d6e; }
+.callout-warn::before { content: "!"; background: #c43d6e; }
+
+.guide-quote {
+  margin: 1.8em 0; padding: 4px 0 4px 20px;
+  border-left: 3px solid var(--accent);
+  font-style: italic; color: var(--fg-dim);
+}
+.guide-quote cite {
+  display: block; margin-top: 8px;
+  font-style: normal; font-size: 13.5px; color: var(--fg-soft);
+}
+
+.guide-related { margin-top: 80px; padding-top: 40px; border-top: 1px solid var(--line); }
+
+@media (max-width: 920px) {
+  .guide-layout { grid-template-columns: 1fr; gap: 32px; }
+  .guide-toc {
+    position: static; border-left: 0; padding-left: 0;
+    border-top: 1px solid var(--line); padding-top: 16px;
+  }
+  .guide-toc-item.is-active::before { display: none; }
+  .guide-chapter-title { font-size: 28px; }
 }

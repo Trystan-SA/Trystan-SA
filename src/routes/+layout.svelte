@@ -1,5 +1,9 @@
 <script>
   import '../app.css';
+  import '@fontsource-variable/inter-tight';
+  import '@fontsource-variable/source-serif-4/opsz.css';
+  import '@fontsource-variable/source-serif-4/opsz-italic.css';
+  import '@fontsource-variable/jetbrains-mono';
   import { page } from '$app/stores';
   import Icons from '$lib/components/icons.svelte';
   import GithubStarsBadge from '$lib/components/GithubStarsBadge.svelte';
@@ -30,18 +34,13 @@
         <a href="{base}/" class={isActive('/') ? 'is-active' : ''}>Home</a>
         <a
           href="{base}/articles/"
-          class={(isActive('/articles') && $page.url.hash !== '#guides') ||
-          $page.url.pathname.startsWith('/article/')
+          class={isActive('/articles') ||
+          $page.url.pathname.startsWith('/article/') ||
+          $page.url.pathname.startsWith('/guide/')
             ? 'is-active'
             : ''}
         >
           Articles
-        </a>
-        <a
-          href="{base}/articles/#guides"
-          class={isActive('/articles') && $page.url.hash === '#guides' ? 'is-active' : ''}
-        >
-          Guides
         </a>
         <a href="{base}/projects/" class={isActive('/projects') ? 'is-active' : ''}>Projects</a>
         <a href="{base}/about/" class={isActive('/about') ? 'is-active' : ''}>About</a>
@@ -81,7 +80,6 @@
         <ul>
           <li><a href="{base}/">Home</a></li>
           <li><a href="{base}/articles/">Articles</a></li>
-          <li><a href="{base}/articles/#guides">Guides</a></li>
           <li><a href="{base}/projects/">Projects</a></li>
           <li><a href="{base}/about/">About</a></li>
         </ul>
