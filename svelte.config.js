@@ -20,7 +20,8 @@ const config = {
       strict: true
     }),
     prerender: {
-      handleMissingId: 'ignore'
+      handleMissingId: 'ignore',
+      handleUnseenRoutes: 'ignore'
     }
   }
 };
