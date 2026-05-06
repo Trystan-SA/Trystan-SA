@@ -68,14 +68,7 @@
     <SectionHead eyebrow="Featured" title="Learn skills that matter" />
     <div class="featured-grid">
       {#each featured as a (a.slug)}
-        <article
-          class="feat-card"
-          onclick={() => goto(`${base}/article/${a.slug}/`)}
-          onkeydown={(e) =>
-            (e.key === 'Enter' || e.key === ' ') && goto(`${base}/article/${a.slug}/`)}
-          role="link"
-          tabindex="0"
-        >
+        <a class="feat-card" href="{base}/article/{a.slug}/">
           <div class="feat-meta">
             <span>{fmtDate(a.date)}</span>
             <span class="dot">·</span>
@@ -88,7 +81,7 @@
               <TagPill id={t} />
             {/each}
           </div>
-        </article>
+        </a>
       {/each}
     </div>
   </section>

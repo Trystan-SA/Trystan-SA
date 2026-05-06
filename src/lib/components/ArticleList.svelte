@@ -1,5 +1,5 @@
 <script>
-  import { goto } from '$app/navigation';
+  import { base } from '$app/paths';
   import { fmtDate } from '$lib/data.js';
   import TagPill from './TagPill.svelte';
 
@@ -8,12 +8,9 @@
 
 <div class="article-list variant-{variant}">
   {#each articles as a, i (a.slug)}
-    <article
+    <a
       class="article-row"
-      onclick={() => goto(`/article/${a.slug}/`)}
-      onkeydown={(e) => (e.key === 'Enter' || e.key === ' ') && goto(`/article/${a.slug}/`)}
-      role="link"
-      tabindex="0"
+      href="{base}/article/{a.slug}/"
       style="animation-delay: {i * 30}ms"
     >
       <div class="article-row-meta">
@@ -31,6 +28,6 @@
         </div>
       </div>
       <div class="article-row-arrow">→</div>
-    </article>
+    </a>
   {/each}
 </div>

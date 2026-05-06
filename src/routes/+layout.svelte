@@ -97,7 +97,6 @@
     </div>
     <div class="footer-bottom">
       <span>© 2026 Trystan Sarrade. All writing licensed CC-BY 4.0.</span>
-      <span>No Analytics. No tracking.</span>
     </div>
   </footer>
 </div>
