@@ -1,9 +1,5 @@
 <script>
   import '../app.css';
-  import '@fontsource-variable/inter-tight';
-  import '@fontsource-variable/source-serif-4/opsz.css';
-  import '@fontsource-variable/source-serif-4/opsz-italic.css';
-  import '@fontsource-variable/jetbrains-mono';
   import { page } from '$app/stores';
   import { onMount } from 'svelte';
   import Icons from '$lib/components/icons.svelte';
@@ -47,12 +43,12 @@
   <nav class="topnav">
     <div class="topnav-inner">
       <a class="brand" href="{base}/">
-        <div class="brand-avatar" aria-label="Profile picture">
+        <div class="brand-avatar" aria-label="Logo">
           <img
-            src="{base}/trystanx60.jpg"
+            src="{base}/logo.webp"
             alt="Trystan Sarrade"
-            width="60"
-            height="60"
+            width="36"
+            height="36"
             decoding="async"
             fetchpriority="high"
           />

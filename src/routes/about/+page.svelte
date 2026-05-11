@@ -17,7 +17,6 @@
 <div class="page about-page">
 
   <header class="page-head">
-    <div class="hero-eyebrow">{$t.about.eyebrow}</div>
     <h1 class="page-title">Trystan Sarrade</h1>
     <p class="page-lede">{$t.profile.tagline}</p>
   </header>

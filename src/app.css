@@ -1,20 +1,21 @@
 /* style.css — editorial portfolio */
 
 :root {
-  --bg: #14110d;
-  --bg-alt: #1f1814;
-  --fg: #f0eee6;
-  --fg-dim: rgba(240,238,230,0.74);
-  --fg-soft: rgba(240,238,230,0.48);
-  --line: rgba(224,130,103,0.20);
-  --line-strong: rgba(224,130,103,0.36);
-  --accent: #e08267;
-  --accent-2: #f0a085;
-  --accent-soft: rgba(224,130,103,0.18);
-  --accent-wash: rgba(224,130,103,0.07);
-  --serif: "Source Serif 4 Variable", "Source Serif 4", Georgia, serif;
-  --sans: "Inter Tight Variable", "Inter Tight", -apple-system, BlinkMacSystemFont, sans-serif;
-  --mono: "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --bg: #14181c;
+  --bg-alt: #1c2127;
+  --fg: #e8e6df;
+  --fg-dim: rgba(232,230,223,0.78);
+  --fg-soft: rgba(232,230,223,0.48);
+  --line: rgba(232,230,223,0.10);
+  --line-strong: rgba(232,230,223,0.22);
+  --accent: #7af07a;
+  --accent-2: #a8f5a8;
+  --accent-soft: rgba(122,240,122,0.14);
+  --accent-wash: rgba(122,240,122,0.05);
+  --display: "VT323", "Geist Mono", ui-monospace, monospace;
+  --serif: "Geist", system-ui, -apple-system, sans-serif;
+  --sans: "Geist", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --mono: "Geist Mono", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
   --r-1: 6px; --r-2: 10px; --r-3: 14px;
   --container: 1180px;
   --measure: 68ch;
@@ -34,16 +35,19 @@
 
 
 [data-fontpair="modern"] {
-  --serif: "Inter Tight Variable", system-ui, sans-serif;
-  --sans:  "Inter Tight Variable", system-ui, sans-serif;
+  --display: "Geist", system-ui, sans-serif;
+  --serif: "Geist", system-ui, sans-serif;
+  --sans:  "Geist", system-ui, sans-serif;
 }
 [data-fontpair="mono"] {
-  --serif: "JetBrains Mono Variable", ui-monospace, monospace;
-  --sans:  "Inter Tight Variable", system-ui, sans-serif;
+  --display: "Geist Mono", ui-monospace, monospace;
+  --serif: "Geist Mono", ui-monospace, monospace;
+  --sans:  "Geist", system-ui, sans-serif;
 }
 [data-fontpair="classic"] {
-  --serif: "Source Serif 4 Variable", Georgia, serif;
-  --sans: "Inter Tight Variable", system-ui, sans-serif;
+  --display: "VT323", "Geist Mono", monospace;
+  --serif: "Geist", system-ui, sans-serif;
+  --sans: "Geist", system-ui, sans-serif;
 }
 
 * { box-sizing: border-box; }
@@ -87,7 +91,7 @@ button { font-family: inherit; }
 }
 .brand {
   display: flex; align-items: center; gap: 10px; cursor: pointer;
-  font-family: var(--serif); font-weight: 600; font-size: 18px;
+  font-family: var(--display); font-weight: 600; font-size: 18px;
   letter-spacing: -0.01em;
 }
 .brand-avatar {
@@ -205,7 +209,7 @@ button { font-family: inherit; }
 }
 .page-head { max-width: var(--measure); margin-bottom: 48px; }
 .page-title {
-  font-family: var(--serif); font-weight: 500; font-size: clamp(40px, 5vw, 64px);
+  font-family: var(--display); font-weight: 500; font-size: clamp(40px, 5vw, 64px);
   line-height: 1.05; letter-spacing: -0.02em; margin: 12px 0 16px;
 }
 .page-lede { font-size: 19px; color: var(--fg-dim); line-height: 1.55; max-width: 60ch; }
@@ -222,7 +226,7 @@ button { font-family: inherit; }
   width: 64px; height: 2px; background: var(--accent);
 }
 .section-title {
-  font-family: var(--serif); font-weight: 500; font-size: 32px; margin: 8px 0 0;
+  font-family: var(--display); font-weight: 500; font-size: 32px; margin: 8px 0 0;
   letter-spacing: -0.015em;
 }
 .section-head-right { font-size: 14px; color: var(--fg-dim); }
@@ -236,13 +240,13 @@ button { font-family: inherit; }
 .hero { padding: 64px 0 24px; }
 
 .hero-stacked .hero-name {
-  font-family: var(--serif); font-weight: 500;
-  font-size: clamp(56px, 8vw, 96px); line-height: 0.98;
-  letter-spacing: -0.03em; margin: 12px 0 8px;
+  font-family: var(--display); font-weight: 400;
+  font-size: clamp(72px, 9vw, 128px); line-height: 0.92;
+  letter-spacing: 0; margin: 12px 0 8px; text-transform: uppercase;
 }
 .hero-stacked .hero-role {
-  font-size: 22px; color: var(--accent); margin: 0 0 28px;
-  font-style: italic; font-family: var(--serif);
+  font-size: 18px; color: var(--accent); margin: 0 0 28px;
+  font-family: var(--mono); letter-spacing: 0.04em;
 }
 .hero-stacked .hero-bio { max-width: 60ch; font-size: 19px; line-height: 1.55; color: var(--fg); }
 
@@ -250,9 +254,41 @@ button { font-family: inherit; }
   display: grid; grid-template-columns: 1.4fr 1fr; gap: 64px; align-items: center;
 }
 .hero-split .hero-name.display {
-  font-family: var(--serif); font-weight: 500;
-  font-size: clamp(48px, 6vw, 80px); line-height: 1;
-  letter-spacing: -0.025em; margin: 12px 0 20px;
+  font-family: var(--display); font-weight: 400;
+  font-size: clamp(64px, 8vw, 112px); line-height: 0.94;
+  letter-spacing: 0; margin: 12px 0 20px; text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* Terminal typing for the hero name */
+.hero-type {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  white-space: nowrap;
+  max-width: 0;
+  animation: hero-type 1.4s steps(15, end) 0.35s forwards;
+}
+.hero-caret {
+  display: inline-block;
+  width: 0.5ch;
+  height: 0.78em;
+  margin-left: 0.06em;
+  background: var(--accent);
+  vertical-align: -0.04em;
+  box-shadow: 0 0 12px color-mix(in srgb, var(--accent) 65%, transparent);
+  animation: hero-caret-blink 0.9s steps(1) infinite;
+  animation-delay: 1.9s;
+}
+@keyframes hero-type {
+  to { max-width: 15ch; }
+}
+@keyframes hero-caret-blink {
+  50% { background: transparent; box-shadow: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-type { animation: none; max-width: none; }
+  .hero-caret { animation: hero-caret-blink 0.9s steps(1) infinite; animation-delay: 0s; }
 }
 .hero-split .hero-bio { font-size: 18px; color: var(--fg-dim); margin-bottom: 28px; }
 
@@ -292,13 +328,16 @@ button { font-family: inherit; }
 .tech-chip-icon {
   display: block; width: 18px; height: 18px;
   opacity: 0.95;
+  /* Force accent-green tint so the chip icons always match the palette,
+     even if the underlying SVG fill is cached or off-brand. */
+  filter: brightness(0) saturate(100%) invert(86%) sepia(38%) saturate(749%) hue-rotate(45deg) brightness(102%) contrast(95%);
 }
 
 .hero-manifesto { padding: 96px 0 40px; max-width: 28ch; }
 .manifesto-line {
-  font-family: var(--serif); font-weight: 500;
-  font-size: clamp(36px, 5vw, 60px); line-height: 1.08;
-  letter-spacing: -0.025em; margin: 0; text-wrap: balance;
+  font-family: var(--display); font-weight: 400;
+  font-size: clamp(48px, 6.5vw, 84px); line-height: 1.0;
+  letter-spacing: 0; margin: 0; text-wrap: balance; text-transform: uppercase;
 }
 .manifesto-line.dim { color: var(--fg-soft); }
 .manifesto-line strong { font-weight: 600; color: var(--accent); }
@@ -387,7 +426,7 @@ button { font-family: inherit; }
 .feat-meta { font-size: 12px; color: var(--accent); font-weight: 600; display: flex; gap: 8px; align-items: center; }
 .feat-meta .dot { color: var(--fg-soft); }
 .feat-title {
-  font-family: var(--serif); font-weight: 500; font-size: 22px; line-height: 1.2;
+  font-family: var(--display); font-weight: 500; font-size: 22px; line-height: 1.2;
   letter-spacing: -0.015em; margin: 0; text-wrap: balance;
 }
 .feat-excerpt { font-size: 14.5px; color: var(--fg-dim); margin: 0; line-height: 1.55; }
@@ -421,7 +460,7 @@ button { font-family: inherit; }
 .article-row-meta .dot { display: none; }
 .article-row-meta time { color: var(--accent); font-weight: 600; }
 .article-row-title {
-  font-family: var(--serif); font-weight: 500; font-size: 24px;
+  font-family: var(--display); font-weight: 500; font-size: 24px;
   line-height: 1.25; letter-spacing: -0.015em; margin: 0 0 8px;
   text-wrap: balance; transition: color .15s;
 }
@@ -478,7 +517,7 @@ button { font-family: inherit; }
   color: var(--accent); font-weight: 600; margin-bottom: 8px;
 }
 .newsletter-title {
-  font-family: var(--serif); font-weight: 500; font-size: 28px;
+  font-family: var(--display); font-weight: 500; font-size: 28px;
   letter-spacing: -0.015em; margin: 0 0 8px;
 }
 .newsletter-sub { color: var(--fg-dim); margin: 0; font-size: 15px; max-width: 50ch; }
@@ -510,14 +549,14 @@ button { font-family: inherit; }
 .article-head { max-width: 760px; margin-bottom: 56px; }
 .article-tags { display: flex; gap: 6px; margin-bottom: 18px; }
 .article-title {
-  font-family: var(--serif); font-weight: 500;
+  font-family: var(--display); font-weight: 500;
   font-size: clamp(36px, 4.5vw, 56px); line-height: 1.08;
   letter-spacing: -0.025em; margin: 0 0 20px; text-wrap: balance;
 }
 .article-excerpt {
-  font-family: var(--serif); font-size: 22px; line-height: 1.5;
-  color: var(--fg); font-style: italic; margin: 0 0 32px;
-  max-width: 62ch; padding-left: 20px; border-left: 3px solid var(--accent);
+  font-family: var(--sans); font-size: 21px; line-height: 1.55;
+  color: var(--fg); font-style: normal; margin: 0 0 32px;
+  max-width: 62ch; padding-left: 20px; border-left: 2px solid var(--accent);
 }
 .article-meta {
   display: flex; align-items: center; justify-content: space-between;
@@ -572,12 +611,12 @@ button { font-family: inherit; }
 }
 .article-body p { margin: 0 0 1.4em; }
 .article-body h2 {
-  font-family: var(--serif); font-weight: 500; font-size: 30px;
+  font-family: var(--display); font-weight: 500; font-size: 30px;
   line-height: 1.2; letter-spacing: -0.015em;
   margin: 2em 0 0.6em; scroll-margin-top: 100px;
 }
 .article-body h3 {
-  font-family: var(--serif); font-weight: 500; font-size: 22px;
+  font-family: var(--display); font-weight: 500; font-size: 22px;
   margin: 1.6em 0 0.5em; scroll-margin-top: 100px;
 }
 .article-body ul {
@@ -621,8 +660,8 @@ button { font-family: inherit; }
 .tk-kw { color: #b8553f; }
 .tk-str { color: #1f8a5b; }
 .tk-cmt { color: var(--fg-soft); font-style: italic; }
-[data-theme="dark"] .tk-kw { color: #e08267; }
-[data-theme="dark"] .tk-str { color: #6cc599; }
+[data-theme="dark"] .tk-kw { color: var(--accent-2); }
+[data-theme="dark"] .tk-str { color: var(--accent); }
 
 /* end-of-article actions */
 .article-end-actions {
@@ -700,7 +739,7 @@ button { font-family: inherit; }
 .about-prose .lede-prose { font-size: 22px; color: var(--fg); margin-top: 0; }
 .about-prose p { margin: 0 0 1.3em; color: var(--fg-dim); }
 .about-prose h3 {
-  font-family: var(--serif); font-size: 22px; font-weight: 500;
+  font-family: var(--display); font-size: 22px; font-weight: 500;
   margin: 2em 0 0.5em; color: var(--fg);
 }
 .about-prose strong { color: var(--fg); font-weight: 600; }
@@ -727,7 +766,7 @@ button { font-family: inherit; }
 .project-meta { font-size: 13px; color: var(--fg-soft); display: flex; flex-direction: column; gap: 4px; padding-top: 6px; }
 .project-year { color: var(--accent); font-weight: 600; font-variant-numeric: tabular-nums; }
 .project-name {
-  font-family: var(--serif); font-weight: 500; font-size: 26px;
+  font-family: var(--display); font-weight: 500; font-size: 26px;
   letter-spacing: -0.015em; margin: 0 0 12px;
   display: inline-flex; align-items: center; gap: 8px;
 }
@@ -762,7 +801,7 @@ button { font-family: inherit; }
   padding: 8px 8px 4px 12px;
 }
 .project-highlight-title {
-  font-family: var(--serif); font-weight: 500; font-size: 14.5px;
+  font-family: var(--display); font-weight: 500; font-size: 14.5px;
   letter-spacing: -0.01em; color: var(--fg);
   margin-bottom: 2px;
 }
@@ -867,7 +906,7 @@ button { font-family: inherit; }
 .sidebar-link:hover .sidebar-hint { color: var(--fg-dim); }
 .sidebar-link.is-active { color: var(--accent); border-left-color: var(--accent); }
 .sidebar-link-row {
-  font-family: var(--serif); font-weight: 500; font-size: 22px;
+  font-family: var(--display); font-weight: 500; font-size: 22px;
   letter-spacing: -0.015em;
   display: flex; align-items: baseline; justify-content: space-between; gap: 10px;
 }
@@ -917,7 +956,7 @@ button { font-family: inherit; }
   margin-bottom: 8px;
 }
 .guide-card-title {
-  font-family: var(--serif); font-weight: 500; font-size: 26px;
+  font-family: var(--display); font-weight: 500; font-size: 26px;
   letter-spacing: -0.015em; color: var(--fg); margin: 0;
 }
 .guide-card-count {
@@ -942,7 +981,7 @@ button { font-family: inherit; }
 }
 .guide-step-body { display: flex; flex-direction: column; gap: 2px; }
 .guide-step-title {
-  font-family: var(--serif); font-weight: 500; font-size: 16px;
+  font-family: var(--display); font-weight: 500; font-size: 16px;
   letter-spacing: -0.01em; line-height: 1.3;
 }
 .guide-step-meta { font-size: 12px; color: var(--fg-soft); display: flex; gap: 6px; }
@@ -987,7 +1026,7 @@ button { font-family: inherit; }
 }
 .longform-card-eyebrow .dot { color: var(--fg-soft); }
 .longform-card-title {
-  font-family: var(--serif); font-weight: 500;
+  font-family: var(--display); font-weight: 500;
   font-size: clamp(26px, 3vw, 32px); line-height: 1.15;
   letter-spacing: -0.02em; margin: 0 0 12px; color: var(--fg);
   text-wrap: balance;
@@ -1021,7 +1060,7 @@ button { font-family: inherit; }
 }
 .guide-hero-eyebrow .dot { color: var(--fg-soft); }
 .guide-hero-title {
-  font-family: var(--serif); font-weight: 500;
+  font-family: var(--display); font-weight: 500;
   font-size: clamp(40px, 5vw, 60px); line-height: 1.05;
   letter-spacing: -0.025em; margin: 0 0 20px; text-wrap: balance;
 }
@@ -1078,7 +1117,7 @@ button { font-family: inherit; }
 .guide-intro p { font-size: 20px; line-height: 1.7; }
 
 .guide-body h2 {
-  font-family: var(--serif); font-weight: 500;
+  font-family: var(--display); font-weight: 500;
   font-size: 34px; line-height: 1.15;
   letter-spacing: -0.02em; margin: 64px 0 28px;
   scroll-margin-top: 100px;
@@ -1094,7 +1133,7 @@ button { font-family: inherit; }
   margin-bottom: 8px;
 }
 .guide-body h3 {
-  font-family: var(--serif); font-weight: 500; font-size: 22px;
+  font-family: var(--display); font-weight: 500; font-size: 22px;
   line-height: 1.3; margin: 1.8em 0 0.5em; color: var(--fg);
   scroll-margin-top: 100px;
 }

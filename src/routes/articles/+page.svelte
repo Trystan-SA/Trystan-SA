@@ -79,7 +79,6 @@
   </svg>
 
   <header class="page-head">
-    <div class="hero-eyebrow">{$t.articles.eyebrow}</div>
     <h1 class="page-title">{$t.articles.title}</h1>
     <p class="page-lede">
       {$t.articles.lede(ARTICLES.length, CATEGORIES.length)}

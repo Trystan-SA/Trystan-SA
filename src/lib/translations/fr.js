@@ -13,7 +13,7 @@ export default {
   },
   profile: {
     role: 'Architecte Logiciel',
-    bio: "Architecte logiciel senior passionné par les systèmes qui fonctionnent vraiment. J'écris sur le côté concret du développement : les choix d'architecture, les dynamiques d'équipe et les outils qui permettent de passer des idées aux produits livrés.",
+    bio: "Architecte logiciel senior, j'ai travaillé en startup dans l'EdTech et la HRTech. J'écris des logiciels scalables, optimisés et fonctionnels, et je pose des MVP pour valider le besoin avant de scaler.",
     brandSub: 'Architecte Logiciel Senior',
   },
   home: {
@@ -62,7 +62,7 @@ export default {
     eyebrow: 'Projets',
     title: "Ce que j'ai construit",
     lede: "Une liste courte et honnête. Certains sont livrés, d'autres en cours, tous m'ont appris quelque chose.",
-    proudOf: 'Dont je suis fier',
+    proudOf: 'Ce dont je suis fier',
     earlierSmaller: 'Plus anciens & plus petits',
   },
   about: {

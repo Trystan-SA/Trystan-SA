@@ -4,7 +4,6 @@
 
 <div class="page projects-page">
   <header class="page-head">
-    <div class="hero-eyebrow">{$t.projects.eyebrow}</div>
     <h1 class="page-title">{$t.projects.title}</h1>
     <p class="page-lede">{$t.projects.lede}</p>
   </header>
@@ -21,7 +20,7 @@
           <a href="https://somanyways.co" target="_blank" rel="noopener">Somanyways <span class="project-link">↗</span></a>
         </h3>
         {#if $lang === 'fr'}
-          <p>Plateforme avec 30 000+ utilisateurs. Tech lead sur l'architecture, la qualité du code et l'évolution produit. Suppression de Nx, migration de Jest vers Vitest, amélioration de la vitesse CI/CD de 3×. Remplacement de Typeform et Retool par un système de formulaires et des panneaux d'administration internes. Livraison des fonctionnalités clés (chatbot IA, tableau de bord manager, bilans, modules d'apprentissage, référentiel manager) et introduction du développement piloté par les specs avec des LLM agentiques.</p>
+          <p>Plateforme avec 30 000+ utilisateurs. Tech lead sur l'architecture, la qualité du code et l'évolution produit. Suppression de Nx, migration de Jest vers Vitest, amélioration de la vitesse CI/CD de 3×. Remplacement de Typeform et Retool par un système de formulaires et des pannels d'administration internes. Livraison des fonctionnalités clés (chatbot IA, tableau de bord manager, bilans, modules d'apprentissage, référentiel manager) et introduction du spec driven development avec des LLM agentiques.</p>
         {:else}
           <p>Platform with 30K+ users. Tech lead on architecture, code quality, and product evolution. Removed Nx, migrated from Jest to Vitest, and improved CI/CD speed 3×. Replaced Typeform and Retool with an in-house form system and admin panels. Shipped core features (AI chatbot, manager dashboard, checkups, learning modules, manager referential) and introduced spec-driven development with agentic LLMs.</p>
         {/if}

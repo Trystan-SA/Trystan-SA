@@ -13,6 +13,8 @@
   Cache-Control: public, max-age=86400, must-revalidate
 /trystan.jpg
   Cache-Control: public, max-age=86400, must-revalidate
+/logo.webp
+  Cache-Control: public, max-age=86400, must-revalidate
 
 # HTML and the sitemap should always revalidate so deploys go live immediately.
 /*.html

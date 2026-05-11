@@ -7,8 +7,9 @@
 <div class="page home">
   <header class="hero hero-split">
     <div class="hero-split-left">
-      <div class="hero-eyebrow">{$t.profile.role.toUpperCase()}</div>
-      <h1 class="hero-name display">Trystan Sarrade</h1>
+      <h1 class="hero-name display" aria-label="Trystan Sarrade">
+        <span class="hero-type">Trystan Sarrade</span><span class="hero-caret" aria-hidden="true"></span>
+      </h1>
       <p class="hero-bio">{$t.profile.bio}</p>
 
       <div class="tech-stack" aria-label="Tech stack">
