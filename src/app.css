@@ -15,7 +15,7 @@
   --display: "VT323", "Geist Mono", ui-monospace, monospace;
   --serif: "Geist", system-ui, -apple-system, sans-serif;
   --sans: "Geist", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  --mono: "Geist Mono", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
   --r-1: 6px; --r-2: 10px; --r-3: 14px;
   --container: 1180px;
   --measure: 68ch;
@@ -52,7 +52,9 @@
 
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
+html { overflow-x: clip; }
 body {
+  overflow-x: clip;
   background: var(--bg);
   background-image:
     radial-gradient(1200px 600px at 0% 0%, var(--accent-wash), transparent 60%),
@@ -109,7 +111,7 @@ button { font-family: inherit; }
   font-family: var(--sans); letter-spacing: 0.02em;
 }
 .brand-name { line-height: 1; }
-.brand-sub { display: block; font-size: 11px; font-weight: 400; color: var(--fg-soft); margin-top: 2px; letter-spacing: 0; font-family: var(--sans); }
+.brand-sub { display: block; font-size: 14px; font-weight: 500; color: var(--fg); letter-spacing: 0; font-family: var(--sans); line-height: 1.1; }
 
 .nav-links { display: flex; align-items: center; gap: 4px; }
 .nav-links a {
@@ -237,7 +239,29 @@ button { font-family: inherit; }
 }
 
 /* ── Hero variants ───────────────────────────────────────────────────────── */
-.hero { padding: 64px 0 24px; }
+/* .hero absorbs what was .page.home's padding so the rain canvas (inside .hero)
+   covers the full visual hero band, not just the inner text area. */
+.hero { padding: 124px 0 calc(24px + var(--d-section)); position: relative; isolation: isolate; }
+.hero > :not(.hero-rain-wrap) { position: relative; z-index: 1; }
+.page.home { overflow: visible; padding: 0; }
+
+/* Visual break between the hero band and the "Now" section */
+.now-section {
+  position: relative;
+  margin-top: 0;
+  padding: var(--d-section) 0;
+  background: var(--bg-alt);
+  /* full-bleed background that extends past .shell-main's container */
+}
+.now-section::before {
+  content: ""; position: absolute; inset: 0 50%;
+  width: 100vw; height: 100%;
+  transform: translateX(-50%);
+  background: var(--bg-alt);
+  border-top: 1px solid var(--line);
+  z-index: -1;
+}
+.now-section > * { position: relative; z-index: 1; }
 
 .hero-stacked .hero-name {
   font-family: var(--display); font-weight: 400;
@@ -311,14 +335,15 @@ button { font-family: inherit; }
 }
 .tech-chip {
   display: inline-flex; align-items: center; gap: 8px;
-  padding: 6px 12px 6px 10px;
+  padding: 5px 10px 5px 9px;
   border: 1px solid var(--line);
-  border-radius: 999px;
+  border-radius: var(--r-1);
   background: var(--accent-wash);
   font-family: var(--mono);
   font-size: 12.5px;
   color: var(--fg-dim);
   transition: border-color .18s ease, color .18s ease, background .18s ease;
+  cursor: default;
 }
 .tech-chip:hover {
   border-color: var(--line-strong);
@@ -343,6 +368,102 @@ button { font-family: inherit; }
 .manifesto-line strong { font-weight: 600; color: var(--accent); }
 
 .hero-actions { display: flex; gap: 12px; margin-top: 28px; flex-wrap: wrap; }
+
+/* ── Freelance availability widget ──────────────────────────────────────── */
+.availability {
+  display: flex; flex-direction: column; gap: 16px;
+  margin: 0 0 28px;
+  padding: 18px 22px 20px;
+  max-width: 560px;
+  border: 1px solid var(--line-strong);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--r-2);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--accent-wash) 80%, transparent),
+    color-mix(in srgb, var(--bg-alt) 60%, transparent)
+  );
+  position: relative;
+  overflow: hidden;
+}
+.availability::before {
+  content: ""; position: absolute; top: 0; right: -40px;
+  width: 120px; height: 120px; border-radius: 50%;
+  background: var(--accent); opacity: 0.06;
+  pointer-events: none;
+}
+
+.availability-hd {
+  display: flex; align-items: center; gap: 10px;
+  flex-wrap: wrap;
+  font-family: var(--mono);
+  font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+  font-weight: 600;
+  position: relative;
+}
+.availability-pulse {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--accent); box-shadow: 0 0 0 0 var(--accent);
+  animation: pulse 2.4s ease-out infinite;
+  flex-shrink: 0;
+}
+.availability-status { color: var(--accent); }
+.availability-sep { color: var(--line-strong); }
+.availability-tag { color: var(--fg-soft); font-weight: 500; letter-spacing: 0.1em; }
+.availability-loc {
+  display: inline-flex; align-items: center; gap: 5px;
+  color: var(--fg-soft); font-weight: 500; letter-spacing: 0.1em;
+  margin-left: auto;
+  padding-left: 12px;
+  border-left: 1px solid var(--line);
+}
+.availability-loc svg { opacity: 0.8; flex-shrink: 0; }
+
+.availability-body {
+  display: flex; align-items: center; gap: 24px;
+  flex-wrap: wrap;
+  position: relative;
+}
+.availability-stat {
+  display: flex; flex-direction: column; gap: 4px;
+  min-width: 0;
+}
+.availability-val {
+  font-family: var(--display); font-weight: 500;
+  font-size: 44px; line-height: 0.95;
+  color: var(--fg);
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+}
+.availability-unit {
+  font-size: 26px; color: var(--accent);
+  margin-left: 1px; letter-spacing: 0;
+}
+.availability-lbl {
+  font-family: var(--mono);
+  font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--fg-soft);
+}
+.availability-divider {
+  width: 1px; align-self: stretch;
+  background: var(--line);
+  margin: 6px 0;
+}
+.availability-cta {
+  margin-left: auto;
+  display: inline-flex; align-items: center;
+  font-family: var(--mono);
+  font-size: 12px; font-weight: 600; letter-spacing: 0.06em;
+  color: var(--accent);
+  background: transparent;
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  padding: 9px 16px;
+  text-decoration: none;
+  transition: background .15s, color .15s;
+  white-space: nowrap;
+}
+.availability-cta:hover { background: var(--accent); color: var(--bg); }
 
 .now-card {
   background: var(--accent-soft); border: 1px solid var(--line-strong);
@@ -386,8 +507,8 @@ button { font-family: inherit; }
   font-family: inherit;
 }
 .btn:active { transform: translateY(1px); }
-.btn-primary { background: var(--accent); color: #fff; }
-.btn-primary:hover { background: var(--fg); color: var(--bg); }
+.btn-primary { background: var(--accent); color: var(--bg); font-weight: 600; }
+.btn-primary:hover { background: var(--accent-2); color: var(--bg); }
 .btn-ghost { background: transparent; color: var(--accent); border: 1px solid var(--line-strong); }
 .btn-ghost:hover { background: var(--accent-soft); border-color: var(--accent); }
 

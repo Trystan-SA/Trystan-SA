@@ -14,8 +14,8 @@ export default {
   profile: {
     role: 'Software Architect',
     tagline: 'Building SaaS, games, tools and many other things.',
-    bio: "I'm a senior software architect deeply passionate about engineering systems that truly work and tackle real-world problems. I write about the messy middle of software, the architectural choices, the team patterns, and the tooling that turns ideas into shipped products.",
-    brandSub: 'Senior Software Architect',
+    bio: "Senior fullstack software engineer with 7 years of experience, specialized in SaaS development. I also lead engineering teams and do product engineering, shaping the product itself with deep technical understanding of what we ship. Daily user of AI tools for code review and dev/ops automation.",
+    brandSub: 'Senior software architect',
   },
   home: {
     stackLabel: 'Stack',
@@ -23,6 +23,14 @@ export default {
     aboutBtn: 'More about me',
     nowLabel: 'Now',
     nowMoreLink: 'See the projects page →',
+    availability: {
+      status: 'Available',
+      tag: 'Freelance · Consulting',
+      location: 'Bordeaux · Paris',
+      daysLabel: 'days / week',
+      rateLabel: 'per day',
+      cta: 'Book a call →',
+    },
     featuredEyebrow: 'Featured',
     featuredTitle: 'Learn skills that matter',
     featuredMinRead: 'min read',
@@ -40,7 +48,6 @@ export default {
       'Working at <a href="https://somanyways.co" target="_blank" rel="noopener">Somanyways</a> as a Senior Fullstack Engineer.',
       'Released <a href="https://criterium.app" target="_blank" rel="noopener">Criterium.app</a> (follow the link to know what it is about).',
       'Developing <a href="https://github.com/Trystan-SA/claude-design-system-prompt" target="_blank" rel="noopener">Forgebox</a>, an AI orchestration agent with MicroVMs to improve security.',
-      'Lifting four times a week. PR week incoming.',
     ],
   },
   articles: {

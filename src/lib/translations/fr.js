@@ -13,8 +13,8 @@ export default {
   },
   profile: {
     role: 'Architecte Logiciel',
-    bio: "Architecte logiciel senior, j'ai travaillé en startup dans l'EdTech et la HRTech. J'écris des logiciels scalables, optimisés et fonctionnels, et je pose des MVP pour valider le besoin avant de scaler.",
-    brandSub: 'Architecte Logiciel Senior',
+    bio: "Ingénieur logiciel fullstack senior avec 7 ans d'expérience, spécialisé dans le développement SaaS. Je dirige aussi des équipes d'ingénierie et fais du product engineering, en façonnant le produit lui-même avec une compréhension technique profonde de ce qu'on livre. Utilisateur au quotidien des outils IA pour la revue de code et l'automatisation dev/ops.",
+    brandSub: 'Architecte logiciel sénior',
   },
   home: {
     stackLabel: 'Stack',
@@ -22,6 +22,14 @@ export default {
     aboutBtn: 'En savoir plus',
     nowLabel: 'En ce moment',
     nowMoreLink: 'Voir la page projets →',
+    availability: {
+      status: 'Disponible',
+      tag: 'Freelance · Consulting',
+      location: 'Bordeaux · Paris',
+      daysLabel: 'jours / semaine',
+      rateLabel: 'par jour',
+      cta: 'Prendre RDV →',
+    },
     featuredEyebrow: 'À la une',
     featuredTitle: 'Apprendre ce qui compte',
     featuredMinRead: 'min de lecture',
@@ -39,7 +47,6 @@ export default {
       'En poste chez <a href="https://somanyways.co" target="_blank" rel="noopener">Somanyways</a> en tant qu\'Ingénieur Fullstack Senior.',
       'Sorti <a href="https://criterium.app" target="_blank" rel="noopener">Criterium.app</a> (suivez le lien pour en savoir plus).',
       'Développement de <a href="https://github.com/Trystan-SA/claude-design-system-prompt" target="_blank" rel="noopener">Forgebox</a>, un agent IA d\'orchestration avec MicroVMs pour améliorer la sécurité.',
-      'Musculation quatre fois par semaine. Semaine de PR en vue.',
     ],
   },
   articles: {

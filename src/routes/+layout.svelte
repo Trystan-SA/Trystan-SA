@@ -42,21 +42,8 @@
 <div class="shell">
   <nav class="topnav">
     <div class="topnav-inner">
-      <a class="brand" href="{base}/">
-        <div class="brand-avatar" aria-label="Logo">
-          <img
-            src="{base}/logo.webp"
-            alt="Trystan Sarrade"
-            width="36"
-            height="36"
-            decoding="async"
-            fetchpriority="high"
-          />
-        </div>
-        <div>
-          <div class="brand-name">Trystan Sarrade</div>
-          <span class="brand-sub">{$t.profile.brandSub}</span>
-        </div>
+      <a class="brand" href="{base}/" aria-label="Trystan Sarrade">
+        <span class="brand-sub">{$t.profile.brandSub}</span>
       </a>
       <div class="nav-links">
         <a href="{base}/" class={isActive('/') ? 'is-active' : ''}>{$t.nav.home}</a>
