@@ -30,7 +30,8 @@
     if (reduce || !canvas) return;
 
     const ctx = canvas.getContext('2d', { alpha: true });
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    // Cap DPR — 1.5 is plenty for animated text and halves paint cost vs 2x.
+    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
     const fontSize = 16;
     const colSpacing = 18;
     const hexFontSize = 12;
@@ -177,12 +178,32 @@
       if (sizeChanged || columns.length === 0) initColumns();
     }
 
+    // Edge-mask: replaces the CSS mask-image gradient. Bright on the sides,
+    // near-transparent in the center, so text stays legible without forcing
+    // the compositor to repaint a masked, blended layer every frame.
+    function edgeAlpha(x) {
+      const t = width > 0 ? x / width : 0.5;
+      // mirror around 0.5 → distance from center, 0 (center) → 0.5 (edge)
+      const d = Math.abs(t - 0.5) * 2; // 0..1
+      // ease toward 1 at the edges, near 0 in the middle ~[0.2..0.8]
+      if (d < 0.2) return 0.04;
+      if (d > 0.84) return 1;
+      const k = (d - 0.2) / 0.64;
+      return 0.04 + k * k * 0.96;
+    }
+
+    // Throttle to ~40fps — visually identical for falling glyphs, ~33% less work.
+    const FRAME_MIN_MS = 24;
+    let lastDraw = 0;
+
     function frame(now) {
       raf = requestAnimationFrame(frame);
       if (!isVisible()) {
         last = now;
         return;
       }
+      if (now - lastDraw < FRAME_MIN_MS) return;
+      lastDraw = now;
       const dt = Math.min(0.05, (now - last) / 1000);
       last = now;
 
@@ -197,14 +218,14 @@
         b.y += b.speed * dt;
         animateHexBlock(b, now);
 
+        const xFade = edgeAlpha(b.x + b.w / 2);
         for (let i = 0; i < b.lines.length; i++) {
           const y = b.y + i * hexLineH;
           if (y < -hexLineH || y > height) continue;
-          // soft top/bottom fade per-line so blocks ease in/out within the hero
           const edgeFade =
             Math.min(1, (y + hexLineH) / 60) *
-            Math.min(1, (height - y) / 60);
-          // first line acts as the "header" — brighter
+            Math.min(1, (height - y) / 60) *
+            xFade;
           if (i === 0) {
             ctx.fillStyle = `rgba(220, 255, 220, ${(0.95 * edgeFade).toFixed(3)})`;
           } else {
@@ -239,16 +260,20 @@
           col.glyphs[i] = pick();
         }
 
+        const xFade = edgeAlpha(col.x);
+        if (xFade < 0.05) continue; // skip near-invisible center columns entirely
+
         for (let i = 0; i < col.glyphs.length; i++) {
           const y = Math.floor(col.head) - i * fontSize;
           if (y < -fontSize || y > height) continue;
           if (i === 0) {
+            const a = (col.bright ? 0.95 : 0.85) * xFade;
             ctx.fillStyle = col.bright
-              ? 'rgba(220, 255, 220, 0.95)'
-              : 'rgba(200, 250, 200, 0.85)';
+              ? `rgba(220, 255, 220, ${a.toFixed(3)})`
+              : `rgba(200, 250, 200, ${a.toFixed(3)})`;
           } else {
             const t = 1 - i / col.trail;
-            const a = Math.max(0.03, 0.7 * t * t);
+            const a = Math.max(0.03, 0.7 * t * t) * xFade;
             ctx.fillStyle = col.bright
               ? `rgba(168, 245, 168, ${a.toFixed(3)})`
               : `rgba(122, 240, 122, ${(a * 0.85).toFixed(3)})`;
@@ -315,28 +340,6 @@
     z-index: 0;
     overflow: hidden;
     opacity: 0.6;
-    mix-blend-mode: screen;
-    /* Sides bright, center almost invisible — keeps text legible */
-    mask-image: linear-gradient(
-      to right,
-      #000 0%,
-      rgba(0, 0, 0, 0.95) 8%,
-      rgba(0, 0, 0, 0.04) 40%,
-      transparent 50%,
-      rgba(0, 0, 0, 0.04) 60%,
-      rgba(0, 0, 0, 0.95) 92%,
-      #000 100%
-    );
-    -webkit-mask-image: linear-gradient(
-      to right,
-      #000 0%,
-      rgba(0, 0, 0, 0.95) 8%,
-      rgba(0, 0, 0, 0.04) 40%,
-      transparent 50%,
-      rgba(0, 0, 0, 0.04) 60%,
-      rgba(0, 0, 0, 0.95) 92%,
-      #000 100%
-    );
   }
   .hero-rain {
     display: block;

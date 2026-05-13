@@ -18,6 +18,28 @@
 
   onMount(() => {
     initLang();
+
+    if (!import.meta.env.PROD) return;
+    // Defer GA4 until the browser is idle so it doesn't fight critical
+    // resources for main-thread time or get flagged by Lighthouse for unused
+    // JS within the LCP/FCP window.
+    const loadGA = () => {
+      if (window.__gaLoaded) return;
+      window.__gaLoaded = true;
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = function () { window.dataLayer.push(arguments); };
+      window.gtag('js', new Date());
+      window.gtag('config', 'G-523N92F8SN');
+      const s = document.createElement('script');
+      s.async = true;
+      s.src = 'https://www.googletagmanager.com/gtag/js?id=G-523N92F8SN';
+      document.head.appendChild(s);
+    };
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(loadGA, { timeout: 4000 });
+    } else {
+      setTimeout(loadGA, 2500);
+    }
   });
 
   $effect(() => {
@@ -27,17 +49,6 @@
   });
 </script>
 
-<svelte:head>
-  {#if import.meta.env.PROD}
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-523N92F8SN"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-523N92F8SN');
-    </script>
-  {/if}
-</svelte:head>
 
 <div class="shell">
   <nav class="topnav">
