@@ -1,0 +1,70 @@
+---
+title: "Les migrations Down ne servent à rien, et ce que ça dit sur l'industrie"
+excerpt: "Personne ne lance jamais une migration Down en production. Pourtant on continue à en écrire... pour rien."
+---
+
+Quand est-ce la dernière fois que vous avez, ou vu quelqu'un lancer une migration down en production ? Personnellement, en 7 ans de développement, ça ne m'est jamais arrivé
+et personne parmi mes collègues et amis devs n'en a vu non plus.
+
+Pourtant on continue à les écrire. Rails les génère par défaut. Django attend que ses opérations soient réversibles. Knex, Goose, Liquibase, Flyway, tous ces outils tiennent
+pour acquis qu'une migration propre comporte un Up et un Down. C'est devenu un réflexe tellement profond qu'on a arrêté de se poser la question : à quoi ça sert, vraiment ?
+
+## La promesse
+
+La migration down promet que "si tu te trompes, tu peux revenir en arrière". Le sacro-saint filet de sécurité de toute migration en prod. Rien de mal ne peut arriver avec une migration down. N'est-ce pas ?
+
+Sauf que ça n'a jamais été utile à quelqu'un en production. Et dans les cas où quelqu'un ici l'a déjà utilisée une fois, il existait probablement d'autres solutions plus stables, viables et faciles à mettre en place.
+
+
+## Pourquoi personne ne s'en sert
+
+**Ce n'est pas réversible.** Un `DROP COLUMN user_email` a tourné, le Down peut écrire `ADD COLUMN user_email TEXT`. La colonne est recréée, mais les données ne sont pas récupérées. Dommage 🤷‍♂️
+
+**Le code n'a jamais été testé.** Vous testez toujours la migration up, au moins sur un environnement de staging, ou bien depuis un test-container sur votre CI/CD. Mais je suis prêt à parier que personne ici ne teste l'équivalent en down. Comment êtes-vous certains que le schéma et les données de production vont réagir de la façon à laquelle vous vous attendiez ?
+
+**La base de données n'est pas le seul composant qui doit revenir en arrière.** Un déploiement raté ne se règle pas en faisant tourner la migration à l'envers. Le code déjà déployé a écrit dans la nouvelle structure. Les caches, les workers, les replicas, tous sont normalement déployés avec la nouvelle version. Revenir en arrière est une stratégie plus ardue que de simplement appliquer une migration down.
+
+
+## Pourquoi on s'obstine ?
+
+Je suis persuadé que c'est à cause des conventions "sociales". Le fait de vouloir bien faire, faire comme les autres, pour passer pour un expert.
+
+J'ai vu la même chose se passer dans le monde de la modélisation 3D lors de mes études de Réalisation numérique. Une des règles qu'on nous a martelée, c'était "Ne faites jamais de Ngon dans vos modèles 3D".
+
+**Les Ngons**, ce sont les faces à plus de 4 sommets. Cela comprend toutes les formes au-delà d'un carré (un polygone). Ils sont historiquement évités en modélisation 3D pour plusieurs raisons. Notamment dans l'animation où il est difficile d'animer des surfaces qui présentent des Ngons et dans certains logiciels de rendu où les Ngons ne sont pas correctement affichés. Ils sont aussi évités car les outils de modélisation ont des automatismes assez pratiques qui ne fonctionnent souvent qu'avec des modèles avec des faces à base de carrés. Ce qui n'est plus un problème en soi une fois la modélisation finalisée.
+
+Mais en 2017 (au moment où je réalisais mes études dans ce domaine), lorsque j'ai eu le malheur de faire des Ngons pour optimiser certaines parties de mes modèles pour les moteurs de jeux en temps réel, j'ai reçu une vague de critiques assez impressionnante de la part des étudiants et des professeurs, me disant qu'un modèle comme ça, c'était bon pour la poubelle et que personne dans l'industrie n'accepterait ça.
+
+Sauf que dans le contexte dans lequel j'avais construit ce modèle (pour du rendu en temps réel, sans animation, modèle 3D déjà finalisé), c'était une décision cohérente et tout à fait acceptable qui répondait à ce que je voulais en faire.
+
+Ça n'a pas empêché des professionnels du milieu de juger hâtivement ce choix purement technique sans essayer de comprendre pourquoi et dans quel cas il fallait réellement l'éviter.
+
+C'est exactement ce qui se passe dans notre cas avec les migrations. C'est une convention, qui certes peut être utile sur certains projets. Mais dans d'autres (et dans une grande majorité des cas), cela ne sert strictement à rien.
+
+
+
+## Ce qu'on met à la place
+
+De mon côté, cela fait des années que j'ai renoncé à écrire des migrations down en production.
+
+Mais cela ne veut pas dire que j'y vais au talent, ce serait attendre qu'un drame se produise.
+
+Ce que je mets en place concrètement :
+
+- **Forward-only.** Un Up, jamais de Down. Une erreur ? On corrige avec un nouveau fichier daté.
+- **Expand / contract.** Pour les changements destructifs, on découpe en deux phases. D'abord on ajoute la nouvelle structure à côté de l'ancienne. Plus tard, quand le code qui l'utilise est en prod depuis assez longtemps pour qu'un rollback du code reste compatible avec le schéma, on supprime l'ancienne.
+- **Sauvegarde avant migration destructive.** Si votre système de base de données ne supporte pas le point-in-time recovery, une backup de la base de données avant la migration est une bonne solution pour éviter la perte d'informations en cas de migration destructive. C'est évidemment en cas de dernier recours, mais ça évite de perdre des données importantes sur certaines tables ou colonnes.
+- **Tests d'idempotence.** Que la migration puisse être rejouée sans casser. Beaucoup plus utile en pratique qu'un Down.
+- **Migrer les données de production dans un environnement de test.** Avant une mise en production, il est utile de récupérer les données de la production et de lancer les scripts de migration sur un environnement de test. C'est la solution que je préfère car elle donne une très bonne indication de si une migration fonctionne correctement ou non.
+
+## Ce que ça dit sur le métier
+
+Ce n'est pas tellement le problème de la migration down qui est intéressant ici. Au final, c'est un peu un non-sujet. Mais cet exemple en dit long sur le rapport que l'industrie a de ce type de "bonnes pratiques".
+
+Le principe est le même pour le clean-code, les patterns, le DDD, le TDD, le SDD et j'en passe...
+
+Certaines personnes dans cette industrie ne finissent par juger qu'à travers certaines pratiques, sans essayer d'en comprendre les tenants et aboutissants.
+
+Les microservices imposés à des équipes de cinq personnes. Le TDD pratiqué comme une religion. Les architectures hexagonales pour des CRUD à trois endpoints. C'est le même mouvement : de bonnes idées arrachées à leur contexte, transformées en obligation morale sans jamais les remettre en question.
+
+L'industrie aime les patterns parce qu'ils nous épargnent une décision. Et chaque décision épargnée est une occasion ratée d'apprendre quelque chose sur son propre système.

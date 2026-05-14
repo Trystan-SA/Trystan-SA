@@ -1,0 +1,74 @@
+---
+title: "Down migrations are useless, and what that says about our industry"
+excerpt: "Nobody ever runs a down migration in production. Yet we keep writing them... for nothing."
+date: "2026-05-14"
+readTime: 5
+tags: ["architecture", "devops"]
+featured: false
+---
+
+When was the last time you ran — or saw someone run — a down migration in production? Personally, in 7 years of development, it has never happened to me,
+and nobody among my colleagues and dev friends has seen one either.
+
+Yet we keep writing them. Rails generates them by default. Django expects its operations to be reversible. Knex, Goose, Liquibase, Flyway — all these tools take
+for granted that a clean migration has both an Up and a Down. The reflex has become so deep that we've stopped asking the question: what is it actually for?
+
+## The promise
+
+The down migration promises that "if you make a mistake, you can roll back." The sacred safety net of every migration in prod. Nothing bad can happen with a down migration. Right?
+
+Except it has never actually helped anyone in production. And in the cases where someone here has used one once, there were probably other solutions that were more stable, more viable, and easier to put in place.
+
+
+## Why nobody uses them
+
+**It isn't reversible.** A `DROP COLUMN user_email` has run, the Down can write `ADD COLUMN user_email TEXT`. The column is recreated, but the data is not recovered. Too bad 🤷‍♂️
+
+**The code has never been tested.** You always test the up migration, at least on a staging environment, or from a test-container in your CI/CD. But I'm willing to bet nobody here tests the equivalent down. How can you be certain that your production schema and data will behave the way you expect?
+
+**The database isn't the only component that has to roll back.** A failed deploy can't be fixed by running the migration in reverse. The code already deployed has written into the new structure. Caches, workers, replicas are all normally deployed with the new version. Rolling back is a much harder strategy than simply applying a down migration.
+
+
+## Why we keep insisting
+
+I'm convinced it's because of "social" conventions. Wanting to do things right, doing what everyone else does, looking like an expert.
+
+I saw the same thing happen in the world of 3D modeling during my studies in Digital Production. One of the rules drilled into us was "Never make Ngons in your 3D models."
+
+**Ngons** are faces with more than 4 vertices. That covers any shape beyond a square (a polygon). They've historically been avoided in 3D modeling for several reasons. Notably in animation, where it's difficult to animate surfaces containing Ngons, and in certain rendering engines where Ngons are not displayed correctly. They're also avoided because modeling tools come with convenient automated features that often only work on models built from square-based faces. None of which is really a problem once the modeling is finalized.
+
+But back in 2017 (when I was doing my studies in this field), when I had the misfortune of using Ngons to optimize certain parts of my models for real-time game engines, I got a fairly impressive wave of criticism from students and teachers, telling me that a model like that was fit for the trash and that nobody in the industry would accept it.
+
+Except that in the context where I had built that model (for real-time rendering, no animation, finalized 3D model), it was a coherent and perfectly acceptable decision that fit what I wanted to do with it.
+
+That didn't stop people in the industry from hastily judging a purely technical choice without trying to understand why and in which cases it really had to be avoided.
+
+That's exactly what's happening in our case with migrations. It's a convention that, sure, can be useful on some projects. But on others (and in the vast majority of cases), it serves absolutely no purpose.
+
+
+
+## What goes in its place
+
+For my part, I gave up writing down migrations in production years ago.
+
+But that doesn't mean I'm just winging it — that would be waiting for disaster to strike.
+
+What I actually put in place:
+
+- **Forward-only.** One Up, never a Down. A mistake? You fix it with a new dated file.
+- **Expand / contract.** For destructive changes, split into two phases. First, add the new structure alongside the old one. Later, once the code using it has been in prod long enough that a code rollback would still be compatible with the schema, drop the old one.
+- **Backup before a destructive migration.** If your database system doesn't support point-in-time recovery, a backup of the database before the migration is a good way to avoid losing information in case of a destructive migration. It's obviously a last resort, but it prevents losing important data in certain tables or columns.
+- **Idempotence tests.** Make sure the migration can be replayed without breaking. Far more useful in practice than a Down.
+- **Migrate production data into a test environment.** Before a release, it's useful to pull production data and run the migration scripts against a test environment. That's my preferred solution because it gives a very strong indication of whether a migration works correctly or not.
+
+## What it says about our trade
+
+It's not really the problem of the down migration that's interesting here. In the end, it's a bit of a non-issue. But this example says a lot about the relationship our industry has with this kind of "best practice."
+
+The same principle applies to clean-code, patterns, DDD, TDD, SDD, and so on...
+
+Some people in this industry end up judging only through the lens of certain practices, without trying to understand the ins and outs of them.
+
+Microservices imposed on five-person teams. TDD practiced as a religion. Hexagonal architectures for three-endpoint CRUDs. It's the same motion: good ideas torn out of their context, hardened into moral obligations, never re-examined.
+
+Our industry loves patterns because they save us a decision. And every decision saved is a missed opportunity to learn something about our own system.
