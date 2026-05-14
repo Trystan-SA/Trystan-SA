@@ -746,6 +746,15 @@ button { font-family: inherit; }
 }
 .article-body ul li { margin-bottom: 8px; }
 .article-body strong { font-weight: 600; color: var(--accent); }
+.article-body :not(pre) > code {
+  font-family: var(--mono);
+  font-size: 0.86em;
+  background: var(--accent-soft);
+  color: var(--accent-2);
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid color-mix(in srgb, var(--accent) 22%, transparent);
+}
 .article-body h2 { color: var(--fg); position: relative; }
 .article-body h2::before {
   content: ""; display: inline-block; width: 24px; height: 2px;

@@ -1,4 +1,4 @@
-import adapter from '@sveltejs/adapter-static';
+import adapter from '@sveltejs/adapter-node';
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 import { mdsvex } from 'mdsvex';
 import rehypeSlug from 'rehype-slug';
@@ -13,12 +13,7 @@ const config = {
   ],
   extensions: ['.svelte', '.svx'],
   kit: {
-    adapter: adapter({
-      pages: 'build',
-      assets: 'build',
-      precompress: false,
-      strict: true
-    }),
+    adapter: adapter(),
     prerender: {
       handleMissingId: 'ignore',
       handleUnseenRoutes: 'ignore'

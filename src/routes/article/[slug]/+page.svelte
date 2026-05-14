@@ -11,12 +11,14 @@
   import Icons from '$lib/components/icons.svelte';
   import Bookmark from '$lib/components/Bookmark.svelte';
   import Heart from '$lib/components/Heart.svelte';
+  import Giscus from '$lib/components/Giscus.svelte';
 
   const enModules = import.meta.glob('/src/content/articles/*/en.svx', { eager: true });
   const frModules = import.meta.glob('/src/content/articles/*/fr.svx', { eager: true });
 
   let { data } = $props();
   const article = $derived(data.article);
+  const viewCount = $derived(data.viewCount ?? 0);
   const la = $derived($loc(article));
 
   const ContentEn = $derived(enModules[`/src/content/articles/${article.slug}/en.svx`]?.default);
@@ -28,21 +30,6 @@
   let toc = $state([]);
   let likeOn = $state(false);
   let bookmark = $state(false);
-  let draft = $state('');
-  let comments = $state([
-    {
-      author: 'Marie L.',
-      avatar: 'M',
-      time: '2 days ago',
-      text: "This crystallized something I've been chewing on for months. The 'second model as verifier' insight in particular: I'd been trying to use the same model and getting confidently agreeable feedback."
-    },
-    {
-      author: 'Karim B.',
-      avatar: 'K',
-      time: '4 days ago',
-      text: 'Curious how you handle flaky third-party APIs in this loop. Do you mock at the boundary or accept the noise?'
-    }
-  ]);
 
   let articleEl = $state(null);
 
@@ -85,16 +72,21 @@
   onMount(() => {
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
+    trackView(article.slug);
   });
   onDestroy(() => {
     if (typeof window !== 'undefined') window.removeEventListener('scroll', onScroll);
   });
 
-  function submitComment(e) {
-    e.preventDefault();
-    if (!draft.trim()) return;
-    comments = [{ author: 'You', avatar: 'Y', time: 'just now', text: draft.trim() }, ...comments];
-    draft = '';
+  function trackView(slug) {
+    try {
+      const key = `viewed:${slug}`;
+      if (sessionStorage.getItem(key)) return;
+      sessionStorage.setItem(key, '1');
+    } catch {
+      // Private mode or storage disabled — count the view anyway.
+    }
+    fetch(`${base}/api/views/${slug}`, { method: 'POST', keepalive: true }).catch(() => {});
   }
 </script>
 
@@ -119,6 +111,8 @@
             <time>{fmtDate(article.date, $t.dateLocale)}</time>
             <span class="dot">·</span>
             <span>{article.readTime} {$t.article.minRead}</span>
+            <span class="dot">·</span>
+            <span>{$t.article.views(viewCount)}</span>
           </div>
         </div>
       </div>
@@ -171,26 +165,8 @@
       </div>
 
       <section class="comments">
-        <h3>{$t.article.commentsTitle(comments.length)}</h3>
-        <form class="comment-form" onsubmit={submitComment}>
-          <div class="avatar small">Y</div>
-          <textarea placeholder={$t.article.commentPlaceholder} bind:value={draft}></textarea>
-          <button type="submit" class="btn btn-primary" disabled={!draft.trim()}>{$t.article.commentPost}</button>
-        </form>
-        <ul class="comment-list">
-          {#each comments as c, i (i)}
-            <li>
-              <div class="avatar small">{c.avatar}</div>
-              <div>
-                <div class="comment-head">
-                  <strong>{c.author}</strong>
-                  <span class="dim">{c.time}</span>
-                </div>
-                <p>{c.text}</p>
-              </div>
-            </li>
-          {/each}
-        </ul>
+        <h3>{$t.article.commentsHeading}</h3>
+        <Giscus lang={$lang} />
       </section>
 
       {#if related.length > 0}
