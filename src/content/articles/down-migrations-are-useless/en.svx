@@ -26,6 +26,8 @@ Except it has never actually helped anyone in production. And in the cases where
 
 **The code has never been tested.** You always test the up migration, at least on a staging environment, or from a test-container in your CI/CD. But I'm willing to bet nobody here tests the equivalent down. How can you be certain that your production schema and data will behave the way you expect?
 
+**The up may have crashed mid-flight.** A down migration is written assuming the up ran to completion. On a database that doesn't support transactional DDLs (hi MySQL), if the up halts halfway, the database ends up in a state nobody anticipated. And the down, which expected a clean schema, will crash too.
+
 **The database isn't the only component that has to roll back.** A failed deploy can't be fixed by running the migration in reverse. The code already deployed has written into the new structure. Caches, workers, replicas are all normally deployed with the new version. Rolling back is a much harder strategy than simply applying a down migration.
 
 
@@ -56,6 +58,7 @@ But that doesn't mean I'm just winging it — that would be waiting for disaster
 What I actually put in place:
 
 - **Forward-only.** One Up, never a Down. A mistake? You fix it with a new dated file.
+- **Transactional DDLs.** On Postgres (and a few others), wrap the migration in a transaction. If it crashes mid-flight, everything is rolled back automatically and the database stays in its previous state. No need for a down — the engine handles it.
 - **Expand / contract.** For destructive changes, split into two phases. First, add the new structure alongside the old one. Later, once the code using it has been in prod long enough that a code rollback would still be compatible with the schema, drop the old one.
 - **Backup before a destructive migration.** If your database system doesn't support point-in-time recovery, a backup of the database before the migration is a good way to avoid losing information in case of a destructive migration. It's obviously a last resort, but it prevents losing important data in certain tables or columns.
 - **Idempotence tests.** Make sure the migration can be replayed without breaking. Far more useful in practice than a Down.
