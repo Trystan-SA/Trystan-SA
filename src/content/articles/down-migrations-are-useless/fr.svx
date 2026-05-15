@@ -24,8 +24,6 @@ Sauf que ça n'a jamais été utile à quelqu'un en production. Et dans les cas 
 
 **L'up a peut-être planté en cours de route.** La migration down est écrite en supposant que l'up s'est exécutée jusqu'au bout. Sur une base qui ne supporte pas les DDLs transactionnelles (coucou MySQL), si l'up s'arrête au milieu, la base se retrouve dans un état que personne n'avait anticipé. Et le down, qui s'attendait à un schéma propre, plantera lui aussi.
 
-**C'est incompatible avec le CD/GitOps.** Quand vous redéployez le commit N-1, le fichier down dont vous auriez besoin a été créé dans le commit N — il n'est tout simplement pas dans l'artefact que vous redéployez. Les pipelines modernes du type "redéploie la version précédente" ne savent pas quoi faire d'une migration down.
-
 **La base de données n'est pas le seul composant qui doit revenir en arrière.** Un déploiement raté ne se règle pas en faisant tourner la migration à l'envers. Le code déjà déployé a écrit dans la nouvelle structure. Les caches, les workers, les replicas, tous sont normalement déployés avec la nouvelle version. Revenir en arrière est une stratégie plus ardue que de simplement appliquer une migration down.
 
 
