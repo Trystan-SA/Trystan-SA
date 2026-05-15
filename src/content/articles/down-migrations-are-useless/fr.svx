@@ -22,6 +22,10 @@ Sauf que ça n'a jamais été utile à quelqu'un en production. Et dans les cas 
 
 **Le code n'a jamais été testé.** Vous testez toujours la migration up, au moins sur un environnement de staging, ou bien depuis un test-container sur votre CI/CD. Mais je suis prêt à parier que personne ici ne teste l'équivalent en down. Comment êtes-vous certains que le schéma et les données de production vont réagir de la façon à laquelle vous vous attendiez ?
 
+**L'up a peut-être planté en cours de route.** La migration down est écrite en supposant que l'up s'est exécutée jusqu'au bout. Sur une base qui ne supporte pas les DDLs transactionnelles (coucou MySQL), si l'up s'arrête au milieu, la base se retrouve dans un état que personne n'avait anticipé. Et le down, qui s'attendait à un schéma propre, plantera lui aussi.
+
+**C'est incompatible avec le CD/GitOps.** Quand vous redéployez le commit N-1, le fichier down dont vous auriez besoin a été créé dans le commit N — il n'est tout simplement pas dans l'artefact que vous redéployez. Les pipelines modernes du type "redéploie la version précédente" ne savent pas quoi faire d'une migration down.
+
 **La base de données n'est pas le seul composant qui doit revenir en arrière.** Un déploiement raté ne se règle pas en faisant tourner la migration à l'envers. Le code déjà déployé a écrit dans la nouvelle structure. Les caches, les workers, les replicas, tous sont normalement déployés avec la nouvelle version. Revenir en arrière est une stratégie plus ardue que de simplement appliquer une migration down.
 
 
@@ -52,6 +56,7 @@ Mais cela ne veut pas dire que j'y vais au talent, ce serait attendre qu'un dram
 Ce que je mets en place concrètement :
 
 - **Forward-only.** Un Up, jamais de Down. Une erreur ? On corrige avec un nouveau fichier daté.
+- **DDLs transactionnelles.** Sur Postgres (et quelques autres), on englobe la migration dans une transaction. Si elle plante en cours de route, tout est annulé automatiquement et la base reste dans son état précédent. Pas besoin de down : le moteur s'en charge.
 - **Expand / contract.** Pour les changements destructifs, on découpe en deux phases. D'abord on ajoute la nouvelle structure à côté de l'ancienne. Plus tard, quand le code qui l'utilise est en prod depuis assez longtemps pour qu'un rollback du code reste compatible avec le schéma, on supprime l'ancienne.
 - **Sauvegarde avant migration destructive.** Si votre système de base de données ne supporte pas le point-in-time recovery, une backup de la base de données avant la migration est une bonne solution pour éviter la perte d'informations en cas de migration destructive. C'est évidemment en cas de dernier recours, mais ça évite de perdre des données importantes sur certaines tables ou colonnes.
 - **Tests d'idempotence.** Que la migration puisse être rejouée sans casser. Beaucoup plus utile en pratique qu'un Down.

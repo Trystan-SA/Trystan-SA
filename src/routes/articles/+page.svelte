@@ -9,6 +9,9 @@
   import Icons from '$lib/components/icons.svelte';
   import GuideIcon from '$lib/components/GuideIcon.svelte';
 
+  let { data } = $props();
+  const stats = $derived(data?.stats ?? {});
+
   let section = $state('articles'); // 'articles' | 'guides'
   let query = $state('');
   let activeTag = $state(null);
@@ -177,7 +180,7 @@
             <button class="btn btn-ghost" onclick={clearFilters}>{$t.articles.clearFilters}</button>
           </div>
         {:else}
-          <ArticleList articles={filtered} variant="stacked" />
+          <ArticleList articles={filtered} variant="stacked" {stats} />
         {/if}
       {:else}
         <div class="guides-list">

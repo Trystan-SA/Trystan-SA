@@ -15,6 +15,7 @@
 
   let { data } = $props();
   const guide = $derived(data.guide);
+  const relatedStats = $derived(data.stats ?? {});
   const lg = $derived($loc(guide));
 
   const ContentEn = $derived(
@@ -137,7 +138,7 @@
       {#if related.length > 0}
         <section class="guide-related">
           <SectionHead eyebrow={$t.guide.keepGoingEyebrow} title={$t.guide.relatedTitle} />
-          <ArticleList articles={related} variant="stacked" />
+          <ArticleList articles={related} variant="stacked" stats={relatedStats} />
         </section>
       {/if}
     </article>

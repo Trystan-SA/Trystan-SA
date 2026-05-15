@@ -9,8 +9,6 @@
   import SectionHead from '$lib/components/SectionHead.svelte';
   import ArticleList from '$lib/components/ArticleList.svelte';
   import Icons from '$lib/components/icons.svelte';
-  import Bookmark from '$lib/components/Bookmark.svelte';
-  import Heart from '$lib/components/Heart.svelte';
   import Giscus from '$lib/components/Giscus.svelte';
 
   const enModules = import.meta.glob('/src/content/articles/*/en.svx', { eager: true });
@@ -19,17 +17,41 @@
   let { data } = $props();
   const article = $derived(data.article);
   const viewCount = $derived(data.viewCount ?? 0);
+  const relatedStats = $derived(data.stats ?? {});
   const la = $derived($loc(article));
 
   const ContentEn = $derived(enModules[`/src/content/articles/${article.slug}/en.svx`]?.default);
   const ContentFr = $derived(frModules[`/src/content/articles/${article.slug}/fr.svx`]?.default);
   const Content = $derived($lang === 'fr' && ContentFr ? ContentFr : ContentEn);
 
+  const SITE = 'https://trystan-sarrade.com';
+  const articleUrl = $derived(`${SITE}/article/${article.slug}/`);
+  const jsonLd = $derived(
+    JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'BlogPosting',
+      headline: la.title,
+      description: la.excerpt,
+      datePublished: article.date,
+      inLanguage: $lang,
+      keywords: article.tags.join(', '),
+      mainEntityOfPage: { '@type': 'WebPage', '@id': articleUrl },
+      author: {
+        '@type': 'Person',
+        name: 'Trystan Sarrade',
+        url: `${SITE}/about/`
+      },
+      publisher: {
+        '@type': 'Person',
+        name: 'Trystan Sarrade',
+        url: `${SITE}/about/`
+      }
+    }).replace(/</g, '\\u003c')
+  );
+
   let progress = $state(0);
   let tocActive = $state(null);
   let toc = $state([]);
-  let likeOn = $state(false);
-  let bookmark = $state(false);
 
   let articleEl = $state(null);
 
@@ -90,6 +112,22 @@
   }
 </script>
 
+<svelte:head>
+  <title>{la.title} · Trystan Sarrade</title>
+  <meta name="description" content={la.excerpt} />
+  <link rel="canonical" href={articleUrl} />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content={la.title} />
+  <meta property="og:description" content={la.excerpt} />
+  <meta property="og:url" content={articleUrl} />
+  <meta property="article:published_time" content={article.date} />
+  <meta property="article:author" content="Trystan Sarrade" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={la.title} />
+  <meta name="twitter:description" content={la.excerpt} />
+  {@html `<script type="application/ld+json">${jsonLd}</script>`}
+</svelte:head>
+
 <div class="reading-progress" style="transform: scaleX({progress})"></div>
 <div class="page article-page">
   <button class="back-link" onclick={() => goto(`${base}/articles/`)}>{$t.article.backLink}</button>
@@ -117,13 +155,6 @@
         </div>
       </div>
       <div class="article-actions">
-        <button
-          class="icon-btn {bookmark ? 'is-on' : ''}"
-          onclick={() => (bookmark = !bookmark)}
-          title="Bookmark"
-        >
-          <Bookmark filled={bookmark} />
-        </button>
         <button class="icon-btn" title="Share" onclick={() => alert('Link copied (demo)')}>
           <Icons name="share" />
         </button>
@@ -146,24 +177,6 @@
     <article class="article-body" bind:this={articleEl}>
       <svelte:component this={Content} />
 
-      <div class="article-end-actions">
-        <button
-          class="reaction-btn {likeOn ? 'is-on' : ''}"
-          onclick={() => (likeOn = !likeOn)}
-        >
-          <Heart filled={likeOn} />
-          <span>{1247 + (likeOn ? 1 : 0)}</span>
-          <span class="reaction-label">{likeOn ? $t.article.liked : $t.article.like}</span>
-        </button>
-        <button
-          class="reaction-btn {bookmark ? 'is-on' : ''}"
-          onclick={() => (bookmark = !bookmark)}
-        >
-          <Bookmark filled={bookmark} />
-          <span class="reaction-label">{bookmark ? $t.article.saved : $t.article.save}</span>
-        </button>
-      </div>
-
       <section class="comments">
         <h3>{$t.article.commentsHeading}</h3>
         <Giscus lang={$lang} />
@@ -172,7 +185,7 @@
       {#if related.length > 0}
         <section class="related">
           <SectionHead eyebrow={$t.article.relatedEyebrow} title={$t.article.relatedTitle} />
-          <ArticleList articles={related} variant="stacked" />
+          <ArticleList articles={related} variant="stacked" stats={relatedStats} />
         </section>
       {/if}
     </article>

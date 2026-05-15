@@ -35,4 +35,17 @@
     <circle cx="12" cy="12.5" r="2" fill="none" stroke="currentColor" stroke-width="1.5" />
     <path d="M5.7 7l4.6-2.5M5.7 9l4.6 2.5" stroke="currentColor" stroke-width="1.5" />
   </svg>
+{:else if name === 'eye'}
+  <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true">
+    <path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" />
+    <circle cx="8" cy="8" r="2" fill="currentColor" />
+  </svg>
+{:else if name === 'heart'}
+  <svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true">
+    <path d="M8 14s-5-3.2-5-7.2A2.8 2.8 0 0 1 8 4a2.8 2.8 0 0 1 5 2.8C13 10.8 8 14 8 14z" fill="currentColor" />
+  </svg>
+{:else if name === 'comment'}
+  <svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true">
+    <path d="M2 3h12a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H6l-3 2.5V12H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" />
+  </svg>
 {/if}

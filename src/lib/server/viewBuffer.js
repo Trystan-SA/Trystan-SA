@@ -57,6 +57,23 @@ export async function getViewCount(slug) {
   }
 }
 
+export async function getViewCountsBatch(slugs) {
+  const buf = buffer();
+  const result = new Map(slugs.map((s) => [s, buf.get(s) ?? 0]));
+  if (!db || slugs.length === 0) return result;
+  try {
+    const rows = await db`SELECT slug, count FROM article_views WHERE slug IN ${db(slugs)}`;
+    for (const row of rows) {
+      const persisted = row.count != null ? Number(row.count) : 0;
+      result.set(row.slug, persisted + (buf.get(row.slug) ?? 0));
+    }
+    return result;
+  } catch (err) {
+    console.error('[viewBuffer] getViewCountsBatch failed:', err);
+    return result;
+  }
+}
+
 export function startViewBuffer() {
   if (globalThis.__viewBufferStarted) return;
   globalThis.__viewBufferStarted = true;

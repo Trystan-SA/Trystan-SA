@@ -580,6 +580,11 @@ button { font-family: inherit; }
 }
 .article-row-meta .dot { display: none; }
 .article-row-meta time { color: var(--accent); font-weight: 600; }
+.article-row-meta .stat {
+  display: inline-flex; align-items: center; gap: 5px;
+  line-height: 1;
+}
+.article-row-meta .stat svg { opacity: 0.85; }
 .article-row-title {
   font-family: var(--display); font-weight: 500; font-size: 24px;
   line-height: 1.25; letter-spacing: -0.015em; margin: 0 0 8px;
@@ -792,22 +797,6 @@ button { font-family: inherit; }
 .tk-cmt { color: var(--fg-soft); font-style: italic; }
 [data-theme="dark"] .tk-kw { color: var(--accent-2); }
 [data-theme="dark"] .tk-str { color: var(--accent); }
-
-/* end-of-article actions */
-.article-end-actions {
-  display: flex; gap: 12px; margin: 56px 0 40px;
-  padding: 24px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
-}
-.reaction-btn {
-  display: inline-flex; align-items: center; gap: 8px;
-  border: 1px solid var(--line); background: transparent; color: var(--fg-dim);
-  padding: 8px 14px; border-radius: 999px; cursor: pointer;
-  font-family: var(--sans); font-size: 13.5px; font-weight: 500;
-  transition: all .15s;
-}
-.reaction-btn:hover { border-color: var(--line-strong); color: var(--fg); }
-.reaction-btn.is-on { color: var(--accent); border-color: var(--accent); background: var(--accent-soft); }
-.reaction-btn .reaction-label { color: inherit; }
 
 /* comments */
 .comments { margin: 48px 0; }
