@@ -1,0 +1,99 @@
+---
+title: "I haven't written a single line of code in 8 months — and AI completely changed our job"
+excerpt: "Up to 10x productivity, more ambitious projects, higher code quality..."
+date: "2026-05-18"
+readTime: 6
+tags: ["ai", "product"]
+featured: false
+---
+
+"Vibecoding" tools like the Copilot, Codex or `Claude Code` agents have been around for over a year now. While the quality wasn't there at first, today it's a completely different story.
+
+
+## I no longer write a single line of code
+
+I started using Claude Code intensively in October 2025, to the point where **I haven't written a single line of code since**.
+
+It's something hard to admit, because I've always loved programming since I was a teenager. Overnight, AI took back from me a skill I had developed over more than a decade. And morally, that hits hard.
+
+Then I eventually realized that what really motivated me was creating and experimenting. AI now lets me build a viable architecture faster, produce higher-quality code, and focus on product-building.
+
+
+## Is AI really that powerful? Yes and no
+
+AI has already reached capabilities developers will never match. For some tasks, I easily hit **10x productivity**:
+
+### Debugging becomes super simple
+
+A syntax issue? A wrong field? A module that won't load because of a dependency? AI finds the issue in a single prompt (the log error) and ships a patch within a minute. In the vast majority of cases the fix is correct and robust as long as you give it enough context about what happened (hence the importance of monitoring).
+
+### Scaffolding a new feature or architecture
+
+Design patterns are slow to master and to adapt depending on the language or framework. I've always spent a lot of time tailoring those patterns to my specific use cases.
+
+AI lets you do all of that in a few minutes. From the frontend down to the DB. It's a real time saver, and you can allocate your brain time elsewhere.
+
+### Tackling technical debt
+
+It sounds counter-intuitive, since every developer keeps saying AI creates technical debt. But on my side **I've seen the opposite** in my experience at Somanyways.
+
+We have an application that has pivoted three times in two years. Features that evolve every sprint, legacy code lying around... All of that in a relatively small team compared to the workload. So you do what you can to ship features to customers on time.
+
+Before AI, we had a fair share of 500 errors with every one of these changes. The code wasn't well architected, wasn't very robust, and the product wasn't stabilized.
+
+We did what we could with the time we had to refactor parts of the code (notably implementing `DDD` on the features with the most complex business logic). But those tasks are rigorous, demanding, and hard to justify to leadership because they're "invisible".
+
+With AI, extracting "god functions" into reusable patterns, services, domains or repositories has become much simpler and faster. In a third of the time we've managed to rewrite entire parts of our codebase.
+
+Unit tests are also **10x faster to write**.
+
+### Learning and onboarding on new technologies
+
+This speed gain isn't limited to an experienced developer who already knows their stack: it also reshuffles the deck for onboarding on new technologies.
+
+A front-end React developer can quickly move to Angular, Vue or Svelte and become productive fast. The principles of these frameworks stay close, and since syntax is now delegated to AI, building Angular components is no longer a serious blocker for a React developer.
+
+The same applies when a Node.js developer joins a Golang or Java codebase. The same architecture, event-driven or dependency-inversion principles show up across all these languages and frameworks. If the project already exists, the developer won't have too much trouble shipping their first contributions within a short timeframe.
+
+**Only the bridge between two distinct programming domains stays harder.** Like asking a front-end developer to do backend work, or a Node.js developer to move to low-level C++ or Rust for embedded systems. Simply because the concepts are different and you have to learn a new domain.
+
+But with AI, the research work has become much easier. If you have documentation foundations (on Notion for example), it's possible to onboard a curious developer who's willing to learn and have them contribute to helping the rest of the team.
+
+### More brain time
+
+Before, my days consisted of about 4 to 6 hours of deep work on real features. The rest, I allocated to lighter background work to rest my brain.
+
+Now, AI de facto saves that mental load, which lets a developer spend more time on the work that requires more focus. On my side, it has even let me launch many more personal projects after work to keep learning — something I could hardly do over long hours before.
+
+
+
+## The bottlenecks we still have to break through
+
+There are areas where AI doesn't help you move faster. It actually adds more work in those cases.
+
+### Code review
+
+AI writes more code, and now it has to be reviewed.
+
+But AI is fairly bad at respecting certain guidelines (`DRY`, putting code in the right services) and tends to quickly spin up entire services where they already existed elsewhere in the code.
+
+The culprit is context handling, which degrades the AI's reasoning when it has to deal with a project that's too large.
+
+You can scaffold the code with .md files that the AI can read to recover context (`BMAD` method or equivalent). But .md files are like documentation: they end up drifting. And to prevent that, you have to review the AI's work anyway.
+
+Personally, I run an AI agent that does a pre-code-review to make sure everything matches the project's standards. It describes what the PR adds, the points of attention, and the criticality of what needs to be reviewed (critical, high, medium, low). The PR owner is of course responsible for re-reading all of the AI's code, but the other developers will have much better signals thanks to this technique.
+
+### Q.A.
+
+**When the cost of code goes down, the cost of Q.A. goes up.** It's hard for an organization to justify hiring more Q.A. people in a context where AI is supposed to be lowering costs.
+
+One solution is to have developers supervise the writing of unit, integration and end-to-end tests, to free Q.A. from doing it manually.
+
+
+## How the developer role will evolve
+
+The critical parts of writing software can hardly be delegated 100% to an AI. It still struggles a lot on certain tasks like writing algorithms, low-level languages, or niche technologies it hasn't been trained on. I can hardly imagine the Linux kernel or a video codec like VLC's being written entirely by an AI.
+
+But the trajectory is clear: **the developer becomes a technical product owner**. Someone who orchestrates AIs to do the execution work, and whose added value shifts toward understanding scope, business needs, and the customer. Their head start comes from their technical understanding of the project, and if they can take ownership of the business and design side, they become the cornerstone of the features they own.
+
+To me, **the "developer in their cave" category will exist less and less**. Organizations will need to onboard them into the business side of the company to unlock the full potential AI offers today.

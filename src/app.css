@@ -735,7 +735,8 @@ button { font-family: inherit; }
   font-family: var(--serif); font-size: 19px; line-height: 1.65;
   max-width: 64ch; color: var(--fg);
 }
-.article-body p { margin: 0 0 1.4em; }
+.article-body p { margin: 0 0 1.4em; text-align: justify; hyphens: auto; -webkit-hyphens: auto; }
+.article-body li { text-align: justify; hyphens: auto; -webkit-hyphens: auto; }
 .article-body h2 {
   font-family: var(--display); font-weight: 500; font-size: 30px;
   line-height: 1.2; letter-spacing: -0.015em;

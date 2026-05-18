@@ -1,0 +1,95 @@
+---
+title: "J'utilise l'IA à 100% depuis 8 mois et ça change complètement notre métier"
+excerpt: "Jusqu'à une productivité x10, des projets plus ambitieux, une qualité de code accrue..."
+---
+
+Les outils de "Vibecoding" comme les agents Copilot, Codex ou `Claude Code` existent maintenant depuis plus d'un an. Bien qu'à leurs débuts leur qualité n'était pas suffisante, aujourd'hui c'est une tout autre histoire.
+
+
+## Je n'écris plus une seule ligne de code
+
+J'ai commencé à utiliser Claude Code intensivement en octobre 2025, au point où **je n'ai pas écrit une seule ligne de code depuis**.
+
+C'est quelque chose de difficile à admettre, car j'ai toujours aimé programmer depuis que je suis adolescent. Du jour au lendemain, l'IA m'a repris cette compétence que j'avais développée depuis plus d'une décennie. Et moralement, on en prend un sacré coup.
+
+Et puis, j'ai fini par me rendre compte que ce qui me motivait réellement, c'était de créer et d'expérimenter. L'IA me permettait maintenant de construire plus rapidement une architecture viable, d'avoir du code de meilleure qualité et de me concentrer sur le product-building.
+
+
+## L'IA est vraiment aussi puissante que ça ? Oui et non
+
+L'IA a déjà atteint des capacités que les développeurs ne pourront jamais égaler. Pour certaines tâches, j'atteins facilement une **productivité x10** :
+
+### Debugger devient super simple
+
+Un problème de syntaxe ? Un mauvais champ ? Un module qui ne veut pas charger à cause d'une dépendance ? L'IA trouve le souci en un seul prompt (l'erreur dans les logs) et fait un patch dans la minute. Dans la très grande majorité des cas le fix est correct et robuste si on lui passe suffisamment de contexte sur ce qu'il s'est passé (d'où l'importance du monitoring).
+
+### Scaffolder une nouvelle feature, une architecture
+
+Les design patterns sont longs à maîtriser et à adapter en fonction du langage ou du framework. J'ai toujours passé beaucoup de temps à adapter ces patterns en fonction de mon cas d'usage.
+
+L'IA permet de créer tout cela simplement en quelques minutes. Du front jusqu'à la DB. C'est un véritable gain de temps et on peut allouer du temps de cerveau à autre chose.
+
+### Traiter la dette technique
+
+Ça paraît contre-intuitif, vu que tous les développeurs passent leur temps à dire que l'IA crée de la dette technique. Mais de mon côté **j'ai vu l'inverse** dans mon expérience à Somanyways.
+
+On a une application qui a pivoté 3 fois en 2 ans. Des features qui évoluent à chaque sprint, du legacy qui traîne... Le tout dans une équipe assez réduite par rapport à la charge de travail. Donc on fait ce qu'on peut pour livrer les features à nos clients dans les temps.
+
+Avant l'IA, on avait pas mal d'erreurs 500 à chacun de ces changements. Le code n'était pas très bien architecturé, pas très robuste et le produit n'était pas stabilisé.
+
+On a fait ce qu'on a pu avec le temps qui nous était alloué pour refactorer certaines parties du code (notamment en implémentant le `DDD` sur les features les plus complexes côté métier). Mais ce sont des tâches rigoureuses, exigeantes et difficiles à justifier auprès de la hiérarchie car "invisibles".
+
+Avec l'IA, extraire des "god functions" en patterns réutilisables, en services, domaine ou repository est devenu quelque chose de bien plus simple et rapide. En 3 fois moins de temps on a réussi à réécrire des parties complètes de notre code.
+
+Les tests unitaires sont aussi **10 fois plus rapides à écrire**.
+
+### Apprendre et onboarder sur de nouvelles technos
+
+Ce gain de vitesse ne se limite pas à un développeur expérimenté qui connaît déjà sa stack : il rebat aussi les cartes de l'onboarding sur de nouvelles technos.
+
+Un développeur front-end React peut rapidement passer sur Angular, Vue ou Svelte et être productif rapidement. Les principes de ces frameworks restent proches, et vu que la syntaxe est maintenant déléguée à l'IA, créer des composants Angular ne pose plus de gros souci à un développeur React.
+
+Le principe est le même quand un développeur Node.js arrive sur une codebase en Golang ou en Java. Les mêmes principes d'architecture, d'event-driven ou d'inversion de dépendance se retrouvent sur tous ces langages et ces frameworks. Si le projet existe déjà, le développeur n'aura pas trop de mal à écrire ses premières contributions dans des délais courts.
+
+**Seul le pont entre deux domaines en programmation reste plus difficile.** Comme demander à un développeur front de faire du back, ou un développeur Node.js de passer sur du low-level en C++ ou Rust pour de l'embarqué. Simplement car les concepts restent différents et qu'il faut apprendre un nouveau domaine.
+
+Mais, avec l'IA, le travail de recherche est devenu bien plus facile. Si vous avez des bases documentaires (sur Notion par exemple), il est possible d'onboarder un développeur curieux et ayant envie d'apprendre pour apporter de l'aide aux autres membres de l'équipe.
+
+### Du temps de cerveau en plus
+
+Avant, mes journées consistaient en environ 4 à 6 heures de travail profond sur de vraies features. Le reste, je l'attribuais à du travail de fond plus facile à traiter pour reposer mon cerveau.
+
+Maintenant, l'IA permet d'économiser de facto cette charge mentale, ce qui permet à un développeur de passer plus de temps sur du travail qui demande plus de concentration. De mon côté, cela m'a même permis de me lancer beaucoup plus sur des projets personnels après le boulot pour continuer à apprendre, ce que je pouvais difficilement faire sur de longues heures auparavant.
+
+
+
+## Les goulots d'étranglement qu'il nous reste à franchir
+
+Il y a des domaines où l'IA ne permet pas d'aller plus vite. Elle nous ajoute même plus de travail dans ces cas-là.
+
+### Le code review
+
+L'IA écrit plus de code, il faut maintenant le reviewer.
+
+Mais l'IA est assez mauvaise pour respecter certaines directives (`DRY`, mettre le code dans les bons services) et elle a tendance à créer rapidement des services entiers là où ils existaient déjà ailleurs dans le code.
+
+Faute à la gestion du contexte, qui réduit les performances de réflexion de l'IA quand elle doit gérer un projet trop complet.
+
+Il est possible de baliser le code avec des fichiers .md que l'IA peut lire pour récupérer du contexte (méthode `BMAD` ou équivalent). Mais les .md sont comme la doc, ils finissent par drifter. Et pour empêcher cela il faut de toute façon reviewer le travail de l'IA.
+
+Personnellement, je lance un agent IA qui fait une pré-code-review pour s'assurer que tout correspond aux standards du projet. Elle décrit ce que la PR ajoute, les points d'attention et la criticité de ce qu'il faut reviewer (critique, high, medium, low). L'owner de la PR a certes la responsabilité de relire tout le code de l'IA, mais les autres développeurs auront de meilleures indications grâce à cette technique.
+
+### La Q.A.
+
+**Quand le coût du code baisse, le coût de la Q.A. augmente.** Il est difficile pour une organisation de justifier l'embauche de plus de Q.A. dans un contexte où l'IA devrait aider à faire baisser les coûts.
+
+Une solution est de demander aux développeurs de superviser l'écriture de tests unitaires, d'intégration et end-to-end pour libérer les Q.A. de s'en occuper manuellement.
+
+
+## Comment le métier de développeur va évoluer
+
+Les parties critiques de l'écriture d'un logiciel peuvent difficilement être déléguées à 100% à une IA. Elle a encore énormément de mal sur certaines tâches comme l'écriture d'algorithmes, les langages low-level ou des technologies de niche où elle n'est pas entraînée. Je vois mal le noyau Linux ou un codec vidéo comme celui de VLC être écrits intégralement par une IA.
+
+Mais la trajectoire est claire : **le développeur devient un product-owner technique**. Quelqu'un qui pilote des IA pour accomplir le travail d'exécution, et dont la valeur ajoutée se déplace vers la compréhension du périmètre, du besoin métier et du client. Sa longueur d'avance vient de sa compréhension technique du projet, et s'il arrive à prendre en main la partie métier et à designer des solutions, il devient la pierre angulaire des features dont il a l'ownership.
+
+Pour moi, **la catégorie "développeur dans sa cave" existera de moins en moins**. Il va être nécessaire pour les organisations d'onboarder ces derniers sur la partie business et métier de l'entreprise pour atteindre le plein potentiel que l'IA permet aujourd'hui.
