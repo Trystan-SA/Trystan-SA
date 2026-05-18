@@ -1,0 +1,20 @@
+---
+title: "What DevOps and SRE actually deliver"
+subtitle: "Delivery speed, measurable reliability, autonomy: three measurable benefits."
+blurb: "The tangible benefits of seriously adopting DevOps and SRE in an engineering team: DORA, SLOs, and the \"you build it, you run it\" culture."
+date: "2026-05-18"
+updated: "2026-05-18"
+readTime: 3
+chapterCount: 0
+tags: ["devops"]
+relatedArticles: ["down-migrations-are-useless"]
+featured: false
+---
+
+Past the concepts, what do you actually gain? Three things, measurable.
+
+**Delivery speed.** The DORA report (DevOps Research and Assessment, acquired by Google in 2018) tracks four key metrics every year: deployment frequency, the time between a commit and its production release (lead time), the percentage of deployments that cause an incident (change failure rate), and the average time to restore a service after an incident (time to restore). "Elite" teams in the report deploy multiple times per day, with a lead time under one hour and a change failure rate below 5%. "Low performers" deploy once every six months with a 60%+ change failure rate. This isn't a small detail, it's a 100x factor on delivery capacity.
+
+**Measurable reliability.** Before SLOs, you argued with intuitions. "The service is unstable", "no it was just yesterday". With an SLO, you have a number: *we commit to 99.9% availability measured over a rolling 28-day window*. If you're at 99.95%, you can take risks (deploy, experiment). If you're at 99.7%, you slow down and stabilize. It's no longer a political discussion, it's a technical decision driven by data.
+
+**Team autonomy.** Amazon's slogan, *"You build it, you run it"*, captures the idea well. The team that wrote the service is also the one that maintains it in production. No more "not my problem". No more wall between design and operation. Feedback loops shrink, bugs get fixed faster, and engineers learn to write code that holds up in production.

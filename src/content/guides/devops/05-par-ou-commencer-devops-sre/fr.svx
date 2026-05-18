@@ -1,0 +1,28 @@
+---
+title: "Par où commencer avec DevOps et SRE"
+subtitle: "Les premiers pas pragmatiques pour une équipe qui veut adopter ces pratiques sans tomber dans le théâtre."
+blurb: "Conseils concrets pour débuter : ne pas copier Google, mesurer avant de promettre, définir un seul SLO, automatiser le déploiement, et instaurer une vraie culture du post-mortem."
+date: "2026-05-18"
+updated: "2026-05-18"
+readTime: 3
+chapterCount: 0
+tags: ["devops"]
+relatedArticles: ["down-migrations-are-useless"]
+featured: false
+---
+
+C'est la partie la plus importante. Parce que la majorité des erreurs que je vois ne viennent pas du fait que les équipes ignorent ces concepts. Elles viennent du fait qu'elles essaient de tout adopter en même temps, ou de copier la stack de Google avec trois utilisateurs.
+
+**Ne copiez pas Google.** Le livre "Site Reliability Engineering" édité par Google est une lecture indispensable, mais ce n'est pas un manuel à appliquer. Google a des millions d'utilisateurs, des datacenters, des SRE par milliers. Vous avez probablement trois serveurs et cinq ingénieurs. Les pratiques décrites dans le livre sont adaptées à leur échelle, pas à la vôtre.
+
+**Commencez par mesurer.** Avant de parler de SLO, de chaos engineering ou de Kubernetes, mettez en place des logs structurés et un monitoring de base. Si vous ne savez pas combien d'utilisateurs ont eu une erreur hier, vous ne pouvez pas commencer à parler de fiabilité.
+
+**Définissez UN SLO simple.** Pas dix. Un seul, sur le service le plus critique. Par exemple : *"99,5% des requêtes sur /api/login répondent en moins de 500 ms sur 28 jours."* Vivez avec pendant trois mois. Vous apprendrez plus en mesurant un objectif qu'en lisant cinq livres sur le sujet.
+
+**Automatisez le déploiement.** Pas de CI/CD = pas de DevOps. C'est probablement le plus grand levier que vous puissiez actionner sur votre vitesse de delivery. Et c'est aussi le plus simple à mettre en place.
+
+**Instaurez les post-mortems sans blâme.** Quand quelque chose casse, posez-vous en équipe et écrivez un document : qu'est-ce qui s'est passé, pourquoi, qu'est-ce qu'on change. Pas de noms. Pas de doigts pointés. C'est un changement culturel qui coûte zéro euro et qui transforme une équipe.
+
+**Évitez le théâtre.** Si vous mettez en place du SRE pour cocher une case dans une présentation, ça ne marchera pas. Si vous montez une équipe DevOps pour faire moderne, vous allez créer un nouveau silo. Ces pratiques marchent quand elles répondent à un vrai problème mesurable, pas quand elles répondent à une mode.
+
+Le DevOps et le SRE ne sont pas des destinations. Ce sont des outils pour résoudre des problèmes précis : aller plus vite, casser moins, dormir la nuit. Adoptez ce qui résout vos problèmes actuels, ignorez le reste, et revenez-y quand vos problèmes auront changé.

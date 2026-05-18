@@ -1,0 +1,28 @@
+---
+title: "D'où viennent DevOps et SRE"
+subtitle: "Les origines historiques de ces deux disciplines, et pourquoi elles sont nées du même problème."
+blurb: "Comprendre comment DevOps et SRE ont émergé : le contexte des années 2000, la guerre Dev / Ops, et les deux réponses qui en ont découlé."
+date: "2026-05-18"
+updated: "2026-05-18"
+readTime: 3
+chapterCount: 0
+tags: ["devops"]
+relatedArticles: ["down-migrations-are-useless"]
+featured: false
+---
+
+"DevOps", "SRE", "platform engineering"... On voit de plus en plus d'entreprises rechercher ces rôles, ils apportent une certaine rigueur, mais ils ne sont pas forcément toujours utiles.
+
+Embaucher un "SRE" pour faire du Kubernetes alors qu'on a trois utilisateurs, ou installer une stack d'observabilité monstrueuse pour un service qui tourne sur un seul serveur, c'est une grossière erreur stratégique. Mais stabiliser un produit (pas forcément SaaS ou dans le cloud) sans eux est une perte de temps.
+
+Ce guide est une introduction pragmatique. On va voir d'où viennent ces deux concepts, ce qu'ils résolvent réellement, en quoi ils diffèrent, et comment en retirer le meilleur en fonction du contexte de votre entreprise.
+
+Pour comprendre ce que DevOps et SRE essaient de résoudre, il faut revenir au monde d'où ils sont nés. Et ce monde, c'est celui du début des années 2000, quand "Dev" et "Ops" étaient deux équipes qui se détestaient cordialement.
+
+Les développeurs écrivaient du code. Les ops le déployaient en production. Quand quelque chose plantait à 3h du matin, c'était les ops qui se levaient. Quand un déploiement durait deux semaines parce qu'il fallait remplir trois tickets et attendre un comité de change, c'étaient les devs qui pestaient. Personne ne se parlait. Tout le monde se renvoyait la balle.
+
+**Le DevOps est né en 2009** d'une volonté de lier les efforts entre les développeurs, qui veulent shipper rapidement du code, et le côté Opérationnel qui gère les infrastructures, les serveurs et les pipelines de mise en production. Le principe est d'éviter les organisations en silo entre les devs et les ops. C'est une méthodologie et une culture d'entreprise à adopter pour permettre une meilleure collaboration entre ces rôles.
+
+Ben Treynor Sloss arrive chez Google en 2003 et constitue la première équipe SRE. Sa définition est devenue célèbre : *"SRE is what happens when you ask a software engineer to design an operations function."* On prend des ingénieurs logiciels, on leur demande de gérer la production, et on les laisse traiter les problèmes opérationnels comme des problèmes d'ingénierie, avec du code, des SLO, et des budgets d'erreur.
+
+Deux histoires, deux origines, mais une même intuition de fond : la séparation Dev / Ops crée plus de problèmes qu'elle n'en résout.

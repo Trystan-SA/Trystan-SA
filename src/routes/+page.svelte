@@ -49,7 +49,7 @@
             <span class="availability-val">550<span class="availability-unit">€</span></span>
             <span class="availability-lbl">{$t.home.availability.rateLabel}</span>
           </div>
-          <a class="availability-cta" href="mailto:trystan.sarrade@somanyways.co">{$t.home.availability.cta}</a>
+          <a class="availability-cta" href="mailto:trystansarrade@gmail.com">{$t.home.availability.cta}</a>
         </div>
       </div>
 

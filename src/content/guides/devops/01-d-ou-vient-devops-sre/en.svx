@@ -1,0 +1,28 @@
+---
+title: "Where DevOps and SRE come from"
+subtitle: "The historical roots of these two disciplines, and why they were born from the same problem."
+blurb: "Understand how DevOps and SRE emerged: the early-2000s context, the Dev / Ops war, and the two responses that came out of it."
+date: "2026-05-18"
+updated: "2026-05-18"
+readTime: 3
+chapterCount: 0
+tags: ["devops"]
+relatedArticles: ["down-migrations-are-useless"]
+featured: false
+---
+
+"DevOps", "SRE", "platform engineering"... more and more companies are hiring for these roles. They bring real rigor, but they aren't always useful.
+
+Hiring an "SRE" to run Kubernetes when you have three users, or installing a monstrous observability stack for a service that runs on a single server, is a serious strategic mistake. But stabilizing a product (not necessarily SaaS or in the cloud) without them is a waste of time.
+
+This guide is a pragmatic introduction. We'll see where these two concepts come from, what they actually solve, how they differ, and how to get the most out of them in the context of your company.
+
+To understand what DevOps and SRE are trying to solve, you have to go back to the world they were born in. And that world is the early 2000s, when "Dev" and "Ops" were two teams that cordially hated each other.
+
+Developers wrote code. Ops deployed it to production. When something broke at 3am, it was ops who got out of bed. When a deployment took two weeks because you had to fill three tickets and wait for a change advisory board, it was devs who cursed. Nobody talked to each other. Everyone passed the buck.
+
+**DevOps was born in 2009** out of a desire to bridge the efforts of developers who want to ship code quickly, and the operational side that manages infrastructure, servers, and release pipelines. The principle is to avoid silo organizations between devs and ops. It's a methodology and a company culture to adopt to enable better collaboration between these roles.
+
+Ben Treynor Sloss joined Google in 2003 and built the first SRE team. His definition has become famous: *"SRE is what happens when you ask a software engineer to design an operations function."* You take software engineers, ask them to run production, and let them treat operational problems like engineering problems, with code, SLOs, and error budgets.
+
+Two stories, two origins, but the same underlying intuition: separating Dev from Ops creates more problems than it solves.

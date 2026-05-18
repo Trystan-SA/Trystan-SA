@@ -1,0 +1,74 @@
+---
+title: "DevOps & SRE : comprendre la différence et ce que ça change vraiment"
+subtitle: "Au-delà du buzzword : ce que ces deux disciplines apportent concrètement à une équipe d'ingénierie."
+blurb: "Une introduction honnête à DevOps et au SRE : d'où ça vient, ce que ça résout, et pourquoi vous n'avez probablement pas besoin de copier Google pour en tirer quelque chose."
+date: "2026-05-18"
+updated: "2026-05-18"
+readTime: 13
+chapterCount: 5
+tags: ["devops"]
+relatedArticles: ["down-migrations-are-useless"]
+featured: false
+---
+
+"DevOps", "SRE", "platform engineering"... On voit de plus en plus d'entreprises rechercher ces rôles, ils apportent une certaine rigueur, mais ils ne sont pas forcément toujours utiles.
+
+Embaucher un "SRE" pour faire du Kubernetes alors qu'on a trois utilisateurs, ou installer une stack d'observabilité monstrueuse pour un service qui tourne sur un seul serveur, c'est une grossière erreur stratégique. Mais stabiliser un produit (pas forcément SaaS ou dans le cloud) sans eux est une perte de temps.
+
+Ce guide est une introduction pragmatique. On va voir d'où viennent ces deux concepts, ce qu'ils résolvent réellement, en quoi ils diffèrent, et comment en retirer le meileur en fonction du contexte de votre entreprise.
+
+## D'où ça vient
+
+**Le DevOps est né en 2009.** d'une volonté de lier les efforts entre les développeurs, qui veulent shipper rapidement du code. Et le côté Opérationnel qui gèrent les infrastructures, les serveurs et les pipelines de mise en production. Le principe est d'éviter les organisations en Silo entre les devs et les ops. C'est une méthodoligue et une culture d'entreprise à adopter pour permettre une meilleure collaboration entre ces rôles.
+
+Ben Treynor Sloss arrive chez Google en 2003 et constitue la première équipe SRE. Sa définition est devenue célèbre : *"SRE is what happens when you ask a software engineer to design an operations function."*. On prend des ingénieurs logiciels, on leur demande de gérer la production, et on les laisse traiter les problèmes opérationnels comme des problèmes d'ingénierie, avec du code, des SLO, et des budgets d'erreur.
+
+## Ce que ça résout
+
+Le DevOps et SRE adressent essentiellement cinq grands problèmes.
+
+**Le silo Dev / Ops.** Le développeur qui dit "Ma PR est mergé, déploie moi ça en production". L'ops qui dit "Ton code n'est pas optimisé et augmente trop l'usage CPU". Le DevOps propose de partager les responsabilités, les outils, et les incidents. Chaqu'un est responsable de l'êtat du code une fois en production.
+
+**Le "ça marche sur ma machine".** Unifier les environnement de développement avec celui de la production. Les développeurs et leurs pipelines sont responsables d'assurer que leurs code est adapté à la production. Le but est de standardiser les environnements (containers, infrastructure as code) pour résoudre le problème mécaniquement. Des outils comme Docker ou Terraform sont devenu des incontournables.
+
+**La fiabilité subjective.** "Le site est lent". "Il y a eu une panne hier". "On a perdu un client à cause d'un bug". Il faut avoir des métriques et de l'observabilité. On mesure le SLA, la latence des requêtes, la disponibilité, les erreurs. Cela responsabilise les développeurs sur la qualité ce qu'ils livrent, mais aussi d'éviter de sur-optimiser ce qui n'est pas nécessaire.
+
+**Le toil.** Concept central du SRE : automatiser tout le travail manuel, répétitif, sans valeur durable qu'on fait parce qu'on n'a pas pris le temps de l'automatiser. Redéployer un service à la main. Nettoyer un cache. Restaurer un compte utilisateur. Le SRE propose de mesurer ce temps perdu et d'y consacrer un budget d'ingénierie pour le supprimer.
+
+**L'incident éternel.** Sans post-mortem, sans culture du retour d'expérience, on refait les mêmes erreurs. Le SRE a popularisé le post-mortem *blameless* : on cherche les causes systémiques, pas les coupables. Les développeurs (ou les équipes CSM, Produit, Q.A.) se mettent à signaler les problèmes organisationnels au lieu de les cacher. C'est la culture du feedback appliqué aux équipes de dev.
+
+## DevOps vs SRE sur le marché du travail
+
+Devops n'est pas un métier, **c'est un principe organisationnel et une culture d'entreprise** que toute l'équipe doit suivre. Beaucoup d'entreprises cherchent des "Devops" pour mettre en place les pipelines requis par l'un des principes du devops (le toil). Mais le Devops c'est aussi d'avoir les compétences de management, de leadership et d'organization (Agile) pour les appliquer dans un environnement de travail.
+
+**Le SRE est une discipline d'ingénierie.** C'est un métier concret, avec ses outils, ses concepts (SLI, SLO, error budgets, toil), ses pratiques (on-call structuré, post-mortems, capacity planning).
+
+Pour simplifier : **DevOps c'est la philosophie, SRE c'est une implémentation concrète de cette philosophie.** Vous pouvez "faire du DevOps" sans avoir une seule personne avec "SRE" dans son titre. Et inversement, vous pouvez avoir une équipe SRE qui applique très peu de culture DevOps (Google est une boîte assez fermée par exemple, le "sharing" n'est pas leur fort).
+
+Dans une boîte avec peu de devs, vous adopterez d'abord la culture DevOps. Des devs qui déploient leur code, des outils partagés, des responsabilités diluées. Le SRE viendra plus tard, quand la fiabilité devient un problème suffisamment quantifiable pour justifier des ingénieurs dédiés.
+
+## Ce que ça apporte concrètement
+
+**De la vitesse de delivery.** La fréquence de déploiement (le délai entre un commit et sa mise en prod) se retrouve améliorée. Bien appliqué, un fix ou une feature ajoutée dans une PR le matin se retrouve en production l'après midi. Le pourcentage de déploiements qui causent un incident (change failure rate), et le temps moyen pour restaurer un service après incident (time to restore) se retrouvent eux aussi améliorés, notamment grâce à la CI/CD. ça réduit énormément les problèmes d'intégration inter-équipes par rapport aux équipes qui ship (certaines une fois par trimestre 🫠)
+
+**De la fiabilité mesurable.** L'équipe s'engage à respecter certaines métrics comme *99,9% de disponibilité mesurée sur 28 jours*. Si cette métrique est à 99,95%, on peut prendre des risques (déployer, expérimenter). Si on est à 99,7%, on freine et on stabilise. Ce sont des décisions technique pilotée par des données et qui peuvent être adaptées au contexte de l'entreprise (SLA de 99.999% pour les produits critiques, SLA de 99% pour les MVP). La disponibilité devient un objectif commun, un KPI.
+
+**De l'autonomie pour les équipes.** *"You build it, you run it"*, résume bien l'idée. L'équipe qui a écrit le service est aussi celle qui le maintient en prod. Plus de "ce n'est pas mon problème". Plus de mur entre la conception et l'opération. Les boucles de feedback se raccourcissent, les bugs se règlent plus vite, et les ingénieurs apprennent à écrire du code qui tient debout en production.
+
+## Par où commencer
+
+C'est la partie la plus importante de ce guide. Parce que la majorité des erreurs que je vois ne viennent pas du fait que les équipes ignorent ces concepts. Elles viennent du fait qu'elles essaient de tout adopter en même temps, ou de copier la stack de Google avec trois utilisateurs.
+
+**Ne copiez pas Google.** Le livre "Site Reliability Engineering" édité par Google est une lecture indispensable, mais ce n'est pas un manuel à appliquer. Google a des millions d'utilisateurs, des datacenters, des SRE par milliers. Vous avez probablement trois serveurs et cinq ingénieurs. Les pratiques décrites dans le livre sont adaptées à leur échelle, pas à la vôtre.
+
+**Commencez par mesurer.** Avant de parler de SLO, de chaos engineering ou de Kubernetes, mettez en place des logs structurés et un monitoring de base. Si vous ne savez pas combien d'utilisateurs ont eu une erreur hier, vous ne pouvez pas commencer à parler de fiabilité.
+
+**Définissez UN SLO simple.** Pas dix. Un seul, sur le service le plus critique. Par exemple : *"99,5% des requêtes sur /api/login répondent en moins de 500 ms sur 28 jours."* Vivez avec pendant trois mois. Vous apprendrez plus en mesurant un objectif qu'en lisant cinq livres sur le sujet.
+
+**Automatisez le déploiement.** Pas de CI/CD = pas de DevOps. C'est probablement le plus grand levier que vous puissiez actionner sur votre vitesse de delivery. Et c'est aussi le plus simple à mettre en place.
+
+**Instaurez les post-mortems sans blâme.** Quand quelque chose casse, posez-vous en équipe et écrivez un document : qu'est-ce qui s'est passé, pourquoi, qu'est-ce qu'on change. Pas de noms. Pas de doigts pointés. C'est un changement culturel qui coûte zéro euro et qui transforme une équipe.
+
+**Évitez le théâtre.** Si vous mettez en place du SRE pour cocher une case dans une présentation, ça ne marchera pas. Si vous montez une équipe DevOps pour faire moderne, vous allez créer un nouveau silo. Ces pratiques marchent quand elles répondent à un vrai problème mesurable, pas quand elles répondent à une mode.
+
+Le DevOps et le SRE ne sont pas des destinations. Ce sont des outils pour résoudre des problèmes précis : aller plus vite, casser moins, dormir la nuit. Adoptez ce qui résout vos problèmes actuels, ignorez le reste, et revenez-y quand vos problèmes auront changé.

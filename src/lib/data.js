@@ -51,8 +51,8 @@ export const CATEGORIES = [
   },
   {
     slug: 'devops',
-    title: 'DevOps & Infrastructure',
-    titleFr: 'DevOps & Infrastructure',
+    title: 'DevOps & SRE',
+    titleFr: 'DevOps & SRE',
     blurb: 'Running real systems, on real machines, without burning a hyperscaler-sized hole in your budget.',
     blurbFr: "Gérer de vrais systèmes, sur de vraies machines, sans creuser un trou de la taille d'un hyperscaler dans votre budget.",
   },

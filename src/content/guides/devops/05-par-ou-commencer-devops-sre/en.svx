@@ -1,0 +1,28 @@
+---
+title: "Where to start with DevOps and SRE"
+subtitle: "Pragmatic first steps for a team that wants to adopt these practices without falling into theater."
+blurb: "Concrete advice for getting started: don't copy Google, measure before promising, define a single SLO, automate deployments, and build a real post-mortem culture."
+date: "2026-05-18"
+updated: "2026-05-18"
+readTime: 3
+chapterCount: 0
+tags: ["devops"]
+relatedArticles: ["down-migrations-are-useless"]
+featured: false
+---
+
+This is the most important part. Because most mistakes I see don't come from teams being ignorant of these concepts. They come from teams trying to adopt everything at once, or copying Google's stack with three users.
+
+**Don't copy Google.** Google's "Site Reliability Engineering" book is required reading, but it's not a playbook to apply verbatim. Google has millions of users, datacenters, thousands of SREs. You probably have three servers and five engineers. The practices in the book fit their scale, not yours.
+
+**Start by measuring.** Before talking about SLOs, chaos engineering, or Kubernetes, set up structured logs and basic monitoring. If you don't know how many users hit an error yesterday, you can't start talking about reliability.
+
+**Define ONE simple SLO.** Not ten. Just one, on your most critical service. For example: *"99.5% of requests to /api/login respond in under 500 ms over 28 days."* Live with it for three months. You'll learn more by measuring one target than by reading five books on the topic.
+
+**Automate deployments.** No CI/CD = no DevOps. This is probably the single biggest lever you can pull on your delivery speed. And it's also the easiest to set up.
+
+**Run blameless post-mortems.** When something breaks, sit down as a team and write a document: what happened, why, what we change. No names. No fingers pointed. It's a cultural change that costs zero euros and transforms a team.
+
+**Avoid the theater.** If you adopt SRE to tick a box in a slide deck, it won't work. If you spin up a DevOps team to look modern, you'll create a new silo. These practices work when they answer a real, measurable problem, not when they answer a fashion.
+
+DevOps and SRE aren't destinations. They're tools for solving specific problems: ship faster, break less, sleep at night. Adopt what solves your current problems, ignore the rest, and come back to them when your problems have changed.

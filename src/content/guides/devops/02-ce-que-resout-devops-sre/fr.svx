@@ -1,0 +1,24 @@
+---
+title: "Ce que DevOps et SRE résolvent vraiment"
+subtitle: "Les cinq grands problèmes que ces deux disciplines adressent en pratique."
+blurb: "Au-delà des concepts, les problèmes concrets que DevOps et SRE essaient de résoudre dans une équipe d'ingénierie : silos, environnements, fiabilité, toil, incidents."
+date: "2026-05-18"
+updated: "2026-05-18"
+readTime: 3
+chapterCount: 0
+tags: ["devops"]
+relatedArticles: ["down-migrations-are-useless"]
+featured: false
+---
+
+Le DevOps et le SRE adressent essentiellement cinq grands problèmes. Pas vingt. Pas trois. Cinq, qui reviennent dans à peu près toutes les boîtes qui n'ont pas pris le temps de structurer leur rapport à la production.
+
+**Le silo Dev / Ops.** Le développeur qui dit "Ma PR est mergée, déploie-moi ça en production". L'ops qui dit "Ton code n'est pas optimisé et augmente trop l'usage CPU". Le DevOps propose de partager les responsabilités, les outils, et les incidents. Chacun est responsable de l'état du code une fois en production.
+
+**Le "ça marche sur ma machine".** Unifier les environnements de développement avec ceux de la production. Les développeurs et leurs pipelines sont responsables d'assurer que leur code est adapté à la production. Le but est de standardiser les environnements (containers, infrastructure as code) pour résoudre le problème mécaniquement. Des outils comme Docker ou Terraform sont devenus des incontournables.
+
+**La fiabilité subjective.** "Le site est lent". "Il y a eu une panne hier". "On a perdu un client à cause d'un bug". Il faut avoir des métriques et de l'observabilité. On mesure le SLA, la latence des requêtes, la disponibilité, les erreurs. Cela responsabilise les développeurs sur la qualité de ce qu'ils livrent, mais aussi évite de sur-optimiser ce qui n'est pas nécessaire.
+
+**Le toil.** Concept central du SRE : automatiser tout le travail manuel, répétitif, sans valeur durable qu'on fait parce qu'on n'a pas pris le temps de l'automatiser. Redéployer un service à la main. Nettoyer un cache. Restaurer un compte utilisateur. Le SRE propose de mesurer ce temps perdu et d'y consacrer un budget d'ingénierie pour le supprimer.
+
+**L'incident éternel.** Sans post-mortem, sans culture du retour d'expérience, on refait les mêmes erreurs. Le SRE a popularisé le post-mortem *blameless* : on cherche les causes systémiques, pas les coupables. Les développeurs (ou les équipes CSM, Produit, Q.A.) se mettent à signaler les problèmes organisationnels au lieu de les cacher. C'est la culture du feedback appliquée aux équipes de dev.

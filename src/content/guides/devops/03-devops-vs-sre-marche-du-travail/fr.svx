@@ -1,0 +1,22 @@
+---
+title: "DevOps vs SRE sur le marché du travail"
+subtitle: "Pourquoi DevOps n'est pas un métier et SRE en est un."
+blurb: "La différence concrète entre la culture DevOps et la discipline SRE, et ce que ça implique pour vos recrutements et votre organisation."
+date: "2026-05-18"
+updated: "2026-05-18"
+readTime: 3
+chapterCount: 0
+tags: ["devops"]
+relatedArticles: ["down-migrations-are-useless"]
+featured: false
+---
+
+C'est là que beaucoup de gens se perdent. On voit passer des offres d'emploi "Ingénieur DevOps / SRE" comme si c'était la même chose. Ce n'est pas le cas.
+
+DevOps n'est pas un métier, **c'est un principe organisationnel et une culture d'entreprise** que toute l'équipe doit suivre. Beaucoup d'entreprises cherchent des "DevOps" pour mettre en place les pipelines requis par l'un des principes du DevOps (le toil). Mais le DevOps, c'est aussi avoir les compétences de management, de leadership et d'organisation (Agile) pour les appliquer dans un environnement de travail.
+
+**Le SRE est une discipline d'ingénierie.** C'est un métier concret, avec ses outils, ses concepts (SLI, SLO, error budgets, toil), ses pratiques (on-call structuré, post-mortems, capacity planning).
+
+Pour simplifier : **DevOps c'est la philosophie, SRE c'est une implémentation concrète de cette philosophie.** Vous pouvez "faire du DevOps" sans avoir une seule personne avec "SRE" dans son titre. Et inversement, vous pouvez avoir une équipe SRE qui applique très peu de culture DevOps (Google est une boîte assez fermée par exemple, le "sharing" n'est pas leur fort).
+
+Dans une boîte avec peu de devs, vous adopterez d'abord la culture DevOps. Des devs qui déploient leur code, des outils partagés, des responsabilités diluées. Le SRE viendra plus tard, quand la fiabilité devient un problème suffisamment quantifiable pour justifier des ingénieurs dédiés.

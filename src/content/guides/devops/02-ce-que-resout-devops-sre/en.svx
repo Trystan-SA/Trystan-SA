@@ -1,0 +1,24 @@
+---
+title: "What DevOps and SRE actually solve"
+subtitle: "The five core problems these two disciplines address in practice."
+blurb: "Beyond the concepts, the concrete problems DevOps and SRE try to solve in an engineering team: silos, environments, reliability, toil, incidents."
+date: "2026-05-18"
+updated: "2026-05-18"
+readTime: 3
+chapterCount: 0
+tags: ["devops"]
+relatedArticles: ["down-migrations-are-useless"]
+featured: false
+---
+
+DevOps and SRE address five core problems. Not twenty. Not three. Five, which show up in just about every company that hasn't taken the time to structure its relationship with production.
+
+**The Dev / Ops silo.** The developer who says "My PR is merged, deploy it to production". The ops person who says "Your code isn't optimized and burns too much CPU". DevOps proposes shared responsibilities, shared tooling, shared incidents. Each person is responsible for the state of the code once it's in production.
+
+**The "works on my machine".** Unifying development environments with production. Developers and their pipelines are responsible for ensuring their code is production-ready. The goal is to standardize environments (containers, infrastructure as code) to solve the problem mechanically. Tools like Docker and Terraform have become unavoidable.
+
+**Subjective reliability.** "The site is slow". "There was an outage yesterday". "We lost a customer because of a bug". You need metrics and observability. You measure SLA, request latency, availability, errors. This holds developers accountable for the quality of what they ship, but also avoids over-optimizing what doesn't need it.
+
+**Toil.** A core SRE concept: automating all the manual, repetitive, no-long-term-value work you do because nobody took the time to automate it. Redeploying a service by hand. Clearing a cache. Restoring a user account. SRE proposes to measure this lost time and allocate an engineering budget to eliminate it.
+
+**The eternal incident.** Without post-mortems, without a feedback culture, you repeat the same mistakes. SRE popularized the *blameless* post-mortem: look for systemic causes, not culprits. Developers (or CSM, Product, QA teams) start reporting organizational problems instead of hiding them. It's feedback culture applied to dev teams.

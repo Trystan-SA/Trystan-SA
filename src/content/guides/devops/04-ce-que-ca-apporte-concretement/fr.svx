@@ -1,0 +1,20 @@
+---
+title: "Ce que DevOps et SRE apportent concrètement"
+subtitle: "Vitesse de delivery, fiabilité mesurable, autonomie : trois bénéfices mesurables."
+blurb: "Les bénéfices tangibles d'une adoption sérieuse de DevOps et SRE dans une équipe d'ingénierie : DORA, SLO, et culture du \"you build it, you run it\"."
+date: "2026-05-18"
+updated: "2026-05-18"
+readTime: 3
+chapterCount: 0
+tags: ["devops"]
+relatedArticles: ["down-migrations-are-useless"]
+featured: false
+---
+
+Au-delà des concepts, qu'est-ce que vous gagnez vraiment ? Trois choses, mesurables.
+
+**De la vitesse de delivery.** Le rapport DORA (DevOps Research and Assessment, racheté par Google en 2018) suit chaque année quatre métriques clés : la fréquence de déploiement, le délai entre un commit et sa mise en prod (lead time), le pourcentage de déploiements qui causent un incident (change failure rate), et le temps moyen pour restaurer un service après incident (time to restore). Les équipes "élites" du rapport déploient plusieurs fois par jour, avec un lead time de moins d'une heure et un change failure rate sous 5%. Les équipes "low performers" déploient une fois tous les six mois avec un change failure rate de 60%+. Ce n'est pas un détail, c'est un facteur 100 sur la capacité à livrer.
+
+**De la fiabilité mesurable.** Avant les SLO, on argumentait avec des intuitions. "Le service est instable", "non c'est juste hier". Avec un SLO, on a un chiffre : *on s'engage sur 99,9% de disponibilité mesurée sur 28 jours glissants*. Si on est à 99,95%, on peut prendre des risques (déployer, expérimenter). Si on est à 99,7%, on freine et on stabilise. Ce n'est plus une discussion politique, c'est une décision technique pilotée par des données.
+
+**De l'autonomie pour les équipes.** Le slogan d'Amazon, *"You build it, you run it"*, résume bien l'idée. L'équipe qui a écrit le service est aussi celle qui le maintient en prod. Plus de "ce n'est pas mon problème". Plus de mur entre la conception et l'opération. Les boucles de feedback se raccourcissent, les bugs se règlent plus vite, et les ingénieurs apprennent à écrire du code qui tient debout en production.
