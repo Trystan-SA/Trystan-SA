@@ -34,10 +34,6 @@
           <span class="availability-status">{$t.home.availability.status}</span>
           <span class="availability-sep" aria-hidden="true">·</span>
           <span class="availability-tag">{$t.home.availability.tag}</span>
-          <span class="availability-loc" aria-label="Location">
-            <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s-7-7.16-7-12a7 7 0 1 1 14 0c0 4.84-7 12-7 12z"/><circle cx="12" cy="10" r="2.5"/></svg>
-            {$t.home.availability.location}
-          </span>
         </div>
         <div class="availability-body">
           <div class="availability-stat">
@@ -46,10 +42,16 @@
           </div>
           <div class="availability-divider" aria-hidden="true"></div>
           <div class="availability-stat">
-            <span class="availability-val">550<span class="availability-unit">€</span></span>
+            <span class="availability-val">600<span class="availability-unit">€</span></span>
             <span class="availability-lbl">{$t.home.availability.rateLabel}</span>
           </div>
-          <a class="availability-cta" href="mailto:trystan.sarrade@somanyways.co">{$t.home.availability.cta}</a>
+          <div class="availability-action">
+            <span class="availability-loc" aria-label="Location">
+              <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s-7-7.16-7-12a7 7 0 1 1 14 0c0 4.84-7 12-7 12z"/><circle cx="12" cy="10" r="2.5"/></svg>
+              {$t.home.availability.location}
+            </span>
+            <a class="availability-cta" href="mailto:trystan.sarrade@somanyways.co">{$t.home.availability.cta}</a>
+          </div>
         </div>
       </div>
 

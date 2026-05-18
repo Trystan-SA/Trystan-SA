@@ -413,11 +413,14 @@ button { font-family: inherit; }
 .availability-loc {
   display: inline-flex; align-items: center; gap: 5px;
   color: var(--fg-soft); font-weight: 500; letter-spacing: 0.1em;
-  margin-left: auto;
-  padding-left: 12px;
-  border-left: 1px solid var(--line);
+  font-family: var(--mono);
+  font-size: 11px; text-transform: uppercase;
 }
 .availability-loc svg { opacity: 0.8; flex-shrink: 0; }
+.availability-action {
+  display: flex; flex-direction: column; align-items: flex-end; gap: 8px;
+  margin-left: auto;
+}
 
 .availability-body {
   display: flex; align-items: center; gap: 24px;
@@ -450,7 +453,6 @@ button { font-family: inherit; }
   margin: 6px 0;
 }
 .availability-cta {
-  margin-left: auto;
   display: inline-flex; align-items: center;
   font-family: var(--mono);
   font-size: 12px; font-weight: 600; letter-spacing: 0.06em;

@@ -13,7 +13,7 @@ export default {
   },
   profile: {
     role: 'Architecte Logiciel',
-    bio: "Ingénieur logiciel fullstack senior avec 7 ans d'expérience, spécialisé dans le développement SaaS. Je dirige aussi des équipes d'ingénierie et fais du product engineering, en façonnant le produit lui-même avec une compréhension technique profonde de ce qu'on livre. Utilisateur au quotidien des outils IA pour la revue de code et l'automatisation dev/ops.",
+    bio: "Je construis des SaaS de A à Z comme Founding Engineer. J'aide aussi des équipes existantes à installer ce qui manque vraiment : DevOps propre, revue de code utile, culture de feedback.",
     brandSub: 'Architecte logiciel sénior',
   },
   home: {
@@ -24,7 +24,7 @@ export default {
     nowMoreLink: 'Voir la page projets →',
     availability: {
       status: 'Disponible',
-      tag: 'Freelance · Consulting',
+      tag: 'Freelance · Founding Engineer',
       location: 'Bordeaux · Paris',
       daysLabel: 'jours / semaine',
       rateLabel: 'par jour',

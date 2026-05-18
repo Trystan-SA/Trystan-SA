@@ -14,7 +14,7 @@ export default {
   profile: {
     role: 'Software Architect',
     tagline: 'Building SaaS, games, tools and many other things.',
-    bio: "Senior fullstack software engineer with 7 years of experience, specialized in SaaS development. I also lead engineering teams and do product engineering, shaping the product itself with deep technical understanding of what we ship. Daily user of AI tools for code review and dev/ops automation.",
+    bio: "I build SaaS from A to Z as a Founding Engineer. I also help existing teams install what's really missing: solid DevOps, useful code reviews, a real feedback culture.",
     brandSub: 'Senior software architect',
   },
   home: {
@@ -25,7 +25,7 @@ export default {
     nowMoreLink: 'See the projects page →',
     availability: {
       status: 'Available',
-      tag: 'Freelance · Consulting',
+      tag: 'Freelance · Founding Engineer',
       location: 'Bordeaux · Paris',
       daysLabel: 'days / week',
       rateLabel: 'per day',
