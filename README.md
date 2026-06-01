@@ -16,11 +16,13 @@ I build SaaS, games and tools. I also write about software architecture, the tea
 - 🚀 **[Somanyways](https://somanyways.co)**: Senior Fullstack Engineer on a platform with 30K+ users.
 - 🤖 **[Criterium.app](https://criterium.app)**: AI chatbot for training centers. Plugs into Moodle, Canvas and other LMS in five minutes. Solo-built in 3 months on the side.
 - 🛠️ **[Forgebox](https://github.com/Trystan-SA/forgebox)** _(WIP)_: open-source AI orchestration platform on top of Firecracker MicroVMs. Go + Svelte.
+- 🖥️ **[rproc](https://github.com/Trystan-SA/rproc)**: open-source Linux resource & process monitor, inspired by the Windows 11 Task Manager. Built in Rust with egui.
 
 ## Stack
 
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white)
 ![Go](https://img.shields.io/badge/Go-00ADD8?style=flat-square&logo=go&logoColor=white)
+![Rust](https://img.shields.io/badge/Rust-000000?style=flat-square&logo=rust&logoColor=white)
 ![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white)
 ![Angular](https://img.shields.io/badge/Angular-DD0031?style=flat-square&logo=angular&logoColor=white)
 ![React](https://img.shields.io/badge/React-20232A?style=flat-square&logo=react&logoColor=61DAFB)

@@ -16,8 +16,6 @@
 
   let { data } = $props();
   const article = $derived(data.article);
-  const viewCount = $derived(data.viewCount ?? 0);
-  const relatedStats = $derived(data.stats ?? {});
   const la = $derived($loc(article));
 
   const ContentEn = $derived(enModules[`/src/content/articles/${article.slug}/en.svx`]?.default);
@@ -94,22 +92,10 @@
   onMount(() => {
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
-    trackView(article.slug);
   });
   onDestroy(() => {
     if (typeof window !== 'undefined') window.removeEventListener('scroll', onScroll);
   });
-
-  function trackView(slug) {
-    try {
-      const key = `viewed:${slug}`;
-      if (sessionStorage.getItem(key)) return;
-      sessionStorage.setItem(key, '1');
-    } catch {
-      // Private mode or storage disabled — count the view anyway.
-    }
-    fetch(`${base}/api/views/${slug}`, { method: 'POST', keepalive: true }).catch(() => {});
-  }
 </script>
 
 <svelte:head>
@@ -149,8 +135,6 @@
             <time>{fmtDate(article.date, $t.dateLocale)}</time>
             <span class="dot">·</span>
             <span>{article.readTime} {$t.article.minRead}</span>
-            <span class="dot">·</span>
-            <span>{$t.article.views(viewCount)}</span>
           </div>
         </div>
       </div>
@@ -185,7 +169,7 @@
       {#if related.length > 0}
         <section class="related">
           <SectionHead eyebrow={$t.article.relatedEyebrow} title={$t.article.relatedTitle} />
-          <ArticleList articles={related} variant="stacked" stats={relatedStats} />
+          <ArticleList articles={related} variant="stacked" />
         </section>
       {/if}
     </article>
