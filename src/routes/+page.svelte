@@ -28,33 +28,6 @@
         </ul>
       </div>
 
-      <div class="availability" aria-label="Freelance availability">
-        <div class="availability-hd">
-          <span class="availability-pulse" aria-hidden="true"></span>
-          <span class="availability-status">{$t.home.availability.status}</span>
-          <span class="availability-sep" aria-hidden="true">·</span>
-          <span class="availability-tag">{$t.home.availability.tag}</span>
-        </div>
-        <div class="availability-body">
-          <div class="availability-stat">
-            <span class="availability-val">2</span>
-            <span class="availability-lbl">{$t.home.availability.daysLabel}</span>
-          </div>
-          <div class="availability-divider" aria-hidden="true"></div>
-          <div class="availability-stat">
-            <span class="availability-val">600<span class="availability-unit">€</span></span>
-            <span class="availability-lbl">{$t.home.availability.rateLabel}</span>
-          </div>
-          <div class="availability-action">
-            <span class="availability-loc" aria-label="Location">
-              <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s-7-7.16-7-12a7 7 0 1 1 14 0c0 4.84-7 12-7 12z"/><circle cx="12" cy="10" r="2.5"/></svg>
-              {$t.home.availability.location}
-            </span>
-            <a class="availability-cta" href="mailto:trystan.sarrade@somanyways.co">{$t.home.availability.cta}</a>
-          </div>
-        </div>
-      </div>
-
       <div class="hero-actions">
         <button class="btn btn-primary" onclick={() => goto(`${base}/projects/`)}>
           {$t.home.readWritingBtn}
@@ -71,6 +44,7 @@
           <li>Working at <a href="https://somanyways.co" target="_blank" rel="noopener">Somanyways</a> as a Senior Fullstack Engineer.</li>
           <li>Released <a href="https://criterium.app" target="_blank" rel="noopener">Criterium.app</a> (follow the link to know what it is about).</li>
           <li>Developing <a href="https://github.com/Trystan-SA/claude-design-system-prompt" target="_blank" rel="noopener">Forgebox</a>, an AI orchestration agent with MicroVMs to improve security.</li>
+          <li>Released <a href="https://github.com/Trystan-SA/rproc" target="_blank" rel="noopener">rproc</a>, a Linux resource & process monitor in Rust, inspired by the Windows 11 Task Manager.</li>
         </ul>
         <a class="now-more" href="{base}/projects/">{$t.home.nowMoreLink}</a>
       </div>

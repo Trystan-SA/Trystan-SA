@@ -13,7 +13,7 @@ export default {
   },
   profile: {
     role: 'Architecte Logiciel',
-    bio: "Je construis des SaaS de A à Z comme Founding Engineer. J'aide aussi des équipes existantes à installer ce qui manque vraiment : DevOps propre, revue de code utile, culture de feedback.",
+    bio: "Je construis des SaaS de A à Z comme Senior Fullstack Engineer. J'aide aussi des équipes existantes à installer ce qui manque vraiment : DevOps propre, revue de code utile, culture de feedback.",
     brandSub: 'Architecte logiciel sénior',
   },
   home: {
@@ -22,14 +22,6 @@ export default {
     aboutBtn: 'En savoir plus',
     nowLabel: 'En ce moment',
     nowMoreLink: 'Voir la page projets →',
-    availability: {
-      status: 'Disponible',
-      tag: 'Freelance · Founding Engineer',
-      location: 'Bordeaux · Paris',
-      daysLabel: 'jours / semaine',
-      rateLabel: 'par jour',
-      cta: 'Prendre RDV →',
-    },
     featuredEyebrow: 'À la une',
     featuredTitle: 'Apprendre ce qui compte',
     featuredMinRead: 'min de lecture',
@@ -44,9 +36,10 @@ export default {
       subscribe: "S'abonner",
     },
     now: [
-      'En poste chez <a href="https://somanyways.co" target="_blank" rel="noopener">Somanyways</a> en tant qu\'Ingénieur Fullstack Senior.',
-      'Sorti <a href="https://criterium.app" target="_blank" rel="noopener">Criterium.app</a> (suivez le lien pour en savoir plus).',
-      'Développement de <a href="https://github.com/Trystan-SA/claude-design-system-prompt" target="_blank" rel="noopener">Forgebox</a>, un agent IA d\'orchestration avec MicroVMs pour améliorer la sécurité.',
+      'En poste chez <a href="https://somanyways.co" target="_blank" rel="noopener">Somanyways</a> comme Ingénieur Fullstack Senior.',
+      'J\'ai lancé <a href="https://criterium.app" target="_blank" rel="noopener">Criterium.app</a> (suivez le lien pour découvrir le projet).',
+      'Je développe <a href="https://github.com/Trystan-SA/claude-design-system-prompt" target="_blank" rel="noopener">Forgebox</a>, un agent d\'orchestration IA isolé dans des MicroVMs pour renforcer la sécurité.',
+      'J\'ai publié <a href="https://github.com/Trystan-SA/rproc" target="_blank" rel="noopener">rproc</a>, un moniteur de ressources et de processus pour Linux, écrit en Rust et inspiré du Gestionnaire des tâches de Windows 11.',
     ],
   },
   articles: {
@@ -118,10 +111,6 @@ export default {
     onThisPage: 'Sur cette page',
     minRead: 'min de lecture',
     commentsHeading: 'Commentaires',
-    views: (n) => `${n.toLocaleString('fr-FR')} vues`,
-    viewsShort: (n) => `${n.toLocaleString('fr-FR')} vues`,
-    commentsShort: (n) => `${n.toLocaleString('fr-FR')} ${n === 1 ? 'commentaire' : 'commentaires'}`,
-    reactionsShort: (n) => `${n.toLocaleString('fr-FR')} ${n === 1 ? 'réaction' : 'réactions'}`,
     relatedEyebrow: 'Connexe',
     relatedTitle: 'Si vous avez aimé',
   },

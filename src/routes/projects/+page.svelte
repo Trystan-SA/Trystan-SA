@@ -95,6 +95,30 @@
     <article class="project-row">
       <div class="project-meta">
         <div class="project-year">2026</div>
+        <div class="project-role">Open source · Creator</div>
+      </div>
+      <div class="project-body">
+        <h3 class="project-name">
+          <a href="https://github.com/Trystan-SA/rproc" target="_blank" rel="noopener">rproc <span class="project-link">↗</span></a>
+        </h3>
+        {#if $lang === 'fr'}
+          <p>Moniteur de ressources et de processus pour Linux, inspiré du Gestionnaire des tâches de Windows 11. Écrit en Rust avec egui. Vues processus (CPU, mémoire, I/O disque, threads), performances en temps réel (CPU par cœur, mémoire, disques, réseau, GPU NVIDIA/AMD/Intel), démarrage et services systemd. Packagé pour Debian/Ubuntu, Fedora, Flatpak et Nix.</p>
+        {:else}
+          <p>Resource & process monitor for Linux, inspired by the Windows 11 Task Manager. Written in Rust with egui. Process views (CPU, memory, disk I/O, threads), real-time performance charts (per-core CPU, memory, disks, network, NVIDIA/AMD/Intel GPU), startup entries and systemd services. Packaged for Debian/Ubuntu, Fedora, Flatpak and Nix.</p>
+        {/if}
+        <div class="project-stack">
+          <span class="stack-chip">Rust</span>
+          <span class="stack-chip">egui</span>
+          <span class="stack-chip">Linux</span>
+          <span class="stack-chip">systemd</span>
+          <span class="stack-chip">Nix</span>
+        </div>
+      </div>
+    </article>
+
+    <article class="project-row">
+      <div class="project-meta">
+        <div class="project-year">2026</div>
         <div class="project-role">Founder · Architect</div>
       </div>
       <div class="project-body">

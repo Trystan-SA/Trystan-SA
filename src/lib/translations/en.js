@@ -14,7 +14,7 @@ export default {
   profile: {
     role: 'Software Architect',
     tagline: 'Building SaaS, games, tools and many other things.',
-    bio: "I build SaaS from A to Z as a Founding Engineer. I also help existing teams install what's really missing: solid DevOps, useful code reviews, a real feedback culture.",
+    bio: "I build SaaS from A to Z as a Senior Fullstack Engineer. I also help existing teams install what's really missing: solid DevOps, useful code reviews, a real feedback culture.",
     brandSub: 'Senior software architect',
   },
   home: {
@@ -23,14 +23,6 @@ export default {
     aboutBtn: 'More about me',
     nowLabel: 'Now',
     nowMoreLink: 'See the projects page →',
-    availability: {
-      status: 'Available',
-      tag: 'Freelance · Founding Engineer',
-      location: 'Bordeaux · Paris',
-      daysLabel: 'days / week',
-      rateLabel: 'per day',
-      cta: 'Book a call →',
-    },
     featuredEyebrow: 'Featured',
     featuredTitle: 'Learn skills that matter',
     featuredMinRead: 'min read',
@@ -48,6 +40,7 @@ export default {
       'Working at <a href="https://somanyways.co" target="_blank" rel="noopener">Somanyways</a> as a Senior Fullstack Engineer.',
       'Released <a href="https://criterium.app" target="_blank" rel="noopener">Criterium.app</a> (follow the link to know what it is about).',
       'Developing <a href="https://github.com/Trystan-SA/claude-design-system-prompt" target="_blank" rel="noopener">Forgebox</a>, an AI orchestration agent with MicroVMs to improve security.',
+      'Released <a href="https://github.com/Trystan-SA/rproc" target="_blank" rel="noopener">rproc</a>, a Linux resource & process monitor in Rust, inspired by the Windows 11 Task Manager.',
     ],
   },
   articles: {
@@ -119,10 +112,6 @@ export default {
     onThisPage: 'On this page',
     minRead: 'min read',
     commentsHeading: 'Comments',
-    views: (n) => `${n.toLocaleString('en-US')} views`,
-    viewsShort: (n) => `${n.toLocaleString('en-US')} views`,
-    commentsShort: (n) => `${n.toLocaleString('en-US')} ${n === 1 ? 'comment' : 'comments'}`,
-    reactionsShort: (n) => `${n.toLocaleString('en-US')} ${n === 1 ? 'reaction' : 'reactions'}`,
     relatedEyebrow: 'Related',
     relatedTitle: 'If you liked this',
   },

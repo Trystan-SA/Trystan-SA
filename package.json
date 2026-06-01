@@ -4,19 +4,12 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "docker compose up -d && vite dev",
+    "dev": "vite dev",
     "build": "vite build",
-    "preview": "vite preview",
-    "start": "node build",
-    "db:up": "docker compose up -d",
-    "db:down": "docker compose down",
-    "db:migrate": "node --env-file=.env scripts/migrate.js"
-  },
-  "dependencies": {
-    "postgres": "^3.4.9"
+    "preview": "vite preview"
   },
   "devDependencies": {
-    "@sveltejs/adapter-node": "^5.5.4",
+    "@sveltejs/adapter-static": "^3.0.8",
     "@sveltejs/kit": "^2.20.0",
     "@sveltejs/vite-plugin-svelte": "^5.0.3",
     "mdsvex": "^0.12.7",
