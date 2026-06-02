@@ -1,11 +1,6 @@
 <script>
   import { onMount } from 'svelte';
-  import {
-    PUBLIC_GISCUS_REPO,
-    PUBLIC_GISCUS_REPO_ID,
-    PUBLIC_GISCUS_CATEGORY,
-    PUBLIC_GISCUS_CATEGORY_ID
-  } from '$env/static/public';
+  import { env } from '$env/dynamic/public';
 
   let {
     mapping = 'pathname',
@@ -15,10 +10,10 @@
 
   let container = $state(null);
 
-  const repo = PUBLIC_GISCUS_REPO;
-  const repoId = PUBLIC_GISCUS_REPO_ID;
-  const category = PUBLIC_GISCUS_CATEGORY;
-  const categoryId = PUBLIC_GISCUS_CATEGORY_ID;
+  const repo = env.PUBLIC_GISCUS_REPO;
+  const repoId = env.PUBLIC_GISCUS_REPO_ID;
+  const category = env.PUBLIC_GISCUS_CATEGORY;
+  const categoryId = env.PUBLIC_GISCUS_CATEGORY_ID;
   const configured = repo && repoId && category && categoryId;
 
   onMount(() => {
