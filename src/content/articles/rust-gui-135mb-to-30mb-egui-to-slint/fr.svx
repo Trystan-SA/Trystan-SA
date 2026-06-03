@@ -1,0 +1,232 @@
+---
+title: "Comment j'ai économisé 87% de RAM à mon app GUI écrite en Rust"
+excerpt: "Le rendu GUI côté CPU m'a fait passé de 130MB de RAM à 30 Mo."
+date: "2026-06-03"
+readTime: 13
+tags: ["architecture", "oss"]
+featured: true
+---
+
+[rproc](https://github.com/Trystan-SA/rproc) est un moniteur de ressources et de processus pour Linux. Pensez au Gestionnaire des tâches de Windows 11, mais natif, rapide et open source. Il affiche en direct les graphes de CPU, mémoire, disque et réseau, liste chaque processus avec son icône et expose les services systemd et les applications au démarrage.
+
+Un moniteur de processus se doit d'être minuscule. On l'ouvre justement quand la machine à des soucis de performances : le dernier truc qu'on veut, c'est que l'outil lui-même en rajoute.
+
+<figure>
+  <img src="/articles/rproc/performance.png" alt="Vue Performance de rproc : graphe CPU en direct sur les 60 dernières secondes, courbes par cœur, et un panneau « top des processus au curseur »" />
+  <figcaption>La vue Performance. Graphes en direct, usage par cœur, et le panneau d'attribution par processus qui montre quels processus se cachent derrière le point que vous survolez. Tout est dessiné par le CPU, sans contexte GPU.</figcaption>
+</figure>
+
+La première version, écrite en Rust avec `egui`, utilisait environ 135 Mo. C'était toujours plus léger que la plupart des outils comparables. Mais la réécriture à permis de faire descendre ça à 30MB. **87 % de moins** que Mission Center.
+
+| Solution | RAM | vs le plus lourd |
+|---|---|---|
+| Mission Center | 239 Mo | - |
+| Resources | 200 Mo | 16 % de moins |
+| Gnome System Monitor | 185 Mo | 22 % de moins |
+| rproc, egui (avant) | ~135 Mo | 43 % de moins |
+| **rproc, Slint, GPU off (après)** | **~30 Mo** | **87 % de moins** |
+
+La réécriture s'est résumée à passer d'**egui** à **Slint**. Mais le plus intéressant c'est de comprendre *où* ces 100 Mo se cachaient.
+
+## Où part vraiment la mémoire d'une interface ?
+
+Avant d'optimiser quoi que ce soit, il faut comprendre ce que le chiffre signifie. Le nombre qu'un moniteur affiche pour un processus, c'est son **RSS** (Resident Set Size) : la quantité de RAM physique que le processus utilise à l'instant T. Et le RSS, ce n'est pas seulement « la mémoire que votre programme a demandée ». C'est la somme de plusieurs choses, dont la plupart que vous n'avez jamais écrites :
+
+- **Vos propres données.** Les structures que votre code alloue : la liste des processus de rproc, les petits tampons d'historique derrière chaque graphe, quelques milliers de courtes chaînes. Quelques Mo, réalistement.
+- **Tout le code que vous liez.** Votre programme, plus chaque bibliothèque dont il dépend, chargés en mémoire.
+- **Les bibliothèques tirées par *ces* bibliothèques.** Vous ajoutez une dépendance, et elle en traîne discrètement dix autres. C'est là que se cachent les surprises.
+- **La mémoire graphique.** Dès qu'un programme parle au GPU, le pilote graphique mappe tout un tas de ses propres tampons (et parfois une tranche de mémoire vidéo) dans votre processus. Tout ça compte comme « votre » RAM, alors que vous n'en avez jamais demandé un octet.
+
+C'est faux de penser qu'un petit programme = petite empreinte mémoire. Ce qui fixe votre vrai plancher, c'est tout ce que vos dépendances traînent avec elles. Le vrai travail de rproc, lire des chiffres dans le système, n'a jamais été la partie coûteuse. *Dessiner* ces chiffres, si.
+
+Ce refactoring consite à choisir des dépendances qui économisent de la ressource.
+
+## Pourquoi egui pesait 135 Mo : le mode immédiat et le GPU
+
+`egui` est un vrai plaisir à utiliser. C'est ce qu'on appelle une interface en **mode immédiat** (immediate mode), et l'idée est simple : il n'y a pas d'interface que vous construisez une fois puis mettez à jour. À la place, à chaque image (frame), vous réexécutez votre code d'UI de haut en bas (`if button("Kill").clicked()`) et la bibliothèque redessine tout depuis zéro. C'est la même approche que Dear ImGui dans le monde C++, et les jeux adorent ça parce que ça s'insère directement dans une boucle de rendu qui tourne déjà 60 fois par seconde.
+
+Mais « tout redessiner, 60 fois par seconde » n'a de sens que si quelque chose de très rapide s'occupe du dessin : une carte graphique. Donc egui, via son wrapper `eframe`, met discrètement en place tout un **pipeline GPU** :
+
+- Une **connexion au pilote graphique** (en jargon graphique, un « contexte » OpenGL ou wgpu).
+- Le **pilote graphique lui-même**, chargé dans votre programme. Avec le pilote propriétaire de NVIDIA, c'est des dizaines de Mo de code et de tampons, et une fois la connexion ouverte, vous ne pouvez pas vraiment vous y soustraire.
+- Un **atlas de textures** : egui pré-rend chaque lettre de chaque police, plus vos icônes, dans une grande image sur le GPU pour que la carte puisse les estampiller à l'écran. Pratique, mais ça coûte de la mémoire.
+
+Rien de tout ça n'est *du gaspillage* pour ce à quoi egui est destiné. C'est exactement ce qu'il faut pour dessiner une UI par-dessus un jeu 3D à 60 fps. C'est juste démesurément surdimensionné pour une fenêtre qui met ses chiffres à jour une fois par seconde et reste figée le reste du temps. Je payais un moteur de rendu de jeu temps réel pour afficher du texte qui ne change presque pas.
+
+Voilà la leçon cachée dans ces 135 Mo : le poids ne venait pas du code d'egui, mais de la machinerie GPU qu'egui tient pour acquise. Un moniteur de processus n'en a aucun besoin. Il a besoin de dessiner du texte, quelques rectangles et quelques courbes, de temps en temps.
+
+## Le mode retenu, et le rendu logiciel
+
+`Slint` inverse ces deux choix.
+
+D'abord, il est en **mode retenu** (retained mode), l'opposé du mode immédiat. Vous décrivez votre interface une seule fois, dans des fichiers `.slint` (un petit langage déclaratif, un peu comme HTML/CSS), et Slint garde cette description en mémoire. Quand une valeur change, il ne redessine que les parties liées à cette valeur. Quand rien ne change, il ne fait rien du tout. Pour une appli qui passe son temps à afficher des chiffres, ça colle bien mieux à la réalité que « redessiner toute la fenêtre, en permanence ».
+
+Ensuite, et c'est là que la mémoire a réellement disparu, Slint peut dessiner toute l'UI **sans aucun GPU**, grâce à ce qu'on appelle un *rendu logiciel* (software renderer) : il peint les pixels avec le CPU, directement dans un simple bloc de mémoire, puis remet cette image finie au système pour l'afficher. Pas de connexion au pilote, pas de pilote graphique chargé dans votre programme, pas d'atlas de textures. Toute la pile GPU de la section précédente n'existe tout simplement pas.
+
+<figure>
+<svg viewBox="0 0 770 430" role="img" xmlns="http://www.w3.org/2000/svg"
+     aria-label="Deux pipelines de rendu comparés. egui envoie les widgets à travers une pile GPU (contexte OpenGL, pilote NVIDIA et un atlas de textures en VRAM) coûtant environ 135 Mo. Le rendu logiciel de Slint rasterise sur le CPU dans un buffer de pixels, coûtant environ 30 Mo."
+     style="width:100%;height:auto;font-family:var(--sans);border:1px solid var(--line);border-radius:var(--r-2);background:var(--bg)">
+  <defs>
+    <marker id="rpA" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="var(--fg-soft)"/>
+    </marker>
+    <marker id="rpAccent" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="var(--accent)"/>
+    </marker>
+  </defs>
+
+  <!-- titres de colonnes -->
+  <text x="180" y="30" text-anchor="middle" font-size="13.5" font-weight="600" fill="var(--fg)">egui (avant)</text>
+  <text x="590" y="30" text-anchor="middle" font-size="13.5" font-weight="600" fill="var(--fg)">Slint, rendu logiciel (après)</text>
+
+  <!-- boîtes neutres -->
+  <g fill="var(--bg-alt)" stroke="var(--line-strong)" stroke-width="1.2">
+    <rect x="60"  y="52"  width="240" height="44" rx="7"/>
+    <rect x="60"  y="118" width="240" height="44" rx="7"/>
+    <rect x="470" y="52"  width="240" height="44" rx="7"/>
+    <rect x="470" y="118" width="240" height="44" rx="7"/>
+    <rect x="470" y="184" width="240" height="44" rx="7"/>
+    <rect x="470" y="250" width="240" height="44" rx="7"/>
+  </g>
+
+  <!-- pile GPU coûteuse (chaud) -->
+  <g fill="rgba(217,119,87,0.13)" stroke="#d97757" stroke-width="1.3">
+    <rect x="60" y="184" width="240" height="44" rx="7"/>
+    <rect x="60" y="250" width="240" height="44" rx="7"/>
+    <rect x="60" y="316" width="240" height="44" rx="7"/>
+  </g>
+
+  <!-- libellés : gauche -->
+  <g text-anchor="middle" fill="var(--fg)" font-size="13.5">
+    <text x="180" y="79">Vos widgets</text>
+    <text x="180" y="145">Tessellation egui</text>
+  </g>
+  <g text-anchor="middle" fill="#e9a988" font-size="13.5">
+    <text x="180" y="211">Contexte OpenGL / wgpu</text>
+    <text x="180" y="277">Pilote GL NVIDIA</text>
+    <text x="180" y="343">Atlas de textures (VRAM)</text>
+  </g>
+
+  <!-- libellés : droite -->
+  <g text-anchor="middle" fill="var(--fg)" font-size="13.5">
+    <text x="590" y="79">Vos widgets</text>
+    <text x="590" y="138">Arbre d'éléments Slint</text>
+    <text x="590" y="211">Rasteriseur CPU</text>
+    <text x="590" y="270">Surface fenêtre</text>
+  </g>
+  <g text-anchor="middle" fill="var(--fg-soft)" font-size="10.5">
+    <text x="590" y="152">retenu, redessine au changement</text>
+    <text x="590" y="284">un simple buffer de pixels</text>
+  </g>
+
+  <!-- flèches : gauche -->
+  <g stroke="var(--fg-soft)" stroke-width="1.5" marker-end="url(#rpA)">
+    <line x1="180" y1="98"  x2="180" y2="115"/>
+    <line x1="180" y1="164" x2="180" y2="181"/>
+    <line x1="180" y1="230" x2="180" y2="247"/>
+    <line x1="180" y1="296" x2="180" y2="313"/>
+  </g>
+  <!-- flèches : droite -->
+  <g stroke="var(--fg-soft)" stroke-width="1.5" marker-end="url(#rpA)">
+    <line x1="590" y1="98"  x2="590" y2="115"/>
+    <line x1="590" y1="164" x2="590" y2="181"/>
+    <line x1="590" y1="230" x2="590" y2="247"/>
+  </g>
+
+  <!-- pastille pile GPU -->
+  <line x1="300" y1="272" x2="312" y2="272" stroke="#d97757" stroke-width="1.3"/>
+  <rect x="312" y="259" width="150" height="26" rx="13" fill="#d97757"/>
+  <text x="387" y="276" text-anchor="middle" font-size="11.5" font-weight="600" fill="#1a1207">Pile de rendu GPU</text>
+
+  <!-- gain RSS -->
+  <text x="180" y="398" text-anchor="middle" font-size="19" font-weight="700" fill="#d97757">~135 Mo</text>
+  <text x="180" y="416" text-anchor="middle" font-size="10.5" fill="var(--fg-soft)">mémoire résidente</text>
+  <text x="590" y="398" text-anchor="middle" font-size="19" font-weight="700" fill="var(--accent)">~30 Mo</text>
+  <text x="590" y="416" text-anchor="middle" font-size="10.5" fill="var(--fg-soft)">mémoire résidente</text>
+
+  <line x1="300" y1="392" x2="468" y2="392" stroke="var(--accent)" stroke-width="2" marker-end="url(#rpAccent)"/>
+  <text x="384" y="382" text-anchor="middle" font-size="12.5" font-weight="600" fill="var(--fg-dim)">4,5× moins</text>
+</svg>
+<figcaption>Mêmes widgets, deux pipelines. egui confie la géométrie à une pile GPU (un contexte OpenGL, le pilote graphique et un atlas de textures en VRAM) qui reste mappée que l'UI change ou non. Le rendu logiciel de Slint rasterise directement dans un buffer de pixels sur le CPU, donc rien de tout cela n'est chargé. Cette pile supprimée, c'est l'essentiel des 100 Mo.</figcaption>
+</figure>
+
+Ce seul changement, abandonner le moteur de rendu GPU, est le plus gros gain du projet à lui seul. egui ne pouvait pas l'offrir : retirez-lui le GPU et il n'a plus rien pour dessiner. Slint peint la même fenêtre sur le CPU et n'ouvre jamais toute cette pile, ce qui explique l'essentiel de l'écart entre 135 Mo et la nouvelle base. (Les économies plus petites, la réduction des icônes, le monitoring GPU optionnel, etc., viennent plus tard.)
+
+Et voilà le titre contre-intuitif de la réécriture : pour une appli de bureau 2D toute simple, *ne pas* utiliser le GPU est l'optimisation. On nous a tous appris à penser « GPU = rapide = bien ». Pour un jeu, oui. Pour une fenêtre pleine de texte et de quelques courbes, le GPU est une taxe de dizaines de Mo pour rendre *légèrement plus* instantané quelque chose qui l'était déjà, et vous la payez en mémoire et en démarrage plus lent.
+
+## Le piège : dessiner les graphes en direct
+
+Abandonner le GPU n'est pas gratuit. Un rendu logiciel est volontairement limité (c'est en partie comme ça qu'il reste petit et portable), et les graphes en direct sont l'endroit où ça a mordu le plus fort.
+
+Sur une boîte à outils GPU, vous dessineriez une courbe en construisant à l'exécution une petite description textuelle de la forme, quelque chose comme `"M 0 0 L 1 5 L 2 3 …"` (la même syntaxe que SVG), et en la reconstruisant à chaque nouvelle donnée. Le rendu logiciel de Slint n'accepte pas une forme assemblée à la volée comme ça, et il ne vous laisse pas non plus boucler pour en générer une : il veut connaître la structure de la forme à l'avance, à la compilation de l'appli.
+
+Alors j'ai retourné le problème. Chaque graphe est une ligne fixe de **60 points**, écrite une fois pour toutes dans le fichier `.slint`, où seule la *position* de chaque point est reliée aux données en direct. Rust garde les 60 dernières mesures ; quand une nouvelle arrive, la plus ancienne tombe et les points se décalent ; Slint déplace simplement les segments existants vers leurs nouvelles positions. Un peu de glu de mise en page laisse le tout s'étirer pour remplir l'espace qu'on lui donne.
+
+```slint
+// 60 points déclarés statiquement ; coordonnées liées au modèle.
+// Pas de chaîne de commandes construite à l'exécution, pas de `for` dans le Path.
+Path {
+    viewbox-width: root.width / 1px;
+    viewbox-height: root.height / 1px;
+    MoveTo { x: 0;            y: root.pts[0]; }
+    LineTo { x: root.step*1;  y: root.pts[1]; }
+    LineTo { x: root.step*2;  y: root.pts[2]; }
+    // … 57 autres, générés une fois à la compilation …
+}
+```
+
+C'est moins élégant que de passer une chaîne, mais c'est prévisible : toujours 60 segments, pas de mémoire brassée à chaque redessin, et le moteur connaît la forme à l'avance. La contrainte m'a poussé vers un design plus propre que celui que j'aurais pris la peine de faire si la voie facile avait été disponible.
+
+## Le bug que seul un tick de rafraîchissement peut provoquer
+
+Voici un bug qui est la pure conséquence de la façon dont l'appli se rafraîchit. rproc recharge ses données sur un timer, quelques fois par seconde. La tentation est de reconstruire toute la liste des processus de zéro à chaque fois. Faites ça, et vous créez une *race condition* quasi impossible à reproduire exprès : un clic de souris, c'est en réalité deux événements, un *press* puis un *release*. Si un rafraîchissement tombe pile *entre* les deux et reconstruit la liste, la ligne sur laquelle vous avez appuyé n'existe plus au moment du relâchement, et le clic s'évapore. Toutes les quelques secondes, un clic ne fait silencieusement rien.
+
+<figure>
+  <img src="/articles/rproc/processes.png" alt="Onglet Processus de rproc : processus groupés avec icônes freedesktop, colonnes CPU, mémoire, E/S disque et statut" />
+  <figcaption>L'onglet Processus. Chaque ligne porte une icône freedesktop, décodée et réduite à ~20 px avant mise en cache plutôt que conservée en résolution native. Les lignes cliquables vivent dans un modèle persistant mis à jour sur place, jamais reconstruit, pour qu'un clic ne soit jamais perdu par un rafraîchissement.</figcaption>
+</figure>
+
+Le correctif, c'est d'arrêter de reconstruire la liste en bloc. À la place, la liste reste en place et ses lignes sont *mises à jour sur place*, modifiées plutôt que recréées, pour que ce qui se trouve sous votre curseur survive à un rafraîchissement qui tombe en plein clic. C'est le genre de bug qui n'apparaît jamais sur une capture d'écran ni dans une démo rapide. Il se manifeste comme un vague « parfois les clics ne marchent pas », et la seule façon de le tuer, c'est de raisonner sur l'ordre dans lequel les choses se produisent, pas de tripoter l'UI jusqu'à ce qu'elle ait l'air correcte.
+
+## Les autres 100 Mo : ce qu'on charge qu'on s'en serve ou non
+
+Échanger le moteur de rendu était le gros gain, mais une vraie part vient simplement du fait de *ne pas charger* des choses tant qu'elles ne sont pas nécessaires. C'est la même idée à chaque fois : la mémoire la moins chère, c'est une bibliothèque qu'on ne charge jamais.
+
+- **Le monitoring GPU est une option, pas un acquis.** Lire les stats NVIDIA implique de charger les bibliothèques propres à NVIDIA, environ 20 Mo à elles seules. L'ancien build les chargeait quoi qu'il arrive. Maintenant c'est un seul réglage : désactivez le monitoring GPU et ces bibliothèques ne sont jamais chargées. Pas de graphes GPU, pas de 20 Mo. Ce réglage, c'est exactement l'écart entre les ~50 Mo et les ~30 Mo de rproc.
+- **Le service en arrière-plan optionnel est désactivé par défaut.** rproc peut continuer d'enregistrer l'historique même quand sa fenêtre est fermée, mais ce service tirait lui aussi ces bibliothèques NVIDIA, encore ~25 Mo. Désactivé sauf si vous le voulez vraiment.
+- **Les icônes d'applis sont réduites avant d'être stockées.** Les icônes de processus viennent du thème système en pleine taille et étaient mises en cache telles quelles. Maintenant, chacune est réduite à peu près à la taille à laquelle elle est réellement affichée (~20 px) avant d'être conservée. Une liste de 300 processus ne garde plus 300 images pleine taille.
+- **Rendre la mémoire libérée au système.** Par défaut, le système de mémoire garde la mémoire que vous avez libérée sous le coude, au cas où vous en auriez de nouveau besoin bientôt. Génial pour la vitesse brute, mauvais pour un moniteur qui devrait *rétrécir* au repos. Donc à chaque rafraîchissement, rproc rend explicitement cette mémoire inutilisée au système d'exploitation, et le chiffre qu'il affiche reflète ce qui est réellement utilisé.
+- **Élaguer les dépendances de dépendances.** Une bibliothèque que rproc utilise pour dessiner ses icônes SVG traînait, par défaut, tout un système de texte et de polices dont elle n'avait pas besoin (les icônes sont des formes, pas du texte). Désactiver cette option l'a entièrement supprimé. Et l'une des dépendances de Slint avait besoin d'une bibliothèque de polices système installée, ce qui a cassé le serveur de build jusqu'à ce que je l'ajoute, exactement le genre de surprise que « les bibliothèques qui tirent des bibliothèques » adore vous réserver.
+
+Chacune de ces économies est petite isolément. Empilées, elles font la différence entre « un peu plus petit » et « 4,5× plus petit », et elles relèvent toutes du même geste : ne mettez pas en place ce que l'utilisateur n'a pas demandé.
+
+## La réécriture avec Claude Code
+
+Une réécriture d'UI, c'est le genre de tâche à 80 % mécanique et 20 % vraiment délicate, ce qui est exactement la forme sur laquelle l'IA est bonne, à condition de la garder du bon côté de cette ligne.
+
+Les 80 % mécaniques : traduire six onglets de code de dessin egui en vues déclaratives `.slint`, plus la glu Rust qui mappe un `Snapshot` vers les modèles Slint. C'est beaucoup de frappe, beaucoup de « refais la même transformation 47 fois », et beaucoup de recherche de la syntaxe Slint. La PR fait +7 122 / -3 755 sur 47 fichiers ; je ne voulais pas tout écrire à la main, et je ne l'ai pas fait.
+
+Ce qui est resté fermement *mon* boulot, c'est l'architecture et les 20 % épineux : la décision de partir sur un rendu logiciel, le design des graphes à 60 points fixes, le repérage de la *race condition* clic/rafraîchissement, le choix des bibliothèques qui deviennent des options désactivables. Ce sont des jugements qui reposent sur la compréhension du *pourquoi* la mémoire était là où elle était. Le modèle est rapide pour « fais que ça compile et que ça ait l'air correct » ; ce n'est pas lui qui devrait décider de votre architecture mémoire.
+
+## L'écosystème des interfaces Rust, en bref
+
+Si vous choisissez une boîte à outils GUI en Rust, l'histoire de mémoire ci-dessus est en réalité une histoire de compromis propre à chacune. La carte rapide :
+
+- **egui (mode immédiat).** Le plus facile pour démarrer, GPU d'abord, redessine tout. Génial pour les outils de dev, les overlays de debug et les UI de jeu. La machinerie GPU est le prix, et on ne peut pas s'y soustraire.
+- **Slint (mode retenu, plusieurs moteurs de rendu).** Fichiers déclaratifs `.slint` et, la partie qui comptait ici, un vrai rendu logiciel pour tourner sans aucun GPU. Conçu en pensant aux téléphones, aux écrans embarqués et aux appareils à faible mémoire, ce qui est précisément pourquoi il avait le bouton dont j'avais besoin.
+- **iced (mode retenu).** Une architecture propre et prévisible (calquée sur le langage Elm). Très agréable à utiliser ; dessine quand même sur le GPU.
+- **gtk-rs (le binding Rust de GTK).** Mature, natif, s'intègre parfaitement au bureau Linux, mais vous embarquez tout le runtime GTK, qui est une grosse base à lui seul.
+- **Tauri / Dioxus-web (la voie webview).** Embarquez un frontend web dans la vue navigateur intégrée du système. Excellente expérience de dev, mais une webview est essentiellement un moteur de navigateur, et sa RAM de base écrase tout ce qui précède.
+
+Il n'y a pas de « meilleur » unique ici. Il y a seulement « meilleur pour une chose qui doit être plus légère que les processus qu'elle surveille ». Pour cette unique contrainte, une boîte à outils en mode retenu avec un rendu logiciel honnête gagne, et c'est une affirmation bien plus étroite que « Slint bat egui ». egui était le bon choix pour *faire marcher rproc*. C'était le mauvais choix pour le rendre petit.
+
+## À retenir
+
+- **Mesurez le plancher, pas seulement votre code.** La mémoire utilisée par mon propre code n'a jamais été le problème. Ce que vos dépendances traînent discrètement, et les systèmes qu'elles activent, fixent votre vrai minimum.
+- **Le GPU est une fonctionnalité, pas un défaut.** Pour une appli de bureau 2D le plus souvent au repos, dessiner sur le CPU à la place peut être un gain mémoire de 4,5×. « Accéléré par le GPU » est autant un coût qu'une capacité.
+- **Rendez les choses lourdes optionnelles.** Un pilote graphique, les bibliothèques GPU d'un fabricant, un service en arrière-plan : tout ce qui coûte des dizaines de Mo devrait rester désactivé jusqu'à ce que l'utilisateur le demande vraiment.
+- **La façon dont une boîte à outils redessine est une décision mémoire, pas seulement une question de style.** « Tout redessiner à chaque image » vous engage discrètement dans un pipeline GPU permanent ; « ne redessiner que ce qui a changé », non.
+- **L'IA gère les 80 % mécaniques et vous laisse les 20 % difficiles.** La réécriture a été rapide parce que Claude Code a fait la traduction ; elle était *correcte* parce que les choix d'architecture sont restés humains. Et « ça a l'air fini sur une capture d'écran » n'est pas la même chose que fini.
+
+Le chiffre final : ~30 Mo GPU désactivé, ~50 Mo activé, contre 185 à 239 Mo pour les alternatives populaires. rproc n'est plus du tout près du sommet de sa propre liste de processus, ce qui, pour un moniteur de processus, était le seul résultat acceptable.
