@@ -1,0 +1,260 @@
+---
+title: "Refactoring 24,000 lines of legacy code: rename, delete, simplify"
+excerpt: "One PR, 226 files, 13 tables renamed, 19 dropped, zero features changed. What a large refactoring effort taught me about what actually makes code optimizable."
+date: "2026-06-09"
+readTime: 9
+tags: ["architecture"]
+featured: false
+---
+
+In early 2025, I merged one of the biggest PRs of my career at Somanyways: 226 files changed, 21,649 lines added, 23,984 deleted. Thirteen tables renamed, nineteen dropped, an entire backend reorganized. Thirty-two days between opening the PR and merging it, fourteen rounds of review.
+
+And yet, from the user's point of view, **nothing changed**. That's the textbook definition of refactoring: changing the structure without changing the behavior. It's also what makes it hard to sell, and valuable when done right.
+
+This article dissects that effort to extract the principles that, in my opinion, separate cosmetic refactoring from refactoring that makes code durably easier to understand, to change, and to optimize.
+
+<figure>
+<svg viewBox="0 0 770 250" role="img" xmlns="http://www.w3.org/2000/svg"
+     aria-label="The three moves of the refactoring: rename 13 tables, delete 19 tables, simplify what remains. Result: 2,335 net lines removed, zero behavior change."
+     style="width:100%;height:auto;font-family:var(--sans);border:1px solid var(--line);border-radius:var(--r-2);background:var(--bg)">
+  <defs>
+    <marker id="rfA" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="var(--fg-soft)"/>
+    </marker>
+  </defs>
+
+  <g fill="var(--bg-alt)" stroke="var(--line-strong)" stroke-width="1.2">
+    <rect x="25"  y="45" width="205" height="115" rx="7"/>
+    <rect x="283" y="45" width="205" height="115" rx="7"/>
+    <rect x="541" y="45" width="205" height="115" rx="7"/>
+  </g>
+
+  <g text-anchor="middle" fill="var(--fg)" font-size="14" font-weight="600">
+    <text x="127" y="75">1. Rename</text>
+    <text x="385" y="75">2. Delete</text>
+    <text x="643" y="75">3. Simplify</text>
+  </g>
+  <g text-anchor="middle" fill="var(--fg-soft)" font-size="11.5">
+    <text x="127" y="102">13 tables, 616 occurrences</text>
+    <text x="127" y="120">of "workoscope" erased</text>
+    <text x="385" y="102">19 dead tables</text>
+    <text x="385" y="120">≈ a third of the schema</text>
+    <text x="643" y="102">5 label tables into 1,</text>
+    <text x="643" y="120">1 enum, plain foreign keys</text>
+  </g>
+
+  <g stroke="var(--fg-soft)" stroke-width="1.5" marker-end="url(#rfA)">
+    <line x1="232" y1="102" x2="278" y2="102"/>
+    <line x1="490" y1="102" x2="536" y2="102"/>
+  </g>
+
+  <text x="385" y="208" text-anchor="middle" font-size="19" font-weight="700" fill="var(--accent)">−2,335 net lines</text>
+  <text x="385" y="229" text-anchor="middle" font-size="11" fill="var(--fg-soft)">zero behavior change</text>
+</svg>
+<figcaption>The effort in three moves: bring the vocabulary up to date, delete what no longer serves, simplify what remains. Each step makes the next one easier.</figcaption>
+</figure>
+
+## The context: code that speaks a dead language
+
+Like many startups, Somanyways had its first version built by an agency. The agency left, the code stayed. The product's core feature, a professional profile test, was still called "Workoscope" throughout the code: the product's name from four years earlier, a word nobody in the company used anymore. It appeared **616 times** in the codebase.
+
+That code worked and had been running in production for years. The problem was its vocabulary. Every developer paid a permanent translation tax ("so, `WorkoscopeModeAssigned` is the scores...") on every read, every onboarding, every conversation with the product team. That tax shows up in no metric, and it slows everyone down.
+
+## Principle 1: rename first
+
+Renaming is the refactoring with the best benefit-to-risk ratio there is. An `ALTER TABLE ... RENAME` doesn't touch the data. A class rename is checked by the compiler. And the payoff is immediate for the whole team.
+
+An excerpt from this PR's mapping table:
+
+| Legacy name | New name | What it actually is |
+| ------------- | ------------- | ------------- |
+| WorkoscopeResult | profile_test_results | One run of the profile test |
+| WorkoscopeModeAssigned | profile_test_scores | The scores (percentages) computed for the user |
+| WorkoscopeCustomModeField | profile_checkups | A 0-to-10 rating the user gives a motivation |
+| Comment | conversation_comments | A manager's comments on a conversation |
+
+Look at that last row. `Comment` is the inverse of the "Workoscope" problem: a name so generic it says nothing. A comment on what? By whom? `conversation_comments` answers both questions without opening the file.
+
+This is DDD's *ubiquitous language* principle, but you don't need to adopt the whole DDD liturgy to apply it: **the code should speak the language the company speaks today**. When the product renames a concept, the code carries a debt until it catches up.
+
+## Principle 2: delete before you optimize
+
+Nineteen tables were dropped outright in this PR. Out of the roughly sixty tables in the schema, that's close to a third of the data model serving no purpose.
+
+The best possible optimization is deletion. A dead table costs you: every new developer reads it while trying to understand the schema, every migration carries it along, every `prisma generate` builds its client, every dump backs it up. In our case, those dead tables accounted for about 15% of every backup's volume. Dead code is dead weight the whole team lifts on every iteration.
+
+But you have to prove a table is dead first. Three converging signals in our case:
+
+- **No reads anywhere in the code.** A `grep` on the model name only turns up its definition and its migrations.
+- **The feature no longer exists in the product.** The `Survey`/`SurveyStep` tables existed to support *multiple* questionnaires per client. The product settled that question long ago: there is exactly one profile test.
+- **The structure is oversized for the actual usage.** Twelve many-to-many junction tables... modeling one-to-many relationships. A plain foreign key column was enough.
+
+That last point deserves a pause, because it's extremely common with ORMs. Prisma (like others) creates implicit junction tables the moment you declare an M:N relation. And I genuinely think the agency's developer didn't know what his Prisma syntax was producing in SQL: twelve relations declared M:N "just in case", twelve junction tables, extra joins on every query, for flexibility nobody ever used. That's the trap of a comfortable ORM: it lets you write a schema without ever looking at the SQL that comes out of it. The schema was lying about the shape of the data.
+
+<figure>
+<svg viewBox="0 0 770 330" role="img" xmlns="http://www.w3.org/2000/svg"
+     aria-label="Before: a many-to-many junction table between profile_test_results and profile_test_scores forces two joins on every read. After: a foreign key column is enough, a single join."
+     style="width:100%;height:auto;font-family:var(--sans);border:1px solid var(--line);border-radius:var(--r-2);background:var(--bg)">
+  <defs>
+    <marker id="rfB" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="var(--accent)"/>
+    </marker>
+  </defs>
+
+  <text x="190" y="30" text-anchor="middle" font-size="13.5" font-weight="600" fill="var(--fg)">Before: implicit M:N junction</text>
+  <text x="580" y="30" text-anchor="middle" font-size="13.5" font-weight="600" fill="var(--fg)">After: a plain foreign key</text>
+
+  <line x1="385" y1="45" x2="385" y2="270" stroke="var(--line)" stroke-dasharray="4 4"/>
+
+  <g fill="var(--bg-alt)" stroke="var(--line-strong)" stroke-width="1.2">
+    <rect x="65"  y="48"  width="250" height="44" rx="7"/>
+    <rect x="65"  y="220" width="250" height="44" rx="7"/>
+    <rect x="455" y="48"  width="250" height="44" rx="7"/>
+    <rect x="455" y="160" width="250" height="64" rx="7"/>
+  </g>
+  <rect x="65" y="128" width="250" height="56" rx="7" fill="rgba(217,119,87,0.13)" stroke="#d97757" stroke-width="1.3"/>
+
+  <g text-anchor="middle" fill="var(--fg)" font-size="13">
+    <text x="190" y="75">profile_test_results</text>
+    <text x="190" y="247">profile_test_scores</text>
+    <text x="580" y="75">profile_test_results</text>
+    <text x="580" y="185">profile_test_scores</text>
+  </g>
+  <text x="190" y="150" text-anchor="middle" font-size="13" fill="#e9a988">_WorkoscopeResult.modes…</text>
+  <text x="190" y="168" text-anchor="middle" font-size="10.5" fill="var(--fg-soft)">junction table generated by the ORM</text>
+  <text x="580" y="207" text-anchor="middle" font-size="11.5" fill="var(--accent)">profile_test_result_id (FK)</text>
+
+  <g stroke="var(--fg-soft)" stroke-width="1.5">
+    <line x1="190" y1="92"  x2="190" y2="126"/>
+    <line x1="190" y1="184" x2="190" y2="218"/>
+  </g>
+  <line x1="580" y1="158" x2="580" y2="96" stroke="var(--accent)" stroke-width="1.6" marker-end="url(#rfB)"/>
+
+  <text x="190" y="296" text-anchor="middle" font-size="12.5" font-weight="600" fill="#e9a988">2 joins on every read</text>
+  <text x="190" y="314" text-anchor="middle" font-size="10.5" fill="var(--fg-soft)">12 junctions like this in the schema</text>
+  <text x="580" y="296" text-anchor="middle" font-size="12.5" font-weight="600" fill="var(--accent)">1 join</text>
+  <text x="580" y="314" text-anchor="middle" font-size="10.5" fill="var(--fg-soft)">the schema tells the real cardinality</text>
+</svg>
+<figcaption>The same relationship, before and after. The Prisma-generated junction allowed a many-to-many that never existed in the product; a foreign key column tells the real story and saves a join on every read. Twelve junctions like this one were dropped.</figcaption>
+</figure>
+
+## Principle 3: a schema that says what the data means
+
+The logical next step after deletion is simplifying what remains. Two examples from this PR.
+
+**Five label tables merged into one.** The historical translation system went through `label_contextualized`, `label_filtered` and `label_translated`, wired together with two junction tables. Five tables to store, in the end, about 900 FR/EN translation pairs. The whole thing was designed to support labels contextualized per client, per audience, per variant... a future that never arrived. Everything was replaced by a single `label_translated` table with two columns, `label_fr` and `label_en`. And even that is generous: in the seven years this SaaS has existed, the English version of the app has never been used.
+
+**A structure table replaced by an enum.** The test's questions were grouped into "steps" via a `SurveySteps` table and its junction table. But the categories are stable, known, and there are five of them. A table for that is infrastructure for a problem that doesn't exist. An enum is enough:
+
+```prisma
+enum ProfileTestQuestionCategory {
+  to_start
+  important_for_me_at_work
+  i_expect_from_my_manager
+  comfortable_in_a_work_environment_where
+  about_you
+}
+```
+
+The effect is directly measurable in the code: the query that loads the questionnaire went from 132 lines to 82, from five levels of nesting to two, and from nine joins to three. Locally, the endpoint now answers in ~35 ms instead of ~110 ms. There was no clever optimization involved: we simply stopped making every query pay for flexibility nobody used.
+
+The rule I draw from this: **unused genericity is a recurring cost**. We were all taught to build flexible "for later". But every indirection (junction table, configuration table, abstraction layer) is paid for on every query, every read of the code, every migration, while waiting for a "later" that almost never comes. And on the day it actually does come, adding the flexibility at that point rarely costs more than having dragged it around for years.
+
+**What about normalization?** You could object that merging five tables into one goes against everything we learn in database classes. Let's put the principle back in its place. Normalization (Codd's normal forms) has one precise goal: eliminating redundancy, so that a piece of information lives in exactly one place and an update can never create an inconsistency. That principle is precious, and it's fully respected here: after the merge, each label still exists in a single copy and the table remains in third normal form. None of the simplifications in this PR introduce any redundancy.
+
+What the PR removes is something else: indirection disguised as rigor. Multiplying tables normalizes nothing. A sixty-table schema can be riddled with anomalies while a twenty-table schema is perfectly normalized. Confusing "many tables" with "well designed" is exactly the kind of half-digested convention that produces schemas like the one we inherited.
+
+The test I apply, table by table: if this piece of data changes tomorrow, how many places need updating? As long as the answer is "one", the schema is sound, whatever its table count. And when a deliberate denormalization simplifies everything, like our five stable categories stored in an enum, it's paid for with a precise, accepted risk: adding a sixth category will require a migration. The trade-off is explicit, readable in the schema itself.
+
+## Principle 4: a migration moves data too
+
+None of the above is worth anything if the production data doesn't survive the trip. The final migration is 288 lines of SQL and moves about 800,000 rows of data. The classic trap in schema refactoring is the `DROP` + `CREATE` approach: you lose everything. The golden rule: **move the data before destroying the structure**.
+
+```sql
+-- 1. Rename: the data comes along, for free
+ALTER TABLE "workoscope_custom_mode_fields" RENAME TO profile_checkups;
+
+-- 2. Move the junction table's data into a real FK column
+ALTER TABLE "profile_test_scores" ADD COLUMN "profile_test_result_id" TEXT;
+
+UPDATE "profile_test_scores" pts
+SET "profile_test_result_id" = j."B"
+FROM "_WorkoscopeResult.modes...workoscopeResult" j
+WHERE pts.id = j."A";
+
+-- 3. Only now, drop
+DROP TABLE "_WorkoscopeResult.modes...workoscopeResult";
+```
+
+<figure>
+<svg viewBox="0 0 770 250" role="img" xmlns="http://www.w3.org/2000/svg"
+     aria-label="The safe order for a destructive migration in three steps: rename first, copy the data next, drop last. About 800,000 rows moved, zero lost."
+     style="width:100%;height:auto;font-family:var(--sans);border:1px solid var(--line);border-radius:var(--r-2);background:var(--bg)">
+  <defs>
+    <marker id="rfC" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="var(--fg-soft)"/>
+    </marker>
+  </defs>
+
+  <rect x="25"  y="50" width="205" height="118" rx="7" fill="var(--bg-alt)" stroke="var(--line-strong)" stroke-width="1.2"/>
+  <rect x="283" y="50" width="205" height="118" rx="7" fill="var(--bg-alt)" stroke="var(--accent)" stroke-width="1.4"/>
+  <rect x="541" y="50" width="205" height="118" rx="7" fill="rgba(217,119,87,0.13)" stroke="#d97757" stroke-width="1.3"/>
+
+  <text x="127" y="80" text-anchor="middle" font-size="14" font-weight="600" fill="var(--fg)">1. RENAME</text>
+  <text x="385" y="80" text-anchor="middle" font-size="14" font-weight="600" fill="var(--accent)">2. COPY</text>
+  <text x="643" y="80" text-anchor="middle" font-size="14" font-weight="600" fill="#e9a988">3. DROP</text>
+
+  <g text-anchor="middle" fill="var(--fg-soft)" font-size="11">
+    <text x="127" y="107">ALTER TABLE … RENAME</text>
+    <text x="127" y="125">the table changes name,</text>
+    <text x="127" y="143">the data comes along</text>
+    <text x="385" y="107">ADD COLUMN then</text>
+    <text x="385" y="125">UPDATE … FROM junction</text>
+    <text x="385" y="143">the data moved over</text>
+    <text x="643" y="107">DROP TABLE on the junction</text>
+    <text x="643" y="125">nothing left</text>
+    <text x="643" y="143">to lose</text>
+  </g>
+
+  <g stroke="var(--fg-soft)" stroke-width="1.5" marker-end="url(#rfC)">
+    <line x1="232" y1="109" x2="278" y2="109"/>
+    <line x1="490" y1="109" x2="536" y2="109"/>
+  </g>
+
+  <text x="385" y="212" text-anchor="middle" font-size="14" font-weight="700" fill="var(--accent)">≈ 800,000 rows moved, 0 lost</text>
+  <text x="385" y="232" text-anchor="middle" font-size="10.5" fill="var(--fg-soft)">the order of operations makes all the difference</text>
+</svg>
+<figcaption>The safe order for a destructive migration. Destruction comes last, once the data already has a new home. Swap steps 2 and 3 and the migration becomes data loss.</figcaption>
+</figure>
+
+Same logic for the enum: the categories were derived from the old data (by mapping the existing labels onto enum values), *then* the structure tables were dropped. The order of operations is the entire difference between a migration and data loss.
+
+And there's only one validation method I trust for this: **restore a production dump locally, run the migration against it, and use the product**. A dataset crafted to make the tests pass reveals nothing: you need the real data, with its years of accumulated inconsistencies. Concretely: a ~1.2 GB dump, a migration that runs in about forty seconds locally, and four full cycles (dump, migrate, manual tests) before the merge. A production dump is where you discover the orphaned labels, the historical duplicates, and the `NULL`s nobody had anticipated. Each of the first three cycles surfaced one of those.
+
+The rest of the safety net: 33 test files updated along the way in the same PR, plus the e2e suite that replays the full profile test journey.
+
+You'll notice there's no down migration in this plan, and that's deliberate: I've already written [exactly what I think of those](/article/down-migrations-are-useless). The safety net here is the tested dump, Postgres's transactional DDL, and a backup before deploying.
+
+## Principle 5: know when to stop
+
+The PR description contained this sentence, which I fully stand behind:
+
+> It is possible to simplify it a bit more, but since this PR is already big enough, it is better to merge it ASAP.
+
+A refactoring has no natural end. Every file you open reveals three more things to clean up. That's a trap: the bigger the PR gets, the more superficial the review becomes, the more conflicts pile up with your colleagues' work, the riskier the deployment gets. This PR lived for 32 days and 14 rounds of review; in the meantime, `develop` moved forward by some sixty commits, and every extra week was paid for in increasingly painful rebases.
+
+That leaves the question every refactoring raises: how do you sell it? This one froze no roadmap. I gave it a few hours a week, alongside feature work, for a month. It's the model I recommend to every team: recurring, protected time dedicated to paying down technical debt. Debt gets repaid the way it gets taken on, in small continuous touches. The "big cleanup we'll do when we have time" never comes. And the budget conversation becomes trivial: selling 45,000 lines of refactoring in one block is nearly impossible, while a few hours a week doesn't even need a meeting.
+
+The perfect refactoring that never merges is worth less than the imperfect one in production. Note the actual scope of this PR: despite its 45,000-line diff, it *only* touches structure. The real query optimizations, the behavior changes, all of that came afterwards, in separate PRs, on top of a codebase that had become readable.
+
+The final tally: **−2,335 net lines**, for code that does exactly the same thing while speaking the team's language.
+
+## Takeaways
+
+- **Legacy is first and foremost a vocabulary problem.** Renaming toward the product's current language is the lowest-risk, highest-return refactoring there is. Start there.
+- **Deletion is the best optimization.** A dead structure costs something on every read, every query, every migration. Prove it's dead (grep + product knowledge), then delete without remorse.
+- **Unused genericity is debt.** M:N junction tables for 1:M relationships, three-layer label systems: if the product doesn't need it today, the schema is lying.
+- **Normalization targets redundancy.** As long as a piece of data lives in one place, merging tables "denormalizes" nothing. Table count was never a quality metric.
+- **Migrations are tested against production data.** Move before you destroy, then validate on a production dump restored locally. Anything else is misplaced confidence.
+- **Budget for technical debt.** A few recurring, protected hours a week are enough to pull off this kind of effort without freezing the roadmap.
+- **Merge before perfection.** A refactoring that drags on goes stale. Slice it, merge it, start again.
