@@ -39,7 +39,7 @@ export default {
     now: [
       'Working at <a href="https://somanyways.co" target="_blank" rel="noopener">Somanyways</a> as a Senior Fullstack Engineer.',
       'Released <a href="https://criterium.app" target="_blank" rel="noopener">Criterium.app</a> (follow the link to know what it is about).',
-      'Developing <a href="https://github.com/Trystan-SA/claude-design-system-prompt" target="_blank" rel="noopener">Forgebox</a>, an AI orchestration agent with MicroVMs to improve security.',
+      'Developing <a href="https://github.com/Trystan-SA/forgebox" target="_blank" rel="noopener">Forgebox</a>, an AI orchestration agent with MicroVMs to improve security.',
       'Released <a href="https://github.com/Trystan-SA/rproc" target="_blank" rel="noopener">rproc</a>, a Linux resource & process monitor in Rust, inspired by the Windows 11 Task Manager.',
     ],
   },

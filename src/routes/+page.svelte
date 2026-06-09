@@ -43,7 +43,7 @@
         <ul class="now-list">
           <li>Working at <a href="https://somanyways.co" target="_blank" rel="noopener">Somanyways</a> as a Senior Fullstack Engineer.</li>
           <li>Released <a href="https://criterium.app" target="_blank" rel="noopener">Criterium.app</a> (follow the link to know what it is about).</li>
-          <li>Developing <a href="https://github.com/Trystan-SA/claude-design-system-prompt" target="_blank" rel="noopener">Forgebox</a>, an AI orchestration agent with MicroVMs to improve security.</li>
+          <li>Developing <a href="https://github.com/Trystan-SA/forgebox" target="_blank" rel="noopener">Forgebox</a>, an AI orchestration agent with MicroVMs to improve security.</li>
           <li>Released <a href="https://github.com/Trystan-SA/rproc" target="_blank" rel="noopener">rproc</a>, a Linux resource & process monitor in Rust, inspired by the Windows 11 Task Manager.</li>
         </ul>
         <a class="now-more" href="{base}/projects/">{$t.home.nowMoreLink}</a>
