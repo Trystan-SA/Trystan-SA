@@ -7,23 +7,20 @@
 [![Email](https://img.shields.io/badge/Email-EA4335?style=flat-square&logo=gmail&logoColor=white)](mailto:trystansarrade@gmail.com)
 ![Stars](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fapi.github-star-counter.workers.dev%2Fuser%2FTrystan-SA&query=%24.stars&label=Stars&color=e08267&style=flat-square&logo=github)
 
-I'm a motivated engineer, driven by curiosity and a love for learning. What I care about most is having real impact on the ecosystems and organizations I'm part of.
-
-I build SaaS, games and tools. I also write about software architecture, the team patterns that ship, and the tooling that turns ideas into real products.
+I build SaaS, games and tools. I also write about software architecture.
 
 ## What I'm working on
 
 - 🚀 **[Somanyways](https://somanyways.co)**: Senior Fullstack Engineer on a platform with 30K+ users.
-- 🤖 **[Criterium.app](https://criterium.app)**: AI chatbot for training centers. Plugs into Moodle, Canvas and other LMS in five minutes. Solo-built in 3 months on the side.
+- 🤖 **[Criterium.app](https://criterium.app)**: AI chatbot for training centers. Plugs into Moodle, Canvas and other LMS in five minutes. Solo-built in 3 months on the side. !! Working on a V2 👀
 - 🛠️ **[Forgebox](https://github.com/Trystan-SA/forgebox)** _(WIP)_: open-source AI orchestration platform on top of Firecracker MicroVMs. Go + Svelte.
-- 🖥️ **[rproc](https://github.com/Trystan-SA/rproc)**: open-source Linux resource & process monitor, inspired by the Windows 11 Task Manager. Built in Rust with egui.
+- 🖥️ **[rproc](https://github.com/Trystan-SA/rproc)**: open-source Linux resource & process monitor, inspired by the Windows 11 Task Manager. Built in Rust and Slint.
 
 ## Stack
 
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white)
 ![Go](https://img.shields.io/badge/Go-00ADD8?style=flat-square&logo=go&logoColor=white)
 ![Rust](https://img.shields.io/badge/Rust-000000?style=flat-square&logo=rust&logoColor=white)
-![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white)
 ![Angular](https://img.shields.io/badge/Angular-DD0031?style=flat-square&logo=angular&logoColor=white)
 ![React](https://img.shields.io/badge/React-20232A?style=flat-square&logo=react&logoColor=61DAFB)
 ![Svelte](https://img.shields.io/badge/Svelte-FF3E00?style=flat-square&logo=svelte&logoColor=white)
@@ -36,6 +33,6 @@ I build SaaS, games and tools. I also write about software architecture, the tea
 
 ## Where to find me
 
-- 🌐 **[Portfolio & writing](https://trystan-sarrade.com)**
+- 🌐 **[Portfolio & Articles](https://trystan-sarrade.com)**
 - 💼 **[LinkedIn](https://www.linkedin.com/in/trystan-sarrade/)**
 - ✉️ **trystansarrade@gmail.com**
