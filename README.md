@@ -1,6 +1,5 @@
-# Hi, I'm Trystan 👋
-
-**Senior Software Architect** · Bordeaux, France
+# Senior Fullstack Engineer #
+**Bordeaux, France**
 
 [![Portfolio](https://img.shields.io/badge/Portfolio-e08267?style=flat-square&logo=svelte&logoColor=white)](https://trystan-sarrade.com)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=flat-square&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/trystan-sarrade/)
