@@ -13,16 +13,16 @@
     <article class="project-row">
       <div class="project-meta">
         <div class="project-year">2024–now</div>
-        <div class="project-role">Senior Fullstack Engineer</div>
+        <div class="project-role">Senior Fullstack Engineer · AI & Automation</div>
       </div>
       <div class="project-body">
         <h3 class="project-name">
           <a href="https://somanyways.co" target="_blank" rel="noopener">Somanyways <span class="project-link">↗</span></a>
         </h3>
         {#if $lang === 'fr'}
-          <p>Plateforme avec 30 000+ utilisateurs. Tech lead sur l'architecture, la qualité du code et l'évolution produit. Suppression de Nx, migration de Jest vers Vitest, amélioration de la vitesse CI/CD de 3×. Remplacement de Typeform et Retool par un système de formulaires et des pannels d'administration internes. Livraison des fonctionnalités clés (chatbot IA, tableau de bord manager, bilans, modules d'apprentissage, référentiel manager) et introduction du spec driven development avec des LLM agentiques.</p>
+          <p>Plateforme avec 30 000+ utilisateurs. Tech lead sur l'architecture, la qualité du code et l'évolution produit. J'y ai introduit le spec-driven development avec des LLM agentiques et livré les fonctionnalités clés à forte composante IA (chatbot IA, tableau de bord manager, bilans, modules d'apprentissage, référentiel manager). Côté ingénierie : suppression de Nx, migration de Jest vers Vitest, CI/CD 3× plus rapide, et remplacement de Typeform et Retool par un système de formulaires et des panels d'administration internes.</p>
         {:else}
-          <p>Platform with 30K+ users. Tech lead on architecture, code quality, and product evolution. Removed Nx, migrated from Jest to Vitest, and improved CI/CD speed 3×. Replaced Typeform and Retool with an in-house form system and admin panels. Shipped core features (AI chatbot, manager dashboard, checkups, learning modules, manager referential) and introduced spec-driven development with agentic LLMs.</p>
+          <p>Platform with 30K+ users. Tech lead on architecture, code quality, and product evolution. Introduced spec-driven development with agentic LLMs and shipped the core AI-heavy features (AI chatbot, manager dashboard, checkups, learning modules, manager referential). On the engineering side: removed Nx, migrated from Jest to Vitest, made CI/CD 3× faster, and replaced Typeform and Retool with an in-house form system and admin panels.</p>
         {/if}
         <div class="project-highlights-wrap">
           <div class="project-highlights-eyebrow">{$t.projects.proudOf}</div>

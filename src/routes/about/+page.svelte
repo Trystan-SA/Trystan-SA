@@ -5,7 +5,8 @@
   import SectionHead from '$lib/components/SectionHead.svelte';
 
   const uses = [
-    { key: 'AI',                items: ['Claude Code', 'AI agents that review code, specs and Q.A.', 'RAG', 'MCP', 'Local LLM finetuning'] },
+    { key: 'AI',                items: ['Claude Code', 'Multi-agent orchestration', 'AI agents that review code, specs and Q.A.', 'RAG', 'MCP', 'Local LLM finetuning'] },
+    { key: 'Automation',        items: ['n8n', 'Make', 'Hermes', 'Cowork', 'Custom pipelines & connectors'] },
     { key: 'Languages',         items: ['TypeScript', 'Go', 'Python', 'bit of Rust', "(and anything really, we are in the AI era, syntax doesn't matter anymore)"] },
     { key: 'Frontend frameworks', items: ['Angular', 'React', 'Svelte'] },
     { key: 'Backend',           items: ['NestJS', 'Fastify', 'Gin', 'Postgres', 'MongoDB'] },

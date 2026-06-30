@@ -8,20 +8,22 @@ export default {
   footer: {
     siteLabel: 'Site',
     elsewhereLabel: 'Elsewhere',
-    bio: 'Senior software architect writing about systems, teams, and the craft of shipping software that lasts.',
+    bio: 'Senior AI Engineer. I build AI products, multi-agent architectures, and automate the workflows of tech and product teams.',
     copyright: '© 2026 Trystan Sarrade. All writing licensed CC-BY 4.0.',
   },
   profile: {
-    role: 'Software Architect',
-    tagline: 'Building SaaS, games, tools and many other things.',
-    bio: "I build SaaS from A to Z as a Senior Fullstack Engineer. I also help existing teams install what's really missing: solid DevOps, useful code reviews, a real feedback culture.",
-    brandSub: 'Senior software architect',
+    role: 'Senior AI Engineer',
+    tagline: "I build AI products and automate teams' workflows.",
+    bio: "I design AI products and autonomous multi-agent architectures for startups and SMEs. I automate your teams' workflows to free them from repetitive work and refocus them on what truly creates value.",
+    brandSub: 'Senior AI Engineer',
   },
   home: {
     stackLabel: 'Stack',
-    readWritingBtn: 'Read the writing →',
+    readWritingBtn: 'See my work →',
     aboutBtn: 'More about me',
+    contactBtn: "Let's work together",
     nowLabel: 'Now',
+    workingOnTitle: "What I'm working on",
     nowMoreLink: 'See the projects page →',
     featuredEyebrow: 'Featured',
     featuredTitle: 'Learn skills that matter',
@@ -42,11 +44,63 @@ export default {
       'Developing <a href="https://github.com/Trystan-SA/forgebox" target="_blank" rel="noopener">Forgebox</a>, an AI orchestration agent with MicroVMs to improve security.',
       'Released <a href="https://github.com/Trystan-SA/rproc" target="_blank" rel="noopener">rproc</a>, a Linux resource & process monitor in Rust, inspired by the Windows 11 Task Manager.',
     ],
+    services: {
+      title: 'My expertise',
+      lede: "You know AI can propel your business, but your ideas are still fuzzy? That's normal. I help startups and SMEs structure their vision and move beyond simple chatbots to deploy real autonomous multi-agent systems.",
+      items: [
+        {
+          title: 'AI orchestration & agents',
+          text: 'Designing and deploying autonomous AI agents, multi-agent architectures, and decision-making workflows able to execute complex business tasks.',
+        },
+        {
+          title: 'Advanced automation',
+          text: 'Building pipelines and connectors with n8n, Make, Hermes or Cowork. I spot the bottlenecks and break them open.',
+        },
+        {
+          title: 'AI-augmented engineering',
+          text: 'I work alongside tech teams to drive AI tooling adoption: more frequent releases and fewer production bugs.',
+        },
+        {
+          title: 'AI tooling training',
+          text: 'I help your teams use AI in their daily work: workshops, hands-on sessions, and shared field experience.',
+        },
+        {
+          title: 'SaaS product building',
+          text: 'I ship and fix your features straight to production, on robust stacks (Node.js, Golang).',
+        },
+      ],
+    },
+    roi: {
+      eyebrow: 'Results',
+      title: 'A few recent results',
+      items: [
+        {
+          metric: '−80%',
+          label: 'Infrastructure costs',
+          text: "Cut a SaaS's infrastructure costs by 80% by rationalizing resources and provisioning (FinOps).",
+        },
+        {
+          metric: '+10',
+          label: 'Major features',
+          text: 'Helped ship 10+ product & automation features at SoManyWays, used by thousands of users every day.',
+        },
+        {
+          metric: '×2',
+          label: 'Tickets shipped per dev',
+          text: 'Integrated AI workflows into tech/product teams: 2× tickets shipped per dev and −60% production bugs.',
+        },
+        {
+          metric: '90%',
+          label: 'OPS tasks automated',
+          text: 'Automated 90% of recurring support and OPS tasks with AI.',
+        },
+      ],
+    },
   },
   articles: {
     eyebrow: 'The writing',
     title: 'Articles & Guides',
-    lede: (a, g) => `Learn here how to ship software that lasts, lead engineering teams that work, and run real infrastructure without bleeding cash. ${a} articles, ${g} guides.`,
+    lede: (a, g) => `Learn here how to build AI products, ship autonomous agents, and automate your teams' workflows — without losing sight of solid engineering. ${a} articles, ${g} guides.`,
     sectionArticles: 'Articles',
     sectionGuides: 'Guides',
     articlesHint: 'Released over time. Latest first.',
@@ -74,13 +128,13 @@ export default {
     emailLabel: 'Email',
     elsewhere: 'Elsewhere',
     prose: [
-      "I'm a motivated engineer, driven by curiosity and a love for learning. What I care about most is having real impact on the ecosystems and organizations I'm part of.",
+      "I'm a motivated engineer, driven by curiosity, now specialized in designing AI products and autonomous multi-agent systems. What I care about most is having real impact on the ecosystems and organizations I'm part of.",
       "My career started as an Ops at a learning-center company, where I grew my engineering skills as an autodidact. I then moved into the world of full-stack development and SaaS, and have been building products there ever since.",
-      "What I've learned is that the engineers who can hold both ends in their head at once, the engineering side and the product-and-customer side, are the ones who truly make a difference. That's what drives me most: owning the entire technical side and making product tradeoffs. I love building things used by real users.",
+      "What I've learned is that the engineers who can hold both ends in their head at once, the engineering side and the product-and-customer side, are the ones who truly make a difference. Today I put that double vision to work for AI: not demos, but agentic systems that run real business tasks in production and free up teams.",
       "I hold a BAC+5 as a digital director and am currently completing an engineering master's at CNAM through a prior learning assessment (VAE).",
     ],
     whatIWriteHeading: 'What I write about',
-    whatIWriteText: "The four threads I keep returning to: software architecture done honestly, engineering leadership at small scale, the practical reality of shipping AI features, and the economics of running infrastructure outside of a hyperscaler.",
+    whatIWriteText: "The threads I keep returning to: designing agents and multi-agent systems, automating business workflows, AI-augmented software engineering, and the economics of running infrastructure that holds up outside of a hyperscaler.",
     reachHeading: 'How to reach me',
     reachText: 'Email is best. My AI agent will ping me! I read everything and reply to most things within a week.',
     readWritingBtn: 'Read the writing →',
@@ -89,6 +143,7 @@ export default {
     usesTitle: 'My tools & stack',
     usesCategories: {
       AI: 'AI',
+      Automation: 'Automation',
       Languages: 'Languages',
       'Frontend frameworks': 'Frontend frameworks',
       Backend: 'Backend',

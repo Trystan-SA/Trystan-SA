@@ -8,19 +8,22 @@ export default {
   footer: {
     siteLabel: 'Site',
     elsewhereLabel: 'Ailleurs',
-    bio: "Architecte logiciel senior qui écrit sur les systèmes, les équipes et l'art de livrer des logiciels durables.",
+    bio: "Senior AI Engineer. Je conçois des produits IA, des architectures multi-agents et j'automatise les workflows des équipes tech et produit.",
     copyright: '© 2026 Trystan Sarrade. Tous les textes sous licence CC-BY 4.0.',
   },
   profile: {
-    role: 'Architecte Logiciel',
-    bio: "Je construis des SaaS de A à Z comme Senior Fullstack Engineer. J'aide aussi des équipes existantes à installer ce qui manque vraiment : DevOps propre, revue de code utile, culture de feedback.",
-    brandSub: 'Architecte logiciel sénior',
+    role: 'Senior AI Engineer',
+    tagline: "Je conçois des produits IA et j'automatise les workflows des équipes.",
+    bio: "Je conçois des produits IA et des architectures multi-agents autonomes pour les start-ups et PME. J'automatise les workflows de vos équipes pour les libérer des tâches répétitives et les recentrer sur la forte valeur ajoutée.",
+    brandSub: 'Senior AI Engineer',
   },
   home: {
     stackLabel: 'Stack',
-    readWritingBtn: 'Lire les articles →',
+    readWritingBtn: 'Voir mes réalisations →',
     aboutBtn: 'En savoir plus',
+    contactBtn: 'Travaillons ensemble',
     nowLabel: 'En ce moment',
+    workingOnTitle: 'Ce sur quoi je travaille',
     nowMoreLink: 'Voir la page projets →',
     featuredEyebrow: 'À la une',
     featuredTitle: 'Apprendre ce qui compte',
@@ -41,11 +44,63 @@ export default {
       'Je développe <a href="https://github.com/Trystan-SA/forgebox" target="_blank" rel="noopener">Forgebox</a>, un agent d\'orchestration IA isolé dans des MicroVMs pour renforcer la sécurité.',
       'J\'ai publié <a href="https://github.com/Trystan-SA/rproc" target="_blank" rel="noopener">rproc</a>, un moniteur de ressources et de processus pour Linux, écrit en Rust et inspiré du Gestionnaire des tâches de Windows 11.',
     ],
+    services: {
+      title: 'Mon expertise',
+      lede: "Vous savez que l'IA peut propulser votre entreprise mais vos idées sont encore floues ? C'est normal. J'accompagne les start-ups et PME à structurer leur vision et à dépasser le simple chatbot pour déployer de véritables systèmes multi-agents autonomes.",
+      items: [
+        {
+          title: 'Orchestration & Agents IA',
+          text: "Conception et déploiement d'agents IA autonomes, architectures multi-agents et intégration de workflows décisionnels capables d'exécuter des tâches métier complexes.",
+        },
+        {
+          title: 'Automatisation avancée',
+          text: "Création de pipelines et de connecteurs via n8n, Make, Hermes ou Cowork. J'identifie les goulots d'étranglement et je les fais sauter.",
+        },
+        {
+          title: 'Ingénierie logicielle augmentée',
+          text: "J'interviens auprès des équipes tech pour pousser l'adoption des outils IA : des livraisons plus fréquentes et moins de bugs en production.",
+        },
+        {
+          title: 'Formation aux outils IA',
+          text: "J'accompagne vos équipes dans leur usage quotidien de l'IA : ateliers, workshops et partages de retours d'expérience.",
+        },
+        {
+          title: 'Création de produit SaaS',
+          text: "Je livre et corrige vos fonctionnalités directement en production, sur des stacks robustes (Node.js, Golang).",
+        },
+      ],
+    },
+    roi: {
+      eyebrow: 'Résultats',
+      title: 'Quelques résultats récents',
+      items: [
+        {
+          metric: '−80 %',
+          label: "Coûts d'infrastructure",
+          text: "Réduction de 80 % des coûts d'infra d'un SaaS en rationalisant ressources et provisionnement (FinOps).",
+        },
+        {
+          metric: '+10',
+          label: 'Fonctionnalités majeures',
+          text: "Aide à la livraison de plus de 10 fonctionnalités produit & automatisation chez SoManyWays, utilisées par des milliers d'utilisateurs au quotidien.",
+        },
+        {
+          metric: '×2',
+          label: 'Tickets livrés par dev',
+          text: "Intégration de workflows IA auprès d'équipes tech/produit : ×2 tickets livrés par dev et −60 % de bugs en production.",
+        },
+        {
+          metric: '90 %',
+          label: 'Tâches OPS automatisées',
+          text: "Automatisation par l'IA de 90 % des tâches support et OPS récurrentes.",
+        },
+      ],
+    },
   },
   articles: {
     eyebrow: 'Les écrits',
     title: 'Articles & Guides',
-    lede: (a, g) => `Apprenez ici à livrer des logiciels durables, diriger des équipes d'ingénieurs et gérer une infrastructure réelle sans brûler votre budget. ${a} articles, ${g} guides.`,
+    lede: (a, g) => `Apprenez ici à construire des produits IA, déployer des agents autonomes et automatiser les workflows de vos équipes — sans perdre de vue une ingénierie solide. ${a} articles, ${g} guides.`,
     sectionArticles: 'Articles',
     sectionGuides: 'Guides',
     articlesHint: 'Publiés au fil du temps. Les plus récents en premier.',
@@ -73,13 +128,13 @@ export default {
     emailLabel: 'Email',
     elsewhere: 'Ailleurs',
     prose: [
-      "Je suis un ingénieur porté par la curiosité et l'envie d'apprendre de nouveaux domaines. Ce qui m'importe le plus, c'est d'avoir un impact réel sur les écosystèmes et les organisations dont je fais partie.",
+      "Je suis un ingénieur porté par la curiosité, aujourd'hui spécialisé dans la conception de produits IA et de systèmes multi-agents autonomes. Ce qui m'importe le plus, c'est d'avoir un impact réel sur les écosystèmes et les organisations dont je fais partie.",
       "Ma carrière a débuté en tant qu'Ops dans un organisme de formation, où j'ai développé mes compétences en ingénierie de façon autodidacte. Je me suis ensuite tourné vers le développement full-stack et le SaaS.",
-      "J'ai appris que les ingénieurs qui maîtrisent à la fois le technique et le produit sont ceux qui font vraiment la différence. C'est ce qui me motive le plus : gérer toute la partie technique et arbitrer des solutions côté produit. J'aime construire des choses utilisées par de vrais utilisateurs.",
+      "J'ai appris que les ingénieurs qui maîtrisent à la fois le technique et le produit sont ceux qui font vraiment la différence. Aujourd'hui, je mets cette double vision au service de l'IA : non pas des démos, mais des systèmes agentiques qui exécutent de vraies tâches métier en production et libèrent les équipes.",
       "J'ai un BAC+5 en tant que réalisateur numérique et je suis en cours d'obtention d'un master d'ingénieur au CNAM grâce à une VAE.",
     ],
     whatIWriteHeading: "Ce sur quoi j'écris",
-    whatIWriteText: "Les quatre fils conducteurs auxquels je reviens sans cesse : l'architecture logicielle traitée honnêtement, le leadership d'ingénierie à petite échelle, la réalité pratique de livrer des fonctionnalités IA, et l'économie de la gestion d'infrastructure hors des hyperscalers.",
+    whatIWriteText: "Les fils conducteurs auxquels je reviens sans cesse : la conception d'agents et de systèmes multi-agents, l'automatisation des workflows métier, l'ingénierie logicielle augmentée par l'IA, et l'économie d'une infrastructure qui tient la route hors des hyperscalers.",
     reachHeading: 'Comment me contacter',
     reachText: "Privilégiez l'email. Mon agent IA me pingera ! Je lis tout et réponds à la plupart des messages en moins d'une semaine.",
     readWritingBtn: 'Lire les articles →',
@@ -88,6 +143,7 @@ export default {
     usesTitle: 'Ma stack & mes outils',
     usesCategories: {
       AI: 'IA',
+      Automation: 'Automatisation',
       Languages: 'Langages',
       'Frontend frameworks': 'Frameworks frontend',
       Backend: 'Backend',
