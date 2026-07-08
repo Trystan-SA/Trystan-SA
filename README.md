@@ -12,7 +12,6 @@ I build SaaS, games and tools. I also write about software architecture.
 
 - 🚀 **[Somanyways](https://somanyways.co)**: Senior Fullstack Engineer on a platform with 30K+ users.
 - 🤖 **[Criterium.app](https://criterium.app)**: AI chatbot for training centers. Plugs into Moodle, Canvas and other LMS in five minutes. Solo-built in 3 months on the side. !! Working on a V2 👀
-- 🛠️ **[Forgebox](https://github.com/Trystan-SA/forgebox)** _(WIP)_: open-source AI orchestration platform on top of Firecracker MicroVMs. Go + Svelte.
 - 🖥️ **[rproc](https://github.com/Trystan-SA/rproc)**: open-source Linux resource & process monitor, inspired by the Windows 11 Task Manager. Built in Rust and Slint.
 
 ## Stack
