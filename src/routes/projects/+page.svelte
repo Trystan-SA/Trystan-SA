@@ -16,7 +16,9 @@
         <div class="project-role">AI Product Builder</div>
       </div>
       <div class="project-body">
-        <h3 class="project-name">Hones</h3>
+        <h3 class="project-name">
+          <a href="https://hones.fr" target="_blank" rel="noopener">Hones <span class="project-link">↗</span></a>
+        </h3>
         {#if $lang === 'fr'}
           <p>Je conçois et livre des produits IA de bout en bout : de la définition du problème et du prototype jusqu'à la mise en production. Architectures agentiques, orchestration de LLM et automatisation des workflows métier.</p>
         {:else}
