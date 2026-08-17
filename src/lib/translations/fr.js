@@ -8,14 +8,14 @@ export default {
   footer: {
     siteLabel: 'Site',
     elsewhereLabel: 'Ailleurs',
-    bio: "Senior AI Engineer. Je conçois des produits IA, des architectures multi-agents et j'automatise les workflows des équipes tech et produit.",
+    bio: "AI Product Builder & Engineer. Je conçois des produits IA, des architectures multi-agents et j'automatise les workflows des équipes tech et produit.",
     copyright: '© 2026 Trystan Sarrade. Tous les textes sous licence CC-BY 4.0.',
   },
   profile: {
-    role: 'Senior AI Engineer',
+    role: 'AI Product Builder & Engineer',
     tagline: "Je conçois des produits IA et j'automatise les workflows des équipes.",
     bio: "Je conçois des produits IA et des architectures multi-agents autonomes pour les start-ups et PME. J'automatise les workflows de vos équipes pour les libérer des tâches répétitives et les recentrer sur la forte valeur ajoutée.",
-    brandSub: 'Senior AI Engineer',
+    brandSub: 'AI Product Builder & Engineer',
   },
   home: {
     stackLabel: 'Stack',
@@ -39,7 +39,7 @@ export default {
       subscribe: "S'abonner",
     },
     now: [
-      'En poste chez <a href="https://somanyways.co" target="_blank" rel="noopener">Somanyways</a> comme Ingénieur Fullstack Senior.',
+      'En poste chez Hones comme AI Product Builder.',
       'J\'ai lancé <a href="https://criterium.app" target="_blank" rel="noopener">Criterium.app</a> (suivez le lien pour découvrir le projet).',
       'Je développe <a href="https://github.com/Trystan-SA/forgebox" target="_blank" rel="noopener">Forgebox</a>, un agent d\'orchestration IA isolé dans des MicroVMs pour renforcer la sécurité.',
       'J\'ai publié <a href="https://github.com/Trystan-SA/rproc" target="_blank" rel="noopener">rproc</a>, un moniteur de ressources et de processus pour Linux, écrit en Rust et inspiré du Gestionnaire des tâches de Windows 11.',
@@ -124,7 +124,7 @@ export default {
     eyebrow: 'À propos',
     basedIn: 'Basé à',
     currently: 'Actuellement',
-    currentlyValue: 'chez SomanyWays (et sur des projets open-source)',
+    currentlyValue: 'chez Hones (et sur des projets open-source)',
     emailLabel: 'Email',
     elsewhere: 'Ailleurs',
     prose: [

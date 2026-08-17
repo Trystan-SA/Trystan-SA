@@ -12,7 +12,28 @@
 
     <article class="project-row">
       <div class="project-meta">
-        <div class="project-year">2024–now</div>
+        <div class="project-year">2026–now</div>
+        <div class="project-role">AI Product Builder</div>
+      </div>
+      <div class="project-body">
+        <h3 class="project-name">Hones</h3>
+        {#if $lang === 'fr'}
+          <p>Je conçois et livre des produits IA de bout en bout : de la définition du problème et du prototype jusqu'à la mise en production. Architectures agentiques, orchestration de LLM et automatisation des workflows métier.</p>
+        {:else}
+          <p>I design and ship AI products end to end: from framing the problem and prototyping through to production. Agentic architectures, LLM orchestration, and business workflow automation.</p>
+        {/if}
+        <div class="project-stack">
+          <span class="stack-chip">AI Agents</span>
+          <span class="stack-chip">LLM</span>
+          <span class="stack-chip">TypeScript</span>
+          <span class="stack-chip">Product</span>
+        </div>
+      </div>
+    </article>
+
+    <article class="project-row">
+      <div class="project-meta">
+        <div class="project-year">2024–2026</div>
         <div class="project-role">Senior Fullstack Engineer · AI & Automation</div>
       </div>
       <div class="project-body">

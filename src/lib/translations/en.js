@@ -8,14 +8,14 @@ export default {
   footer: {
     siteLabel: 'Site',
     elsewhereLabel: 'Elsewhere',
-    bio: 'Senior AI Engineer. I build AI products, multi-agent architectures, and automate the workflows of tech and product teams.',
+    bio: 'AI Product Builder & Engineer. I build AI products, multi-agent architectures, and automate the workflows of tech and product teams.',
     copyright: '© 2026 Trystan Sarrade. All writing licensed CC-BY 4.0.',
   },
   profile: {
-    role: 'Senior AI Engineer',
+    role: 'AI Product Builder & Engineer',
     tagline: "I build AI products and automate teams' workflows.",
     bio: "I design AI products and autonomous multi-agent architectures for startups and SMEs. I automate your teams' workflows to free them from repetitive work and refocus them on what truly creates value.",
-    brandSub: 'Senior AI Engineer',
+    brandSub: 'AI Product Builder & Engineer',
   },
   home: {
     stackLabel: 'Stack',
@@ -39,7 +39,7 @@ export default {
       subscribe: 'Subscribe',
     },
     now: [
-      'Working at <a href="https://somanyways.co" target="_blank" rel="noopener">Somanyways</a> as a Senior Fullstack Engineer.',
+      'Working at Hones as an AI Product Builder.',
       'Released <a href="https://criterium.app" target="_blank" rel="noopener">Criterium.app</a> (follow the link to know what it is about).',
       'Developing <a href="https://github.com/Trystan-SA/forgebox" target="_blank" rel="noopener">Forgebox</a>, an AI orchestration agent with MicroVMs to improve security.',
       'Released <a href="https://github.com/Trystan-SA/rproc" target="_blank" rel="noopener">rproc</a>, a Linux resource & process monitor in Rust, inspired by the Windows 11 Task Manager.',
@@ -124,7 +124,7 @@ export default {
     eyebrow: 'About',
     basedIn: 'Based in',
     currently: 'Currently',
-    currentlyValue: 'at SomanyWays (and on open-source projects)',
+    currentlyValue: 'at Hones (and on open-source projects)',
     emailLabel: 'Email',
     elsewhere: 'Elsewhere',
     prose: [
