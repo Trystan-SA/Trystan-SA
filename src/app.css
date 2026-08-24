@@ -641,7 +641,7 @@ button { font-family: inherit; }
 .back-link:hover { color: var(--fg); }
 
 .article-head { max-width: 760px; margin-bottom: 56px; }
-.article-tags { display: flex; gap: 6px; margin-bottom: 18px; }
+.article-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 18px; }
 .article-title {
   font-family: var(--display); font-weight: 500;
   font-size: clamp(36px, 4.5vw, 56px); line-height: 1.08;
@@ -991,9 +991,13 @@ button { font-family: inherit; }
 @media (max-width: 920px) {
   .hero-split { grid-template-columns: 1fr; gap: 32px; }
   .featured-grid { grid-template-columns: 1fr; }
-  .article-row { grid-template-columns: 1fr; gap: 8px; }
+  .article-row { grid-template-columns: 1fr; gap: 8px; padding: 20px 16px; }
   .article-row-arrow { display: none; }
-  .article-layout { grid-template-columns: 1fr; }
+  .article-row-meta { flex-direction: row; align-items: center; gap: 8px; padding-top: 0; }
+  .article-row-meta .dot { display: inline; }
+  .article-row-title { font-size: 20px; }
+  .article-row-excerpt { font-size: 14.5px; }
+  .article-layout { grid-template-columns: 1fr; gap: 32px; }
   .toc { display: none; }
   .about-grid { grid-template-columns: 1fr; }
   .about-portrait { position: static; max-width: 280px; }
@@ -1009,11 +1013,52 @@ button { font-family: inherit; }
   .shell-main { padding: 0 20px; }
   .topnav-inner { padding: 14px 20px; }
   .footer-inner { padding: 0 20px; }
+
+  /* Article detail: prevent justify from creating giant word gaps on narrow columns */
+  .article-body p,
+  .article-body li { text-align: left; hyphens: none; -webkit-hyphens: none; }
+  .article-body { font-size: 17px; line-height: 1.65; }
+  .article-body ul { font-size: 16px; padding-left: 20px; }
+  .article-body h2 { font-size: 24px; margin: 1.6em 0 0.5em; }
+  .article-body h2::before { width: 16px; margin-right: 8px; }
+  .article-body h3 { font-size: 19px; }
+  .article-body pre { padding: 12px 14px; font-size: 13px; }
+
+  /* Article head */
+  .article-head { margin-bottom: 40px; }
+  .article-title { margin-bottom: 16px; }
+  .article-excerpt {
+    font-size: 17px; padding-left: 14px; margin-bottom: 24px;
+  }
+  .article-meta { flex-wrap: wrap; gap: 12px 16px; padding-top: 16px; }
+
+  /* Articles page decoration */
+  .deco-pen { width: 220px; top: -20px; right: -60px; opacity: 0.06; }
 }
 
 @media (max-width: 480px) {
-  .shell-main { padding: 0 20px; }
-  .topnav-inner { padding: 12px 20px; }
+  .shell-main { padding: 0 16px; }
+  .topnav-inner { padding: 12px 16px; }
+  .page { padding: 40px 0 var(--d-section); }
+  .page-head { margin-bottom: 32px; }
+  .page-lede { font-size: 16px; }
+
+  /* Article list rows: tighter side padding so cards align with page edge */
+  .article-row { padding: 18px 12px; }
+  .variant-stacked .article-row { margin: 0 -12px; }
+
+  /* Article detail */
+  .article-title { font-size: clamp(28px, 8vw, 40px); }
+  .article-excerpt { font-size: 16px; padding-left: 12px; }
+  .article-body { font-size: 16px; }
+  .article-body h2 { font-size: 22px; }
+  .article-body h2::before { display: none; }
+  .article-body h3 { font-size: 18px; }
+  .article-body ul { padding-left: 18px; }
+  .avatar { width: 34px; height: 34px; font-size: 12px; }
+
+  /* Decoration off on the tightest screens */
+  .deco-pen { display: none; }
 }
 
 /* Now card hidden — markup kept; remove these two rules to re-enable */

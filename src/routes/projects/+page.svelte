@@ -12,7 +12,7 @@
 
     <article class="project-row">
       <div class="project-meta">
-        <div class="project-year">2026–now</div>
+        <div class="project-year">Nov 2026 – now</div>
         <div class="project-role">AI Product Builder</div>
       </div>
       <div class="project-body">
@@ -35,7 +35,7 @@
 
     <article class="project-row">
       <div class="project-meta">
-        <div class="project-year">2024–2026</div>
+        <div class="project-year">Apr 2024 – Nov 2026</div>
         <div class="project-role">Senior Fullstack Engineer · AI & Automation</div>
       </div>
       <div class="project-body">
@@ -53,10 +53,10 @@
             <li class="project-highlight">
               {#if $lang === 'fr'}
                 <div class="project-highlight-title">Seul responsable technique</div>
-                <p class="project-highlight-text">Reprise de la pleine propriété technique du SaaS après le départ de l'ingénieur senior et du CTO freelance. Front, back, infra, devops.</p>
+                <p class="project-highlight-text">Reprise de la pleine propriété technique du SaaS pendant 1 an, après le départ de l'ingénieur senior et du CTO freelance. Front, back, infra, devops.</p>
               {:else}
                 <div class="project-highlight-title">Sole technical owner</div>
-                <p class="project-highlight-text">Took full technical ownership of the entire SaaS after the Senior engineer and the CTO freelance left the team. Front, back, infra, devops.</p>
+                <p class="project-highlight-text">Took full technical ownership of the entire SaaS for 1 year, after the Senior engineer and the CTO freelance left the team. Front, back, infra, devops.</p>
               {/if}
             </li>
             <li class="project-highlight">
@@ -92,81 +92,18 @@
 
     <article class="project-row">
       <div class="project-meta">
-        <div class="project-year">2026</div>
-        <div class="project-role">Open source · Creator</div>
-      </div>
-      <div class="project-body">
-        <h3 class="project-name">
-          <a href="https://github.com/Trystan-SA/forgebox" target="_blank" rel="noopener">Forgebox <span class="project-link">↗</span></a>
-          <span class="project-wip">WIP</span>
-        </h3>
-        {#if $lang === 'fr'}
-          <p>Plateforme d'orchestration IA open-source basée sur des MicroVMs (Firecracker) pour la sécurité. Écrite en Golang et Svelte. Avec des outils, MCP et une configuration personnalisée de LLM et de workflows d'automatisation.</p>
-        {:else}
-          <p>Open-source AI orchestration platform based on MicroVMs (Firecracker) for security. Written in Golang and Svelte. With tooling, MCP and custom LLM and automation workflow configuration.</p>
-        {/if}
-        <div class="project-stack">
-          <span class="stack-chip">Go</span>
-          <span class="stack-chip">Svelte</span>
-          <span class="stack-chip">Firecracker</span>
-          <span class="stack-chip">MicroVMs</span>
-          <span class="stack-chip">MCP</span>
-        </div>
-      </div>
-    </article>
-
-    <article class="project-row">
-      <div class="project-meta">
-        <div class="project-year">2026</div>
-        <div class="project-role">Open source · Creator</div>
-      </div>
-      <div class="project-body">
-        <h3 class="project-name">
-          <a href="https://github.com/Trystan-SA/rproc" target="_blank" rel="noopener">rproc <span class="project-link">↗</span></a>
-        </h3>
-        {#if $lang === 'fr'}
-          <p>Moniteur de ressources et de processus pour Linux, inspiré du Gestionnaire des tâches de Windows 11. Écrit en Rust avec egui. Vues processus (CPU, mémoire, I/O disque, threads), performances en temps réel (CPU par cœur, mémoire, disques, réseau, GPU NVIDIA/AMD/Intel), démarrage et services systemd. Packagé pour Debian/Ubuntu, Fedora, Flatpak et Nix.</p>
-        {:else}
-          <p>Resource & process monitor for Linux, inspired by the Windows 11 Task Manager. Written in Rust with egui. Process views (CPU, memory, disk I/O, threads), real-time performance charts (per-core CPU, memory, disks, network, NVIDIA/AMD/Intel GPU), startup entries and systemd services. Packaged for Debian/Ubuntu, Fedora, Flatpak and Nix.</p>
-        {/if}
-        <div class="project-stack">
-          <span class="stack-chip">Rust</span>
-          <span class="stack-chip">egui</span>
-          <span class="stack-chip">Linux</span>
-          <span class="stack-chip">systemd</span>
-          <span class="stack-chip">Nix</span>
-        </div>
-      </div>
-    </article>
-
-    <article class="project-row">
-      <div class="project-meta">
-        <div class="project-year">2026</div>
-        <div class="project-role">Founder · Architect</div>
+        <div class="project-year">Nov 2025 – now</div>
+        <div class="project-role">Founder</div>
       </div>
       <div class="project-body">
         <h3 class="project-name">
           <a href="https://criterium.app" target="_blank" rel="noopener">Criterium.app <span class="project-link">↗</span></a>
         </h3>
         {#if $lang === 'fr'}
-          <p>Chatbot IA pour les centres de formation qui répond aux questions des apprenants 24h/24 à partir du contenu des cours. S'intègre avec Moodle, Canvas et d'autres LMS en cinq minutes.</p>
+          <p>SaaS AI native pour la création de cours et de contenu de formation par IA. Avec des activités de podcast, quizz, devoirs et cours entièrement générables par l'IA.</p>
         {:else}
-          <p>AI chatbot for training centers that answers learners' questions 24/7 from course content. Integrates with Moodle, Canvas and other LMS in five minutes.</p>
+          <p>AI-native SaaS for creating courses and training content with AI. Podcast, quiz, assignment and course activities fully generated by AI.</p>
         {/if}
-        <div class="project-highlights-wrap">
-          <div class="project-highlights-eyebrow">{$t.projects.proudOf}</div>
-          <ul class="project-highlights">
-            <li class="project-highlight">
-              {#if $lang === 'fr'}
-                <div class="project-highlight-title">Build solo en 3 mois</div>
-                <p class="project-highlight-text">Construit l'intégralité du SaaS seul en 3 mois, en parallèle de mon emploi à temps plein. Exploitation de nouveaux workflows IA pour accélérer le développement de 3×. Les releases se font en un push. Les outils de CI/CD et de qualité de code rendent le développement quotidien agréable.</p>
-              {:else}
-                <div class="project-highlight-title">3-month solo build</div>
-                <p class="project-highlight-text">Built the entire SaaS solo in 3 months, on the side of my full-time job. Leveraged new AI workflows to speed up development by 3×. Releases are one push away. CI/CD and code-quality tooling make day-to-day development a breeze.</p>
-              {/if}
-            </li>
-          </ul>
-        </div>
         <div class="project-stack">
           <span class="stack-chip">TypeScript</span>
           <span class="stack-chip">React</span>
@@ -212,15 +149,6 @@
               {:else}
                 <div class="project-highlight-title">Streamlined ops & certifications</div>
                 <p class="project-highlight-text">Improved operations across the board, made Qualiopi certification tracking easier, and negotiated 2 certification partnerships to unlock CPF access. Better IT automation and management improved the learners' journey end-to-end.</p>
-              {/if}
-            </li>
-            <li class="project-highlight">
-              {#if $lang === 'fr'}
-                <div class="project-highlight-title">Formation WordPress créée de zéro</div>
-                <p class="project-highlight-text">Création de ma propre formation WordPress, enseignée à 300+ personnes et ayant généré 150 000 € sur 4 ans.</p>
-              {:else}
-                <div class="project-highlight-title">Built a WordPress training program</div>
-                <p class="project-highlight-text">Created my own WordPress training, taught it to 300+ people, and generated €150K over 4 years.</p>
               {/if}
             </li>
           </ul>
