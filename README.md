@@ -10,7 +10,7 @@ I build AI products, SaaS, games and tools. I also write about software architec
 
 ## What I'm working on
 
-- 🎯 **[Hones](https://hones.fr)**: AI Product Builder. Designing and shipping AI products end to end.
+- 🎯 **[Hones](https://hones.fr)**: AI Product Builder. Designing and shipping software products end to end.
 - 🚀 **[Somanyways](https://somanyways.co)** _(2024–2026)_: Senior Fullstack Engineer on a platform with 30K+ users.
 - 🤖 **[Criterium.app](https://criterium.app)**: AI courses creator. Generate written courses, audio podcast and sell your knowledge in minutes 
 - 🖥️ **[rproc](https://github.com/Trystan-SA/rproc)**: open-source Linux resource & process monitor, inspired by the Windows 11 Task Manager. Built in Rust and Slint.
