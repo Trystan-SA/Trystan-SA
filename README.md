@@ -1,4 +1,4 @@
-# AI Product Builder & Engineer #
+# Product Engineer #
 **Bordeaux, France**
 
 [![Portfolio](https://img.shields.io/badge/Portfolio-e08267?style=flat-square&logo=svelte&logoColor=white)](https://trystan-sarrade.com)
@@ -10,9 +10,11 @@ I build AI products, SaaS, games and tools. I also write about software architec
 
 ## What I'm working on
 
-- 🎯 **[Hones](https://hones.fr)**: AI Product Builder. Designing and shipping software products end to end.
+- 🎯 **[Hones](https://hones.fr)** _(2026-Now)_: AI Product Builder. Designing and shipping software products end to end.
 - 🚀 **[Somanyways](https://somanyways.co)** _(2024–2026)_: Senior Fullstack Engineer on a platform with 30K+ users.
-- 🤖 **[Criterium.app](https://criterium.app)**: AI courses creator. Generate written courses, audio podcast and sell your knowledge in minutes 
+- 🤖 **[Criterium.app](https://criterium.app)**: AI courses creator. Generate written courses, audio podcast and sell your knowledge in minutes
+
+- 🦀 **[laya-candle](https://github.com/Trystan-SA/laya-candle)**: Pure-Rust port of Laya, running JEV-like model locally
 - 🖥️ **[rproc](https://github.com/Trystan-SA/rproc)**: open-source Linux resource & process monitor, inspired by the Windows 11 Task Manager. Built in Rust and Slint.
 
 ## Stack
